@@ -315,19 +315,25 @@ html {
 }
 #slideshow{
 	width: 80%;
-	height: 400px;
-	margin: auto;
-	text-align: center;
-  margin-top: 10px;
+    margin: auto;
+    margin-top: 20px;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 20px;
 
 }
 #slideshow img{
 	width: 100%;
-	height: 400px;
-    transition: opacity 1s ease-in-out;
-  border-radius: 20px;
+    height: auto;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.4s ease;
 }
 
+#slideshow img:hover{
+    transform: scale(1.02);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
 
 
 #runtext{
@@ -718,30 +724,17 @@ html {
         margin: 10px auto;
     }
 	
-	
     .product{
     width: 95%;
     margin: auto;} 
-    
-	
-	  #slideshow{
-    width: 95%;
-		height: 25%;
-    margin: auto;
-    margin-top: 20px;
-	  }
+
     #runtext{
     width: 95%;
     margin: auto;
     margin-top: 20px;
     }
-  
-	  #slideshow img{
-		height:100%;
-	  }
-	
-  
-	  #fo-content {
+
+	#fo-content {
       flex-direction: column;
       gap: 30px;
     }
@@ -790,20 +783,13 @@ html {
     width: 95%;
     margin: auto;
   }
-  #slideshow{
-    width: 95%;
-    height: auto;
-	}
-  #slideshow img{
-    height: 40%;}
-    
+
   #runtext{
     width: 95%;
     margin: auto;
     margin-top: 20px;
   }
 
-	
 	
 }
 
@@ -827,12 +813,6 @@ html {
     width: 80%;
     margin: auto;
   }
-  #slideshow{
-    width: 80%;
-    height: auto;
-	}
-  #slideshow img{
-    height: 55%;}
     
   #runtext{
     width: 80%;
