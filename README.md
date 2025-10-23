@@ -1,1 +1,1 @@
-hi
+Trang web quản lý và đặt lịch cắt tóc 30Shine

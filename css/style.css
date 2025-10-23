@@ -8,7 +8,6 @@
 body{
 	margin: 0px; 
 	padding: 0px;
-	font-family: Arial;
 }
 
 
@@ -74,10 +73,6 @@ input:focus {
     margin-right: 8px;
 }
 
-.picture {
-    width: 30px;
-    height: 16px;
-}
 
 #h_right > div {
     margin-left: 10px;
@@ -90,15 +85,16 @@ input:focus {
 	padding-left: 15px;
 	border-left: 1px solid #ccc;
 }
-
-.picture_s, .picture_l, .picture_login {
-    width: 30px;
-    height: 20px;
-    margin-right: 5px;
+#icon_social i {
+    padding-right: 10px;
+    font-size: 18px;
 }
 .picture_l{
     border-left: 1px solid #ccc;
 	margin-left: 5px;
+    width: 30px;
+    height: 20px;
+    margin-right: 5px;
 }
 /* HEADER */
 #header {
@@ -343,6 +339,8 @@ html {
 	line-height: 30px;
 }
 
+
+
 .product{
 	width: 80%;
 	margin: auto;
@@ -524,12 +522,16 @@ html {
   margin-bottom: 15px;
 }
 
-.social-icons img {
+#ytb {
   width: 50px;
+  height: 35px;
+  transition: transform 0.3s;
+}
+.social-icons img {
+  width: 45px;
   height: 40px;
   transition: transform 0.3s;
 }
-
 .social-icons img:hover {
   transform: scale(1.1);
 }
@@ -690,12 +692,9 @@ html {
         border-left: none;
     }
     
-    .picture {
-        width: 25px;
-        height: 14px;
-    }
     
-    .picture_s, .picture_l, .picture_login {
+    
+    .picture_s, .picture_l {
         width: 22px;
         height: 16px;
     }
@@ -899,7 +898,6 @@ html {
 }
 .login-form a, p, h1, span{
     color: #fff;
-    font-family: 'Poppins', sans-serif;
 }
 .login-form h1 {
     text-align: center;
@@ -915,7 +913,7 @@ html {
     line-height: 32px;
     border-radius: 15px;
     margin-top: 5px;
-    padding: 5px 5px;
+    padding: 5px 10px;
     
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
@@ -962,10 +960,10 @@ html {
 
 #btn-login{
     border-radius: 15px;
-    height: 36px;
-    width: 50px;
     background: linear-gradient(135deg, #00e5ff, #0078ff);
     border: 0px;
+    width: 100%;
+    height: 40px;
     color: white;
     cursor: pointer;
     font-weight: 700;
@@ -993,7 +991,6 @@ html {
     gap: 20px;
     padding: 40px;
     border-radius: 12px;
-    font-family: 'Poppins', sans-serif;
     width: 100%;
     
 }
@@ -1195,6 +1192,47 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .cuocthi-img:hover {
     transform: scale(1.05);
 }
+
+
+/* Cuộc thi 30Shine trượt ngang */
+.cuocthi-slide {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  scroll-behavior: smooth;
+  padding-bottom: 10px;
+  scrollbar-width: thin;                 
+  scrollbar-color: #3558d6 rgba(0,0,0,0.06);
+}
+
+
+/* Mỗi thí sinh hiển thị dạng khung */
+.cuocthi-slide .item {
+  flex: 0 0 auto; /* Không co lại */
+  width: 220px;   /* chỉnh kích thước mỗi ô */
+}
+
+.cuocthi-slide::-webkit-scrollbar {
+     height: 10px; 
+}
+
+.cuocthi-slide::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.04);
+  border-radius: 12px;
+}
+
+.cuocthi-slide::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg,#6b8cff,#3558d6);
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 3px 8px rgba(53,88,214,0.22);
+}
+
+.cuocthi-slide::-webkit-scrollbar-thumb:hover {
+  box-shadow: 0 6px 14px rgba(53,88,214,0.32);
+}
+
+
 
 .tintuc-pic{
     width: 100%;
