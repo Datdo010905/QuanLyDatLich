@@ -916,12 +916,28 @@ html {
     border-radius: 15px;
     margin-top: 5px;
     padding: 5px 5px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
     transition: all 0.3s ease;
 }
 
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.password-toggle:hover {
+    color: #c0bdbd;
+}
 #input-sdt{
     margin-bottom: 10px;
     width: 100%;
@@ -1306,3 +1322,5 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .angels-item img:hover {
     transform: scale(1.05);
 }
+
+

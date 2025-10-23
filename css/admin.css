@@ -1,0 +1,46 @@
+:root{--bg:#f6f7fb;--accent:#ff6b00;--muted:#666;}
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{margin:0;background:var(--bg);color:#222}
+.admin-layout{display:flex;min-height:100vh}
+.sidebar{width:220px;background:#0b1220;color:#fff;display:flex;flex-direction:column;gap:12px;padding:18px}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.brand img{width:36px;height:36px;border-radius:6px}
+.sidebar nav{display:flex;flex-direction:column;gap:6px}
+.sidebar a{color:#cbd5e1;padding:10px;border-radius:6px;text-decoration:none;cursor:pointer}
+.sidebar a:hover,.sidebar a.active{background:#122032;color:#fff}
+.sidebar-footer{margin-top:auto}
+.sidebar-footer button{width:100%;padding:8px;border:0;background:#1f2937;color:#fff;border-radius:6px;cursor:pointer}
+
+/* main area */
+.main{flex:1;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#fff;border-bottom:1px solid #e6e9ef}
+.icon-btn{background:transparent;border:0;font-size:18px;padding:8px;cursor:pointer}
+.topbar-right{display:flex;gap:8px;align-items:center}
+.topbar input{padding:8px;border-radius:6px;border:1px solid #ddd;min-width:200px}
+
+/* content */
+.content{padding:18px;flex:1;overflow:auto}
+.cards{display:flex;gap:12px;margin-bottom:12px}
+.card{flex:1;background:#fff;padding:16px;border-radius:8px;box-shadow:0 4px 12px rgba(16,24,40,.04)}
+.panel{background:#fff;padding:12px;border-radius:8px;box-shadow:0 6px 16px rgba(16,24,40,.04);margin-bottom:12px}
+.header-actions{display:flex;justify-content:space-between;align-items:center}
+.table{width:100%;border-collapse:collapse}
+.table thead{background:#f3f4f6}
+.table th,.table td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+.btn{padding:8px 12px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);align-items:center;justify-content:center;z-index:3000}
+.modal.active{display:flex}
+.modal-body{background:#fff;padding:18px;border-radius:8px;min-width:320px;max-width:90%}
+.modal-close{position:absolute;right:16px;top:12px;background:transparent;border:0;font-size:22px;cursor:pointer}
+.form-row{display:flex;flex-direction:column;margin-bottom:10px}
+.form-row input{padding:8px;border:1px solid #ddd;border-radius:6px}
+
+/* responsiveness */
+@media (max-width:900px){
+    .sidebar{position:fixed;left:-260px;top:0;height:100%;transition:left .25s}
+    .sidebar.open{left:0}
+    .admin-layout{padding-left:0}
+}

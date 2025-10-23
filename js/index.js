@@ -34,3 +34,57 @@ window.onload = function() {
   });}
 
 
+//toggle password
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const icon = document.getElementById('show-password');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+
+//border password input
+function checklength() {
+    const passwordInput = document.getElementById('pwd1');
+    if (passwordInput.value.length < 8) {
+        passwordInput.style.boxShadow = '0 0 8px #ff3002ff';
+    } else {
+        passwordInput.style.boxShadow = '0 0 8px #00e5ff';
+    }
+}
+
+//dang nhap 
+function dangNhap(event) { 
+  
+  event.preventDefault(); // chặn hành vi reload trang 
+
+  const user = document.getElementById('username').value.trim(); 
+  const pass = document.getElementById('password').value.trim(); 
+
+  axios.get(`https:localhost:7259/api/TaiKhoan_/dangnhap?username=${user}&pass=${pass}`) 
+  .then(res => {
+      console.log("Kết quả API:", res.data);
+
+      if (res.data.success) {
+        alert(res.data.message || "Đăng nhập thành công!");
+        // ✅ Có thể lưu token nếu API trả về
+        // localStorage.setItem('token', res.data.token);
+        window.location.href = "admin.html";
+      } else {
+        alert(res.data.message || "Sai thông tin đăng nhập!");
+      }
+    })
+    .catch(err => {
+      console.error("Lỗi khi gọi API:", err);
+      alert("Không thể kết nối đến API hoặc lỗi mạng!");
+    });
+}
+

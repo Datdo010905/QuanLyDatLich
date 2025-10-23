@@ -4,9 +4,12 @@
 		<meta charset="UTF-8"/>	
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" type="text/css" href="css/style.css" />					
-						
+
+    	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+		
 		<script src="js/jquery-3.7.1.min.js"></script>
 		<script src="js/index.js"></script>
+		<script src="js/axios-1.12.2.min.js"></script>
 		<link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
 	</head>
 	
@@ -54,12 +57,19 @@
 		<div id="container"> 
 			<div class="login-form">
                 <h1>THÔNG TIN TÀI KHOẢN</h1>
-                <form>
+                <form onsubmit="return dangNhap(event)">
 					<span>Tài khoản:<span style="color: red">*</span></span><br>
-                    <input class="input-field" type="text" placeholder="Email hoặc Số điện thoại" required /><br />
+                    <input id ="username" class="input-field" type="text" placeholder="Tên đăng nhập hoặc Số điện thoại" required /><br />
                     <span>Mật khẩu:<span style="color: red">*</span></span><br>
 
-					<input class="input-field" type="password" placeholder="Mật khẩu" required /><br />
+					<div class="password-container">
+						<input id ="password" class="input-field" type="password" placeholder="Mật khẩu" required />
+						<span class="password-toggle">
+							<i class="fa fa-eye" id="show-password" onclick="togglePassword()"></i>
+						</span>
+					</div>
+					
+					<br />
                     <br/>
                     <input id="btn-login" type="submit" value="ĐĂNG NHẬP"/>
                 </form>
