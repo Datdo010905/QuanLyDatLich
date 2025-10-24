@@ -85,6 +85,21 @@ input:focus {
 	padding-left: 15px;
 	border-left: 1px solid #ccc;
 }
+
+.logout-btn {
+    margin-left: 10px;
+    padding: 4px 8px;
+    border: none;
+    background: linear-gradient(to right, #3a498a, #173691);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.logout-btn:hover {
+    background: #fa0101;
+}
 #icon_social i {
     padding-right: 10px;
     font-size: 18px;
@@ -611,15 +626,6 @@ html {
     }
     100% {
         transform: scale(1);
-    }
-}
-/* Hiệu ứng xoay nhẹ */
-@keyframes rotate {
-    0% {
-        rotate: 0deg;
-    }
-    100% {
-        rotate: 360deg;
     }
 }
 
@@ -1342,9 +1348,19 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 /* chi tiết dịch vụ */
+.name_itemchitiet{
+    font-size: 24px; 
+    font-weight: bold;
+}
+.pic_itemchitiet{
+	width: 300px; 
+	height: 200px;
+    border-radius: 10px;
+}
 .slide_item{
-	width: 50px;
+	width: 65px;
 	height: 50px;
+    border-radius: 10px;
 }
 .slide_item{
 	transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);

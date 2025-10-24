@@ -88,7 +88,107 @@ function dangNhap(event) {
     });
 }
 
+// kiêm tra trạng thái đăng nhập khi tải trang
+window.addEventListener('DOMContentLoaded', () => {
+    checkdangnhap();
+});
+//kiếm tra trạng thái đăng nhập
+function checkdangnhap() {
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    const loginElement = document.getElementById("login-hello");
+    
+    if (loggedInUser && loginElement) {
+        loginElement.innerHTML = ` Xin chào, ${loggedInUser} <button onclick="dangXuat()" class="logout-btn">Đăng xuất</button>`;
+    }
+}
+//dang nhập local
+function dangNhapLocal(event) {
+    event.preventDefault();
 
+    const loginUser = localStorage.getItem("registeredUser");
+    if (!loginUser) {
+        alert("Tài khoản không tồn tại! Vui lòng đăng ký.");
+        return;
+    }
+
+    const registeredUser = JSON.parse(loginUser);
+
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
+
+    if (user === registeredUser.username && pass === registeredUser.password) {
+        // Save login state
+        localStorage.setItem("loggedInUser", user);
+        localStorage.setItem("isLoggedIn", "true");
+        
+        // Update UI
+        const loginElement = document.getElementById("login-hello");
+        if (loginElement) {
+            loginElement.innerHTML = `Xin chào ${user} <button onclick="dangXuat()" class="logout-btn">Đăng xuất</button>`;
+        }
+
+        alert("Đăng nhập thành công!");
+        window.location.href = "index.html";
+    } else {
+        alert("Sai thông tin đăng nhập!");
+
+        const loginElement = document.getElementById("login-hello");
+        if (loginElement) {
+            loginElement.innerHTML = " Login";
+        }
+    }
+}
+//đăng xuất
+function dangXuat() {
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("isLoggedIn");
+    
+    const loginElement = document.getElementById("login-hello");
+    if (loginElement) {
+        loginElement.innerHTML = " Login";
+    }
+
+    window.location.href = "index.html";
+}
+
+//đăng ký
+function dangKyLocal(event) {
+    event.preventDefault();
+
+    const fullname = document.getElementById('fullname').value.trim();
+    const user = document.getElementById('username').value.trim();
+    const pass1 = document.getElementById('pwd1').value.trim();
+    const pass2 = document.getElementById('pwd2').value.trim();
+
+    if (pass1 !== pass2) {
+        alert("Mật khẩu không khớp. Vui lòng thử lại.");
+        return;
+    }
+    if (pass1.length < 8) {
+        alert('Mật khẩu phải có ít nhất 8 ký tự!');
+        return false;
+    }
+
+    try {
+      localStorage.setItem("registeredUser", JSON.stringify
+        ({
+            fullname: fullname,
+            username: user,
+            password: pass1
+        }));
+        alert("Đăng ký thành công! Vui lòng đăng nhập.");
+        window.location.href = "login.html";
+      }
+    catch (e) {
+        console.error('Lỗi đăng ký:', e);
+        alert('Có lỗi xảy ra khi đăng ký!');
+        return false; 
+    }
+}
+
+
+
+//chuyển ảnh chi tiết dịch vụ
 function slide(i) {
-  document.getElementById("slide_msi").src = `img/MANHINH/MSI_Optix_MAG322CQRV_v${i}.png`;
+  document.getElementById("slide_dv").src = `img/catgoicombo1_/cat-goi-combo-1-${i}.png`;
 }
