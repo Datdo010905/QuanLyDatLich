@@ -75,7 +75,7 @@ function dangNhap(event) {
 
       if (res.data.success) {
         alert(res.data.message || "Đăng nhập thành công!");
-        // ✅ Có thể lưu token nếu API trả về
+        // Có thể lưu token nếu API trả về
         // localStorage.setItem('token', res.data.token);
         window.location.href = "admin.html";
       } else {
@@ -88,3 +88,7 @@ function dangNhap(event) {
     });
 }
 
+
+function slide(i) {
+  document.getElementById("slide_msi").src = `img/MANHINH/MSI_Optix_MAG322CQRV_v${i}.png`;
+}

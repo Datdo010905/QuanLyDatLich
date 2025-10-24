@@ -1341,4 +1341,73 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     transform: scale(1.05);
 }
 
+/* chi tiết dịch vụ */
+.slide_item{
+	width: 50px;
+	height: 50px;
+}
+.slide_item{
+	transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.slide_item:hover{
+	transform: scale(1.1);
+	transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	cursor: pointer;
+}
+
+.react{
+	color: ff9300;
+}
+
+.mota-dv{
+    position: relative;
+    width: 100%;
+    max-height: 315px;
+    border: 1px solid #098fe9;
+    margin-top: 40px;
+    border-radius: 6px;
+}
+.title_quytrinh{
+    color: white;
+    background-color: #0d92f1;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 20px;
+    text-align: center;
+    padding: 8px;
+    width: 250px;
+    position: absolute;
+    top: -20px;
+    left: 15px;
+}
+
+.quytrinh_content{
+    margin-top: 20px;
+    line-height: 28px;
+    padding: 0px 20px;
+}
+
+.phut-gia{
+    margin-top: 10px;
+}
+.phut{
+	font-size: 14pt;
+	width: 160px;
+	float: left;
+	line-height: 40px;
+    font-size: 14pt;
+    color: #0a2a78;
+}
+
+.giachitiet{
+	background-color: #099ee9;
+	border-radius: 20px;
+	text-align: center;
+	line-height: 35px;
+	font-size: 20px;
+	width: 160px;
+	color: white;
+	font-weight: bold;
+	float: left
+}
 
