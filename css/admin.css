@@ -334,3 +334,21 @@
     display: inline-block;
   }
 }
+
+.accounts {
+    border-radius: 11px;
+    background-color: #0950ea9e;
+    padding: 10px;
+    width: 90%;
+    margin-left: 12px;
+}
+
+
+.accounts .row span {
+    font-size: 15px;
+    color: #ffffff;
+}
+
+.accounts .row strong {
+    float: right;
+}

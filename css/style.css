@@ -98,7 +98,6 @@ input:focus {
 }
 
 .logout-btn {
-    margin-left: 10px;
     padding: 4px 8px;
     border: none;
     background: linear-gradient(to right, #3a498a, #173691);
@@ -1533,7 +1532,7 @@ html {
 
 .pic_itemchitiet {
     width: 300px;
-    height: 200px;
+    height: 300px;
     border-radius: 10px;
 }
 

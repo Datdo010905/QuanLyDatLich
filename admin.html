@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/admin.css" />
     <link rel="icon" href="img/logo.png" />
     <script src="js/login.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/data.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -22,16 +23,25 @@
             <nav>
                 <!-- data-section như single page -->
                 <a class="active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
-                <a data-section="users"><i class="fas fa-users"></i> Tài khoản</a>
-                <a data-section="users"><i class="fas fa-users"></i> Khuyến mại</a>
-                <a data-section="users"><i class="fas fa-users"></i> Khách hàng</a>
-                <a data-section="users"><i class="fas fa-users"></i> Nhân viên</a>
-                
+                <a data-section="accounts"><i class="fas fa-user-shield"></i> Tài khoản</a>
+
+                <a data-section="promotions"><i class="fas fa-tags"></i> Khuyến mại</a>
+
+                <a data-section="services"><i class="fas fa-concierge-bell"></i> Dịch vụ</a>
+
+                <a data-section="customers"><i class="fas fa-users"></i> Khách hàng</a>
+
+                <a data-section="staff"><i class="fas fa-user-tie"></i> Nhân viên</a>
+
+                <a data-section="invoices"><i class="fas fa-file-invoice-dollar"></i> Hoá đơn</a>
+
                 <a data-section="bookings"><i class="fas fa-calendar-check"></i> Lịch hẹn</a>
-                <a data-section="services"><i class="fas fa-cogs"></i> Dịch vụ</a>
+
                 <a data-section="reports"><i class="fas fa-chart-line"></i> Báo cáo</a>
-                <a data-section="settings"><i class="fas fa-cog"></i> Cài đặt</a>
             </nav>
+            <div class="accounts">
+              <div class="row"><span><button onclick="dangXuat()" class="logout-btn"><i class="fas fa-right-from-bracket"></i></button> Người dùng:</span><strong id = "login-hello"> </strong></div>
+            </div>
             <div class="sidebar-footer">
                 <button id="logoutBtn" onclick="dangXuat(event)"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
             </div>

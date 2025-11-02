@@ -64,7 +64,11 @@ select.input-field {
 /* Style cho option */
 select.input-field option {
   padding: 8px;
-  font-size: 15px;
+  font-size: 18px;
   background-color: #fff;
   color: #333;
+}
+/* Style cho option */
+select.input-field option :hover{
+  background-color: #0a69d5;
 }

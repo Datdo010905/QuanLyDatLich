@@ -7,7 +7,10 @@
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 	<script src="js/jquery-3.7.1.min.js"></script>
+	<script src="js/data.js"></script>
 	<script src="js/index.js"></script>
+	<script src="js/login.js"></script>
+	<script src="js/dichvu.js"></script>
 	<link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
 
 </head>
@@ -78,7 +81,7 @@
 				<div id="top-right">
 					<div id="top-right-content">
 						<div id="t2">
-							<a href="lichhen.html"><svg stroke="currentColor" fill="currentColor" stroke-width="0"
+							<a href="lichsu.html"><svg stroke="currentColor" fill="currentColor" stroke-width="0"
 									viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
 									<path
 										d="M7 3V1H9V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V9H20V5H17V7H15V5H9V7H7V5H4V19H10V21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7ZM17 12C14.7909 12 13 13.7909 13 16C13 18.2091 14.7909 20 17 20C19.2091 20 21 18.2091 21 16C21 13.7909 19.2091 12 17 12ZM11 16C11 12.6863 13.6863 10 17 10C20.3137 10 23 12.6863 23 16C23 19.3137 20.3137 22 17 22C13.6863 22 11 19.3137 11 16ZM16 13V16.4142L18.2929 18.7071L19.7071 17.2929L18 15.5858V13H16Z">
@@ -151,8 +154,16 @@
 				<div class="form-row">
 					<input id="input-sdt"  oninput="this.value = this.value.replace(/[^0-9]/g, '')"
 					type="text" placeholder="Nhập SĐT để đặt lịch" required />
-					<a href="lichhen.html"><button id="btn-datlich">ĐẶT LỊCH NGAY</button></a>
+					<button onclick="luusodienthoai()" id="btn-datlich">ĐẶT LỊCH NGAY</button>
+					<script>
+					function luusodienthoai() {
+						const sdt = document.getElementById("input-sdt").value;
+						localStorage.setItem("sdt", sdt); // Lưu dữ liệu
+						window.location.href = "lichhen.html"; // Chuyển trang
+						}
+					</script>
 				</div>
+				
 			</div>
 			<div class="danhgia">
 				<h3>MỜI BẠN ĐÁNH GIÁ CHẤT LƯỢNG PHỤC VỤ</h3>
@@ -173,7 +184,8 @@
 		<div class="clear"></div>
 		<div class="product">
 			<h2 id="1" class="product-title"><i class="fa-solid fa-scissors"></i> DỊCH Vụ TÓC</h2>
-			<div class="col-s-6 col-m-4 col-x-3">
+			<div class="row" id="ds-dichvu">
+			<!-- <div class="col-s-6 col-m-4 col-x-3">
 				<div class="item">
 					<br />
 					<img class="pic_item" title="cat-goi-combo-1-1" src="img/product/cat-goi-combo-1-1.jpg" />
@@ -213,12 +225,14 @@
 					<br />
 					<div class="gia"><span class="product-price">90.000 VNĐ</span></div>
 				</div>
+			</div> -->
 			</div>
 
 
 			<div class="clear"></div>
 			<h2 id="2" class="product-title"><i class="fa-solid fa-spa"></i> THƯ GIÃN VÀ CHĂM SÓC DA</h2>
-			<div class="col-s-6 col-m-4 col-x-3">
+			<div class="row" id="ds-chamsoc">
+			<!-- <div class="col-s-6 col-m-4 col-x-3">
 				<div class="item">
 					<br />
 					<img class="pic_item" title="goi-thu-gian" src="img/product/goi-thu-gian.png" /> <br /><br />
@@ -257,6 +271,7 @@
 					<br />
 					<div class="gia"><span class="product-price">239.000 VNĐ</span></div>
 				</div>
+				</div> -->
 			</div>
 
 			<div class="clear"></div>

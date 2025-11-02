@@ -7,7 +7,10 @@
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 	<script src="js/jquery-3.7.1.min.js"></script>
+	<script src="js/data.js"></script>
+	<script src="js/chitietdv.js"></script>
 	<script src="js/index.js"></script>
+	<script src="js/login.js"></script>
 	<link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
 
 </head>
@@ -51,7 +54,8 @@
 				</div>
 				<div id="r3">
 					<div id="login">
-						<div id="a_log"><i class="fa-solid fa-user"></i> <a href="login.html">Login</a></div>
+						<div id="a_log"><i class="fa-solid fa-user"></i><a id="login-hello" href="login.html"> Login</a>
+						</div>
 					</div>
 
 				</div>
@@ -77,7 +81,7 @@
 				<div id="top-right">
 					<div id="top-right-content">
 						<div id="t2">
-							<a href="lichhen.html"><svg stroke="currentColor" fill="currentColor" stroke-width="0"
+							<a href="lichsu.html"><svg stroke="currentColor" fill="currentColor" stroke-width="0"
 									viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
 									<path
 										d="M7 3V1H9V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V9H20V5H17V7H15V5H9V7H7V5H4V19H10V21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7ZM17 12C14.7909 12 13 13.7909 13 16C13 18.2091 14.7909 20 17 20C19.2091 20 21 18.2091 21 16C21 13.7909 19.2091 12 17 12ZM11 16C11 12.6863 13.6863 10 17 10C20.3137 10 23 12.6863 23 16C23 19.3137 20.3137 22 17 22C13.6863 22 11 19.3137 11 16ZM16 13V16.4142L18.2929 18.7071L19.7071 17.2929L18 15.5858V13H16Z">
@@ -135,99 +139,101 @@
 	</div>
 
 	<div id="container">
-		<div class="product">
+		<div class="product" id = "chitietdichvu">
 
-			<div class="product-title-3" style="margin-top: 20px;"><a href="index.html">Dịch vụ tóc</a> > Cắt gội combo
-				1
+			<!-- <div class="product-title-3" style="margin-top: 20px;"><a href="index.html">Dịch vụ tóc</a> > Cắt gội combo 1
 			</div>
 
-			<div class="col-s-6 col-m-5 col-x-4">
-				<div class="item" style="border: none;">
-					<img id="slide_dv" class="pic_itemchitiet" title="cat-goi-combo-1"
-						src="img/catgoicombo1_/cat-goi-combo-1-9.png" /> <br /><br /><br /><br />
-					<img class="slide_item" onclick="slide(9)" src="img/catgoicombo1_/cat-goi-combo-1-9.png">
-					<img class="slide_item" onclick="slide(5)" src="img/catgoicombo1_/cat-goi-combo-1-5.png">
-					<img class="slide_item" onclick="slide(6)" src="img/catgoicombo1_/cat-goi-combo-1-6.png">
-					<img class="slide_item" onclick="slide(7)" src="img/catgoicombo1_/cat-goi-combo-1-7.png">
-					<img class="slide_item" onclick="slide(10)" src="img/catgoicombo1_/cat-goi-combo-1-10.png">
+				<div class="col-s-6 col-m-5 col-x-4">
+					<div class="item" style="border: none;">
+						<img id="slide_dv" class="pic_itemchitiet" title="cat-goi-combo-1"
+							src="img/catgoicombo1_/cat-goi-combo-1-9.png" /> <br /><br /><br /><br />
+						<img class="slide_item" onclick="slide(9)" src="img/catgoicombo1_/cat-goi-combo-1-9.png">
+						<img class="slide_item" onclick="slide(5)" src="img/catgoicombo1_/cat-goi-combo-1-5.png">
+						<img class="slide_item" onclick="slide(6)" src="img/catgoicombo1_/cat-goi-combo-1-6.png">
+						<img class="slide_item" onclick="slide(7)" src="img/catgoicombo1_/cat-goi-combo-1-7.png">
+						<img class="slide_item" onclick="slide(10)" src="img/catgoicombo1_/cat-goi-combo-1-10.png">
 
-				</div>
-			</div>
-			<div class="col-s-6 col-x-4 col-m-7">
-				<div class="name_itemchitiet">
-					Cắt gội combo 1
-				</div>
-				<div class="react">
-					<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em"
-						width="1em" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
-						</path>
-					</svg>
-					<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em"
-						width="1em" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
-						</path>
-					</svg>
-					<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em"
-						width="1em" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
-						</path>
-					</svg>
-					<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em"
-						width="1em" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
-						</path>
-					</svg>
-					<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em"
-						width="1em" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
-						</path>
-					</svg>
-
-					<a href="https://www.facebook.com/toladatdo" style="margin-top: 10px; color: #00a2ff;">(12 đánh giá
-						của khách hàng)</a>
-				</div>
-				<div class="phut-gia">
-					<div class="phut">45 phút</div>
-					<div class="giachitiet"><span>122.000 VNĐ</span></div>
-				</div>
-				<div class="btn-datlichchitiet">
-					<button id="btn-datlich" style="margin-top: 10px; width: 100%;">ĐẶT LỊCH NGAY</button>
-				</div>
-				<div class="mota-dv">
-					<div class="title_quytrinh">MÔ TẢ</div>
-					<div class="quytrinh_content">
-						<li>Combo cắt kỹ</li>
-						<li>Combo gội dưỡng sinh</li>
 					</div>
 				</div>
-
-			</div>
-			<div class="col-s-12 col-x-4 col-m-12">
-				<div class="mota-dv">
-					<div class="title_quytrinh">QUY TRÌNH DỊCH VỤ</div>
-					<div class="quytrinh_content">
-						<li>Thư giãn cơ mặt</li>
-						<li>Rửa mặt & Chăm sóc da mặt</li>
-						<li>Hút mụn & Phun hoa hồng</li>
-						<li>Gội đầu & Thư giãn vùng đầu</li>
-						<li>Rửa tai bọt & Ngoáy tai</li>
-						<li>Thư giãn cổ + xối nước thác đổ</li>
-						<li>Đấm lưng</li>
-						<li>Cắt tóc</li>
-						<li>Sấy tóc</li>
+				<div class="col-s-6 col-x-4 col-m-7">
+					<div class="name_itemchitiet">
+						Cắt gội combo 1
 					</div>
+					<div class="react">
+						<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512"
+							height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
+							</path>
+						</svg>
+						<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512"
+							height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
+							</path>
+						</svg>
+						<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512"
+							height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
+							</path>
+						</svg>
+						<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512"
+							height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
+							</path>
+						</svg>
+						<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512"
+							height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
+							</path>
+						</svg>
+
+						<a href="https://www.facebook.com/toladatdo" style="margin-top: 10px; color: #00a2ff;">(12 đánh
+							giá
+							của khách hàng)</a>
+					</div>
+					<div class="phut-gia">
+						<div class="phut">45 phút</div>
+						<div class="giachitiet"><span>122.000 VNĐ</span></div>
+					</div>
+					<div class="btn-datlichchitiet">
+						<button id="btn-datlich" style="margin-top: 10px; width: 100%;">ĐẶT LỊCH NGAY</button>
+					</div>
+					<div class="mota-dv">
+						<div class="title_quytrinh">MÔ TẢ</div>
+						<div class="quytrinh_content">
+							<li>Combo cắt kỹ</li>
+							<li>Combo gội dưỡng sinh</li>
+						</div>
+					</div>
+
 				</div>
-			</div>
-			<div class="cuocthi">
-				<img class="cuocthi-img" src="img/catgoicombo1_/cat-goi-combo-1-banner.png" />
-			</div>
+				<div class="col-s-12 col-x-4 col-m-12">
+					<div class="mota-dv">
+						<div class="title_quytrinh">QUY TRÌNH DỊCH VỤ</div>
+						<div class="quytrinh_content">
+							<li>Thư giãn cơ mặt</li>
+							<li>Rửa mặt & Chăm sóc da mặt</li>
+							<li>Hút mụn & Phun hoa hồng</li>
+							<li>Gội đầu & Thư giãn vùng đầu</li>
+							<li>Rửa tai bọt & Ngoáy tai</li>
+							<li>Thư giãn cổ + xối nước thác đổ</li>
+							<li>Đấm lưng</li>
+							<li>Cắt tóc</li>
+							<li>Sấy tóc</li>
+						</div>
+					</div>
+				</div> -->
+
 		</div>
+		<div class="cuocthi">
+			<img class="cuocthi-img" src="img/catgoicombo1_/cat-goi-combo-1-banner.png" />
+		</div>
+	</div>
 
 
 

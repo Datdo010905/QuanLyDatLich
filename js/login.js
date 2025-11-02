@@ -39,12 +39,10 @@ function dangNhapLocal(event) {
     return false;
   }
 
-  // Lưu vào localStorage
   localStorage.setItem("loggedInUser", account.MATK);
   localStorage.setItem("isLoggedIn", "true");
   localStorage.setItem("phanQuyen", account.PHANQUYEN);
 
-  // Điều hướng theo quyền
   if (account.PHANQUYEN === 1 || account.PHANQUYEN === 2) {
     alert("Đăng nhập thành công!");
     window.location.href = "admin.html";
@@ -56,6 +54,16 @@ function dangNhapLocal(event) {
   return false;
 }
 
+//kiếm tra trạng thái đăng nhập
+function checkdangnhap() {
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    const loginElement = document.getElementById("login-hello");
+    
+    if (loggedInUser && loginElement) {
+        loginElement.innerHTML = ` ${loggedInUser} <button onclick="dangXuat()" class="logout-btn"><i class="fas fa-right-from-bracket"></i></button>`;
+    }
+}
+window.addEventListener('DOMContentLoaded', checkdangnhap);
 
 //đăng xuất
 function dangXuat() {

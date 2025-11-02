@@ -71,19 +71,4 @@ window.onload = function() {
 // });
 
 
-//kiếm tra trạng thái đăng nhập
-function checkdangnhap() {
-    const loggedInUser = localStorage.getItem("loggedInUser");
-    const loginElement = document.getElementById("login-hello");
-    
-    if (loggedInUser && loginElement) {
-        loginElement.innerHTML = ` Xin chào, ${loggedInUser} <button onclick="dangXuat()" class="logout-btn">Đăng xuất</button>`;
-    }
-}
 
-
-
-//chuyển ảnh chi tiết dịch vụ
-function slide(i) {
-  document.getElementById("slide_dv").src = `img/catgoicombo1_/cat-goi-combo-1-${i}.png`;
-}
