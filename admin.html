@@ -1,21 +1,26 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Admin - 30Shine</title>
     <link rel="stylesheet" href="css/admin.css" />
     <link rel="icon" href="img/logo.png" />
+    <script src="js/login.js"></script>
+    <script src="js/data.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+
 <body>
     <div class="admin-layout">
         <aside class="sidebar" id="sidebar">
             <div class="brand">
                 <img src="img/logo.png" alt="logo" />
-                <span>30Shine Admin</span>
+
             </div>
             <nav>
+                <!-- data-section như single page -->
                 <a class="active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
                 <a data-section="users"><i class="fas fa-users"></i> Khách hàng</a>
                 <a data-section="bookings"><i class="fas fa-calendar-check"></i> Đặt lịch</a>
@@ -24,7 +29,7 @@
                 <a data-section="settings"><i class="fas fa-cog"></i> Cài đặt</a>
             </nav>
             <div class="sidebar-footer">
-                <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+                <button id="logoutBtn" onclick="dangXuat(event)"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
             </div>
         </aside>
 
@@ -57,7 +62,13 @@
                     <div class="panel">
                         <h2>Hoạt động gần đây</h2>
                         <table class="table" id="recentTable">
-                            <thead><tr><th>Thời gian</th><th>Sự kiện</th><th>Người dùng</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Sự kiện</th>
+                                    <th>Người dùng</th>
+                                </tr>
+                            </thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -73,7 +84,15 @@
                     </div>
                     <div class="panel">
                         <table class="table" id="usersTable">
-                            <thead><tr><th>ID</th><th>Họ tên</th><th>Email / SĐT</th><th>Ngày tạo</th><th>Hành động</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ tên</th>
+                                    <th>Email / SĐT</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -84,7 +103,15 @@
                     <div class="panel">
                         <h2>Đặt lịch</h2>
                         <table class="table" id="bookingsTable">
-                            <thead><tr><th>Mã</th><th>Khách</th><th>Dịch vụ</th><th>Ngày/giờ</th><th>Trạng thái</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>Mã</th>
+                                    <th>Khách</th>
+                                    <th>Dịch vụ</th>
+                                    <th>Ngày/giờ</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -98,20 +125,35 @@
                     </div>
                     <div class="panel">
                         <table class="table" id="servicesTable">
-                            <thead><tr><th>ID</th><th>Tên</th><th>Thời gian</th><th>Giá</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên</th>
+                                    <th>Thời gian</th>
+                                    <th>Giá</th>
+                                </tr>
+                            </thead>
                             <tbody></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Reports + Settings placeholders -->
-                <div id="reports" class="section"><div class="panel"><h2>Báo cáo</h2><p>Coming soon.</p></div></div>
-                <div id="settings" class="section"><div class="panel"><h2>Cài đặt</h2><p>Coming soon.</p></div></div>
+                <div id="reports" class="section">
+                    <div class="panel">
+                        <h2>Báo cáo</h2>
+                        <p>Coming soon.</p>
+                    </div>
+                </div>
+                <div id="settings" class="section">
+                    <div class="panel">
+                        <h2>Cài đặt</h2>
+                        <p>Coming soon.</p>
+                    </div>
+                </div>
             </section>
         </main>
     </div>
 
-    <!-- Modal (reused for add/edit) -->
     <div id="modal" class="modal" aria-hidden="true">
         <div class="modal-body">
             <button class="modal-close" aria-label="Đóng">&times;</button>
@@ -129,4 +171,5 @@
 
     <script src="js/admin.js"></script>
 </body>
+
 </html>

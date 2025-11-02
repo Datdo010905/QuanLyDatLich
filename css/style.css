@@ -870,104 +870,7 @@ html {
 	
 }
 
-
-/* CSS LOGIN*/
-.login-form {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    width: 90%;
-    margin: 50px auto;
-    max-width: 500px; 
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    background: linear-gradient(to right, #3a498a, #173691)
-}
-.login-form a, p, h1, span{
-    color: #fff;
-}
-.login-form h1 {
-    text-align: center;
-    margin: 0 0 20px 0;
-    font-size: 28px;
-    letter-spacing: 1px;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-}
-
-.input-field{
-    margin-bottom: 10px;
-    width: 100%;
-    line-height: 32px;
-    border-radius: 15px;
-    margin-top: 5px;
-    padding: 5px 10px;
-    
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    transition: all 0.3s ease;
-}
-
-.password-container {
-    position: relative;
-    width: 100%;
-}
-
-.password-toggle {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-}
-
-.password-toggle:hover {
-    color: #c0bdbd;
-}
-#input-sdt{
-    margin-bottom: 10px;
-    width: 100%;
-    line-height: 32px;
-    border-radius: 15px;
-    margin-top: 5px;
-    padding: 5px 5px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    background-color: rgba(255, 255, 255, 0.1);
-    color: rgb(0, 0, 0);
-    transition: all 0.3s ease;
-}
-.input-field:focus {
-    border-color: #00e5ff;
-    box-shadow: 0 0 8px #00e5ff;
-    background-color: rgba(255, 255, 255, 0.15);
-}
-.input-field::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-    transition: color 0.3s ease;
-}
-
-#btn-login{
-    border-radius: 15px;
-    background: linear-gradient(135deg, #00e5ff, #0078ff);
-    border: 0px;
-    width: 100%;
-    height: 40px;
-    color: white;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 14pt;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 229, 255, 0.3);
-    letter-spacing: 1px; /*kch giữa các chữ*/
-}
-#btn-login:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 229, 255, 0.5);
-    background: linear-gradient(135deg, #00b8ff, #005eff);
-}
-
-/* Khi nhấn nút */
-#btn-login:active {
-    transform: scale(0.98);
-}
+/*  */
 
 /* CSS ĐẶT LỊCH */
 .datlich-container {
@@ -1219,6 +1122,42 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 
+.chatluong-slide {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  scroll-behavior: smooth;
+  padding-bottom: 10px;
+  scrollbar-width: thin;                 
+  scrollbar-color: #3558d6 rgba(0,0,0,0.06);
+}
+
+
+/* Mỗi item hiển thị dạng khung */
+.chatluong-slide .tintuc-item{
+  flex: 0 0 auto; /* Không co lại */
+  width: 270px;   /* chỉnh kích thước mỗi ô */
+}
+
+.chatluong-slide::-webkit-scrollbar {
+     height: 10px; 
+}
+
+.chatluong-slide::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.04);
+  border-radius: 12px;
+}
+
+.chatluong-slide::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg,#6b8cff,#3558d6);
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 3px 8px rgba(53,88,214,0.22);
+}
+
+.chatluong-slide::-webkit-scrollbar-thumb:hover {
+  box-shadow: 0 6px 14px rgba(53,88,214,0.32);
+}
 
 .tintuc-pic{
     width: 100%;
