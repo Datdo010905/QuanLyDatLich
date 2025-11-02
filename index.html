@@ -149,7 +149,8 @@
 				<h2>ĐẶT LỊCH GIỮ CHỖ CHỈ 30 GIÂY</h2>
 				<p>Cắt xong trả tiền, huỷ lịch không sao</p>
 				<div class="form-row">
-					<input id="input-sdt" type="text" placeholder="Nhập SĐT để đặt lịch" required />
+					<input id="input-sdt"  oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+					type="text" placeholder="Nhập SĐT để đặt lịch" required />
 					<a href="lichhen.html"><button id="btn-datlich">ĐẶT LỊCH NGAY</button></a>
 				</div>
 			</div>
@@ -870,11 +871,11 @@
 				</p>
 				<form>
 					<input class="input-field" type="email" placeholder="Email" /><br />
-					<input class="input-field" type="tel" pattern="^\d{10}" required
+					<input class="input-field" type="tel" required
 						placeholder="Số điện thoại*" /><br />
 
 					<br />
-					<input id="btn-login" type="submit" value="ĐĂNG KÝ NGAY" />
+					<input id="btn-datlich" type="submit" value="ĐĂNG KÝ NGAY" />
 				</form>
 			</div>
 		</div>

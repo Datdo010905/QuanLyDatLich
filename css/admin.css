@@ -55,10 +55,11 @@
   align-items: center;
   gap: 10px;
   transition: 0.2s;
+  cursor: pointer;
 }
 
 .sidebar nav a:hover {
-  background: #334155;
+  background: #3b82f6;
   color: #fff;
 }
 
@@ -101,7 +102,7 @@
 .topbar {
   height: 60px;
   background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -145,13 +146,21 @@
   display: none;
   animation: fadeIn 0.3s ease;
 }
+
 .section.active-section {
   display: block;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ========== DASHBOARD CARDS ========== */
@@ -166,13 +175,13 @@
   background: #fff;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: 0.2s;
 }
 
 .card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card h3 {
@@ -192,7 +201,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
 }
 
@@ -208,7 +217,8 @@
   margin-top: 10px;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   padding: 12px 10px;
   border-bottom: 1px solid #e2e8f0;
   text-align: left;
@@ -243,6 +253,7 @@
   background: #3b82f6;
   color: #fff;
 }
+
 .btn.primary:hover {
   background: #2563eb;
 }
@@ -252,7 +263,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   justify-content: center;
   align-items: center;
   z-index: 1000;

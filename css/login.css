@@ -19,7 +19,7 @@ body {
   background: #fff;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
 }
 
 /* Bên trái */
@@ -130,6 +130,7 @@ button:hover {
 .extra-links a:hover {
   text-decoration: underline;
 }
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 992px) {
   .login-container {
@@ -139,7 +140,8 @@ button:hover {
     margin: 40px 0;
   }
 
-  .login-left, .login-right {
+  .login-left,
+  .login-right {
     width: 100%;
   }
 
@@ -184,7 +186,8 @@ button:hover {
 
 @media (max-width: 480px) {
   .login-left {
-    display: none; /* Ẩn logo bên trái để tối ưu không gian */
+    display: none;
+    /* Ẩn logo bên trái để tối ưu không gian */
   }
 
   .login-container {
@@ -203,7 +206,8 @@ button:hover {
     margin-bottom: 20px;
   }
 
-  input, button {
+  input,
+  button {
     font-size: 14px;
   }
 
@@ -211,4 +215,3 @@ button:hover {
     font-size: 12px;
   }
 }
-
