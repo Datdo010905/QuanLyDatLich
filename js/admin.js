@@ -1,103 +1,261 @@
-// Minimal admin interactions (sidebar, sections, modal, sample data)
-document.addEventListener('DOMContentLoaded', () => {
-  const sidebar = document.getElementById('sidebar');
-  const toggle = document.getElementById('toggleSidebar');
-  const navLinks = document.querySelectorAll('.sidebar nav a');
-  const sections = document.querySelectorAll('.section');
-  const modal = document.getElementById('modal');
-  const modalClose = modal.querySelector('.modal-close');
-  const cancelModal = document.getElementById('cancelModal');
-  const addUserBtn = document.getElementById('addUserBtn');
-  const usersTableBody = document.querySelector('#usersTable tbody');
-  const recentTableBody = document.querySelector('#recentTable tbody');
+// Kiểm tra quyền admin
+window.onload = function () {
+  const loggedInUser = localStorage.getItem("loggedInUser");
+  // if (!userLogin) {
+  //   alert("Bạn không có quyền truy cập trang này!");
+  //   window.location.href = "login.html";
+  //   return;
+  // }
 
-  // sample data
-  const users = [
-    {id:1,name:'Đạt Đỗ',contact:'dat@example.com',created:'2025-01-10'},
-    {id:2,name:'Dương Gió',contact:'0352512556',created:'2025-02-02'}
-  ];
-  const recent = [
-    {time:'2025-10-01 09:12',event:'Đặt lịch',user:'Đạt Đỗ'},
-    {time:'2025-10-01 08:40',event:'Đăng ký',user:'Dương Gió'}
-  ];
+  document.getElementById("login-hello").textContent = loggedInUser;
 
-  function renderUsers(){
-    usersTableBody.innerHTML = users.map(u => `
-      <tr>
-        <td>${u.id}</td>
-        <td>${u.name}</td>
-        <td>${u.contact}</td>
-        <td>${u.created}</td>
-        <td>
-          <button class="btn" data-id="${u.id}" onclick="editUser(${u.id})">Sửa</button>
-          <button class="btn" data-id="${u.id}" onclick="deleteUser(${u.id})">Xóa</button>
-        </td>
-      </tr>`).join('');
-    document.getElementById('totalUsers').textContent = users.length;
-  }
+  loadDashboard();
+  renderAllTables();
+};
 
-  function renderRecent(){
-    recentTableBody.innerHTML = recent.map(r => `<tr><td>${r.time}</td><td>${r.event}</td><td>${r.user}</td></tr>`).join('');
-  }
+// Đăng xuất
+function dangXuat() {
+  localStorage.removeItem("userLogin");
+  window.location.href = "login.html";
+}
+//chuyển nav
+document.addEventListener("DOMContentLoaded", () => {
+  const navLinks = document.querySelectorAll(".sidebar nav a");
+  const sections = document.querySelectorAll(".section");
 
-  // expose simple actions to window for inline buttons
-  window.editUser = (id) => {
-    const u = users.find(x=>x.id===id);
-    if(!u) return;
-    openModal('Sửa khách hàng', {name:u.name,contact:u.contact}, (formData) => {
-      u.name = formData.name; u.contact = formData.contact;
-      renderUsers(); closeModal();
-    });
-  };
-  window.deleteUser = (id) => {
-    if(!confirm('Xóa khách hàng?')) return;
-    const idx = users.findIndex(x=>x.id===id);
-    if(idx>-1) users.splice(idx,1);
-    renderUsers();
-  };
+  navLinks.forEach(link => {
+    link.addEventListener("click", () => {
+      // Bỏ active cũ
+      navLinks.forEach(l => l.classList.remove("active"));
+      sections.forEach(s => s.classList.remove("active-section"));
 
-  // modal helpers
-  function openModal(title, data = {}, onSubmit){
-    modal.classList.add('active'); modal.setAttribute('aria-hidden','false');
-    document.getElementById('modalTitle').textContent = title;
-    const form = document.getElementById('modalForm');
-    form.name.value = data.name || '';
-    form.contact.value = data.contact || '';
-    form.onsubmit = (e) => {
-      e.preventDefault();
-      const fd = {name: form.name.value.trim(), contact: form.contact.value.trim()};
-      if(onSubmit) onSubmit(fd);
-    };
-  }
-  function closeModal(){ modal.classList.remove('active'); modal.setAttribute('aria-hidden','true'); }
-
-  // open add user
-  addUserBtn?.addEventListener('click', () => {
-    openModal('Thêm khách hàng', {}, (formData) => {
-      const id = users.length ? users[users.length-1].id+1 : 1;
-      users.push({id,name:formData.name,contact:formData.contact,created:new Date().toISOString().slice(0,10)});
-      renderUsers(); closeModal();
+      // Gán active mới
+      link.classList.add("active");
+      const targetId = link.getAttribute("data-section");
+      const target = document.getElementById(targetId);
+      if (target) target.classList.add("active-section");
     });
   });
-
-  modalClose.addEventListener('click', closeModal);
-  cancelModal?.addEventListener('click', closeModal);
-  modal.addEventListener('click', e => { if(e.target===modal) closeModal(); });
-
-  // sidebar toggle and navigation
-  toggle?.addEventListener('click', () => {
-    if(window.innerWidth <= 900) sidebar.classList.toggle('open');
-  });
-  navLinks.forEach(a=>{
-    a.addEventListener('click', () => {
-      navLinks.forEach(n=>n.classList.remove('active'));
-      a.classList.add('active');
-      const target = a.getAttribute('data-section');
-      sections.forEach(s => s.id === target ? s.classList.add('active-section') : s.classList.remove('active-section'));
-      if(window.innerWidth<=900) sidebar.classList.remove('open');
-    });
-  });
-
-  // initial render
-  renderUsers(); renderRecent();
 });
+
+// ================== DASHBOARD ==================
+function loadDashboard() {
+  document.getElementById("totalUsers").textContent = KHACHHANG.length;
+  document.getElementById("todayBookings").textContent = LICHHEN.length;
+  const tongDoanhThu = HOADON.reduce((sum, hd) => sum + hd.TONGTIEN, 0);
+  document.getElementById("revenue").textContent = tongDoanhThu.toLocaleString("vi-VN") + "₫";
+}
+
+// ================== HIỂN THỊ DỮ LIỆU ==================
+function renderAllTables() {
+  renderAccounts();
+  renderBranches();
+  renderCustomers();
+  renderStaff();
+  renderServices();
+  renderSkincare();
+  renderPromotions();
+  renderInvoices();
+  renderBookings();
+}
+
+
+// 1️⃣ TÀI KHOẢN
+function renderAccounts() {
+  const tbody = document.querySelector("#accountsTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = TAIKHOAN.map(tk => `
+    <tr>
+      <td>${tk.MATK}</td>
+      <td>${tk.PASS}</td>
+      <td>${tk.PHANQUYEN}</td>
+      <td>${tk.TRANGTHAI}</td>
+      <td class="actions">
+        <button class="btn small edit" data-id="${tk.MATK}"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${tk.MATK}"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// 2️⃣ CHI NHÁNH
+function renderBranches() {
+  const tbody = document.querySelector("#branchesTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = CHINHANH.map(cn => `
+    <tr>
+      <td>${cn.MACHINHANH}</td>
+      <td>${cn.TENCHINHANH}</td>
+      <td>${cn.DIACHI}</td>
+      <td>${cn.SDT}</td>
+      <td class="actions">
+        <button class="btn small edit" data-id="${cn.MACHINHANH}"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${cn.MACHINHANH}"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// 3️⃣ KHÁCH HÀNG
+function renderCustomers() {
+  const tbody = document.querySelector("#customersTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = KHACHHANG.map(kh => `
+    <tr>
+      <td>${kh.MAKH}</td>
+      <td>${kh.HOTEN}</td>
+      <td>${kh.SDT}</td>
+      <td>${kh.MATK}</td>
+      <td class="actions">
+        <button class="btn small edit" data-id="${kh.MAKH}"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${kh.MAKH}"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// 4️⃣ NHÂN VIÊN
+function renderStaff() {
+  const tbody = document.querySelector("#staffTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = NHANVIEN.map(nv => `
+    <tr>
+      <td>${nv.MANV}</td>
+      <td>${nv.HOTEN}</td>
+      <td>${nv.CHUCVU}</td>
+      <td>${nv.SDT}</td>
+      <td>${nv.DIACHI}</td>
+      <td>${nv.NGAYSINH}</td>
+      <td>${nv.MATK}</td>
+      <td>${nv.MACHINHANH}</td>
+      <td class="actions">
+        <button class="btn small edit" data-id="${nv.MANV}"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${nv.MANV}"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// 5️⃣ DỊCH VỤ TÓC
+function renderServices() {
+  const tbody = document.querySelector("#hairServicesTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = DICHVU.map(dv => `
+    <tr>
+      <td>${dv.MADV}</td>
+      <td>${dv.TENDV}</td>
+      <td>${dv.MOTA}</td>
+      <td>${dv.THOIGIAN} phút</td>
+      <td>${dv.GIADV.toLocaleString("vi-VN")}₫</td>
+      <td>${dv.TRANGTHAI}</td>
+      <td><img src="${dv.ANH}" alt="${dv.TENDV}" width="60"></td>
+      <td>${dv.QUYTRINH}</td>
+      <td class="actions">
+        <button class="btn small edit" data-id="${dv.MADV}"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${dv.MADV}"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// 6️⃣ DỊCH VỤ CHĂM SÓC DA
+function renderSkincare() {
+  const tbody = document.querySelector("#skinCareServicesTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = CHAMSOCDA.map(cs => `
+    <tr>
+      <td>${cs.MADV}</td>
+      <td>${cs.TENDV}</td>
+      <td>${cs.MOTA}</td>
+      <td>${cs.THOIGIAN} phút</td>
+      <td>${cs.GIADV.toLocaleString("vi-VN")}₫</td>
+      <td>${cs.TRANGTHAI}</td>
+      <td><img src="${cs.ANH}" alt="${cs.TENDV}" width="60"></td>
+      <td>${cs.QUYTRINH}</td>
+      <td class="actions">
+        <button class="btn small edit" data-id="${cs.MADV}"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${cs.MADV}"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// 7️⃣ KHUYẾN MÃI
+function renderPromotions() {
+  const tbody = document.querySelector("#promotionsTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = KHUYENMAI.map(km => `
+    <tr>
+      <td>${km.MAKM}</td>
+      <td>${km.TENKM}</td>
+      <td>${km.MOTA}</td>
+      <td>${km.NGAYBD}</td>
+      <td>${km.NGAYKT}</td>
+      <td>${(km.GIATRI * 100).toFixed(0)}%</td>
+      <td>${km.TRANGTHAI}</td>
+      <td class="actions">
+        <button class="btn small edit" data-id="${km.MAKM}"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${km.MAKM}"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// 8️⃣ LỊCH HẸN
+function renderBookings() {
+  const tbody = document.querySelector("#bookingsTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = LICHHEN.map(lh => `
+    <tr>
+      <td>${lh.MALICH}</td>
+      <td>${lh.NGAYHEN}</td>
+      <td>${lh.TRANGTHAI}</td>
+      <td>${lh.MANV}</td>
+      <td>${lh.MAKH}</td>
+      <td>${lh.MACHINHANH}</td>
+      <td class="actions">
+        <button class="btn small edit" data-id="${lh.MALICH}"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${lh.MALICH}"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// 9️⃣ CHI TIẾT LỊCH HẸN
+function renderBookingDetails() {
+  const tbody = document.querySelector("#bookingDetailsTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = CHITIETLICHHEN.map(ct => `
+    <tr>
+      <td>${ct.MALICH}</td>
+      <td>${ct.MADV}</td>
+      <td>${ct.SOLUONG}</td>
+      <td>${ct.GHICHU}</td>
+      <td class="actions">
+        <button class="btn small edit" data-id="${ct.MALICH}-${ct.MADV}"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${ct.MALICH}-${ct.MADV}"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// 🔟 HÓA ĐƠN
+function renderInvoices() {
+  const tbody = document.querySelector("#invoicesTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = HOADON.map(hd => `
+    <tr>
+      <td>${hd.MAHD}</td>
+      <td>${hd.MAKM ?? "Không có"}</td>
+      <td>${hd.TONGTIEN.toLocaleString("vi-VN")}₫</td>
+      <td>${hd.HINHTHUCTHANHTOAN}</td>
+      <td>${hd.MANV}</td>
+      <td>${hd.MALICH}</td>
+      <td>${hd.TRANGTHAI}</td>
+      <td class="actions">
+        <button class="btn small edit" data-id="${hd.MAHD}"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${hd.MAHD}"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}

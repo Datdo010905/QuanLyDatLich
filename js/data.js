@@ -4,6 +4,11 @@ const TAIKHOAN = [
   { MATK: "nhanvien", PASS: "1", PHANQUYEN: 2, TRANGTHAI: "Hoạt động" },
   { MATK: "0352512556", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
   { MATK: "dotiendat", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
+  { MATK: "dotiendat1", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
+  { MATK: "dotiendat2", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
+  { MATK: "dotiendat3", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
+  { MATK: "dotiendat4", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
+  { MATK: "dotiendat5", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
 ];
 // BẢNG CHI NHÁNH
 const CHINHANH = [
@@ -15,11 +20,11 @@ const CHINHANH = [
 
 // BẢNG KHÁCH HÀNG
 const KHACHHANG = [
-  { MAKH: "KH001", HOTEN: "Nguyễn Văn An", SDT: "0912345678", MATK: "TK003" },
-  { MAKH: "KH002", HOTEN: "Trần Thị Bình", SDT: "0987654321", MATK: "TK004" },
-  { MAKH: "KH003", HOTEN: "Lê Văn Cường", SDT: "0909123456", MATK: "TK006" },
-  { MAKH: "KH004", HOTEN: "Phạm Thị Dung", SDT: "0911987654", MATK: "TK007" },
-  { MAKH: "KH005", HOTEN: "Đỗ Hữu Phúc", SDT: "0978123456", MATK: "TK008" },
+  { MAKH: "KH001", HOTEN: "Nguyễn Văn An", SDT: "0912345678", MATK: "dotiendat1" },
+  { MAKH: "KH002", HOTEN: "Trần Thị Bình", SDT: "0987654321", MATK: "dotiendat2" },
+  { MAKH: "KH003", HOTEN: "Lê Văn Cường", SDT: "0909123456", MATK: "dotiendat3" },
+  { MAKH: "KH004", HOTEN: "Phạm Thị Dung", SDT: "0911987654", MATK: "dotiendat4" },
+  { MAKH: "KH005", HOTEN: "Đỗ Hữu Phúc", SDT: "0978123456", MATK: "dotiendat5" },
 ];
 
 const NHANVIEN = [
@@ -119,11 +124,11 @@ const CHAMSOCDA = [
 ];
 // BẢNG KHUYẾN MÃI
 const KHUYENMAI = [
-  { MAKM: "KM001", TENKM: "Giảm giá khai trương", MOTA: "Giảm 20% tất cả dịch vụ", NGAYBD: "2025-01-01", NGAYKT: "2025-02-01", GIATRI: 0.2, TRANGTHAI: "Hết hạn", DIEUKIENAPDUNG: "Áp dụng cho mọi khách hàng" },
-  { MAKM: "KM002", TENKM: "Thứ 4 vui vẻ", MOTA: "Giảm 15% dịch vụ cắt tóc", NGAYBD: "2025-03-01", NGAYKT: "2025-12-31", GIATRI: 0.15, TRANGTHAI: "Đang áp dụng", DIEUKIENAPDUNG: "Áp dụng thứ 4 hàng tuần" },
-  { MAKM: "KM003", TENKM: "Sinh nhật khách hàng", MOTA: "Giảm 30% cho khách có sinh nhật trong tháng", NGAYBD: "2025-01-01", NGAYKT: "2025-12-31", GIATRI: 0.3, TRANGTHAI: "Đang áp dụng", DIEUKIENAPDUNG: "Theo tháng sinh" },
-  { MAKM: "KM004", TENKM: "Mùa hè sôi động", MOTA: "Combo cắt + gội chỉ 150k", NGAYBD: "2025-05-01", NGAYKT: "2025-08-31", GIATRI: 0.25, TRANGTHAI: "Hết hạn", DIEUKIENAPDUNG: "Áp dụng combo DV001 và DV002" },
-  { MAKM: "KM005", TENKM: "Khách hàng thân thiết", MOTA: "Giảm 10% tổng hóa đơn", NGAYBD: "2025-01-01", NGAYKT: "2025-12-31", GIATRI: 0.1, TRANGTHAI: "Đang áp dụng", DIEUKIENAPDUNG: "Khách hàng có >=5 lượt hẹn" },
+  { MAKM: "KM001", TENKM: "Giảm giá khai trương", MOTA: "Giảm 20% tất cả dịch vụ", NGAYBD: "2025-01-01", NGAYKT: "2025-02-01", GIATRI: 0.2, TRANGTHAI: "Hết hạn"},
+  { MAKM: "KM002", TENKM: "Thứ 4 vui vẻ", MOTA: "Giảm 15% dịch vụ cắt tóc", NGAYBD: "2025-03-01", NGAYKT: "2025-12-31", GIATRI: 0.15, TRANGTHAI: "Đang áp dụng"},
+  { MAKM: "KM003", TENKM: "Sinh nhật khách hàng", MOTA: "Giảm 30% cho khách", NGAYBD: "2025-01-01", NGAYKT: "2025-12-31", GIATRI: 0.3, TRANGTHAI: "Đang áp dụng" },
+  { MAKM: "KM004", TENKM: "Mùa hè sôi động", MOTA: "Combo cắt + gội chỉ 150k", NGAYBD: "2025-05-01", NGAYKT: "2025-08-31", GIATRI: 0.25, TRANGTHAI: "Hết hạn" },
+  { MAKM: "KM005", TENKM: "Khách hàng thân thiết", MOTA: "Giảm 10% tổng hóa đơn", NGAYBD: "2025-01-01", NGAYKT: "2025-12-31", GIATRI: 0.1, TRANGTHAI: "Đang áp dụng" },
 ];
 
 const LICHHEN = [

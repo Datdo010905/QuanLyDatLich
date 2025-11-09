@@ -203,8 +203,27 @@
   padding: 20px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
+  overflow-x: auto;
+}
+.panel::-webkit-scrollbar {
+    height: 10px;
 }
 
+.panel::-webkit-scrollbar-thumb::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 12px;
+}
+
+.panel::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #6b8cff, #3558d6);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 3px 8px rgba(53, 88, 214, 0.22);
+}
+
+.panel::-webkit-scrollbar-thumb:hover {
+    box-shadow: 0 6px 14px rgba(53, 88, 214, 0.32);
+}
 .header-actions {
   display: flex;
   justify-content: space-between;
@@ -215,6 +234,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
+  white-space: nowrap;
 }
 
 .table th,
@@ -250,13 +270,13 @@
 }
 
 .btn.primary {
-  background: #3b82f6;
+  background: #0caa01b6;
   color: #fff;
 }
 
 .btn.primary:hover {
-  background: #2563eb;
-}
+  background: #014b13c0;
+} 
 
 /* ========== MODAL ========== */
 .modal {
@@ -352,3 +372,30 @@
 .accounts .row strong {
     float: right;
 }
+
+.table .actions {
+  white-space: nowrap;
+}
+
+.btn.small {
+  background: #f0f0f0;
+  border: none;
+  padding: 4px 6px;
+  margin: 0 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn.small:hover {
+  background: #dcdcdc;
+}
+
+.btn.small.edit {
+  color: #0164f9;
+}
+
+.btn.small.delete {
+  color: #e53935;
+}
+

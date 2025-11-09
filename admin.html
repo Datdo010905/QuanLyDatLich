@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Admin - 30Shine</title>
     <link rel="stylesheet" href="css/admin.css" />
-    <link rel="icon" href="img/logo.png" />
-    <script src="js/login.js"></script>
-    <script src="js/auth.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/admin.js"></script>
+    <link rel="icon" href="img/logo.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
@@ -17,31 +18,28 @@
     <div class="admin-layout">
         <aside class="sidebar" id="sidebar">
             <div class="brand">
-                <img src="img/logo.png" alt="logo" />
-
+                <a href="admin.html"><img src="img/logo.png" alt="logo" /></a>
             </div>
             <nav>
-                <!-- data-section như single page -->
                 <a class="active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
                 <a data-section="accounts"><i class="fas fa-user-shield"></i> Tài khoản</a>
-
                 <a data-section="promotions"><i class="fas fa-tags"></i> Khuyến mại</a>
-
                 <a data-section="services"><i class="fas fa-concierge-bell"></i> Dịch vụ</a>
-
                 <a data-section="customers"><i class="fas fa-users"></i> Khách hàng</a>
-
                 <a data-section="staff"><i class="fas fa-user-tie"></i> Nhân viên</a>
-
                 <a data-section="invoices"><i class="fas fa-file-invoice-dollar"></i> Hoá đơn</a>
-
                 <a data-section="bookings"><i class="fas fa-calendar-check"></i> Lịch hẹn</a>
-
                 <a data-section="reports"><i class="fas fa-chart-line"></i> Báo cáo</a>
             </nav>
+
             <div class="accounts">
-              <div class="row"><span><button onclick="dangXuat()" class="logout-btn"><i class="fas fa-right-from-bracket"></i></button> Người dùng:</span><strong id = "login-hello"> </strong></div>
+                <div class="row">
+                    <span><button onclick="dangXuat()" class="logout-btn"><i
+                                class="fas fa-right-from-bracket"></i></button> Người dùng:</span>
+                    <strong id="login-hello"></strong>
+                </div>
             </div>
+
             <div class="sidebar-footer">
                 <button id="logoutBtn" onclick="dangXuat(event)"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
             </div>
@@ -57,6 +55,7 @@
             </header>
 
             <section class="content" id="content">
+
                 <!-- Dashboard -->
                 <div id="dashboard" class="section active-section">
                     <div class="cards">
@@ -88,23 +87,170 @@
                     </div>
                 </div>
 
-                <!-- Users -->
-                <div id="users" class="section">
+                <!-- Accounts -->
+                <div id="accounts" class="section">
                     <div class="panel header-actions">
-                        <h2>Quản lý khách hàng</h2>
-                        <div>
-                            <button id="addUserBtn" class="btn primary">Thêm khách</button>
-                        </div>
+                        <h2>Tài khoản</h2>
+                        <button id="addAccountBtn" class="btn primary">Thêm tài khoản</button>
                     </div>
                     <div class="panel">
-                        <table class="table" id="usersTable">
+                        <table class="table" id="accountsTable">
+                            <thead>
+                                <tr>
+                                    <th>Tên đăng nhập</th>
+                                    <th>Mật khẩu</th>
+                                    <th>Quyền hạn</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Promotions -->
+                <div id="promotions" class="section">
+                    <div class="panel header-actions">
+                        <h2>Khuyến mại</h2>
+                        <button id="addPromotionBtn" class="btn primary">Thêm khuyến mại</button>
+                    </div>
+                    <div class="panel">
+                        <table class="table" id="promotionsTable">
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Họ tên</th>
-                                    <th>Email / SĐT</th>
-                                    <th>Ngày tạo</th>
+                                    <th>Tên Khuyến Mãi</th>
+                                    <th>Mô Tả</th>
+                                    <th>Ngày bắt đầu</th>
+                                    <th>Ngày kết thúc</th>
+                                    <th>Giá Trị</th>
+                                    <th>Trạng Thái</th>
                                     <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="services" class="section">
+                    <div class="panel header-actions">
+                        <h2>Dịch vụ</h2>
+                        <button id="addServiceBtn" class="btn primary">Thêm dịch vụ</button>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Tóc</h3>
+                        <div class="table-wrapper">
+                            <table class="table" id="hairServicesTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên Dịch Vụ</th>
+                                        <th>Mô Tả</th>
+                                        <th>Thời Gian (phút)</th>
+                                        <th>Giá (VND)</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Ảnh</th>
+                                        <th>Quy Trình</th>
+                                        <th>Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hairServicesTbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Chăm sóc da & Thư giãn</h3>
+                        <div class="table-wrapper">
+                            <table class="table" id="skinCareServicesTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên Dịch Vụ</th>
+                                        <th>Mô Tả</th>
+                                        <th>Thời Gian (phút)</th>
+                                        <th>Giá (VND)</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Ảnh</th>
+                                        <th>Quy Trình</th>
+                                        <th>Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="skinCareServicesTbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Customers -->
+                <div id="customers" class="section">
+                    <div class="panel header-actions">
+                        <h2>Khách hàng</h2>
+                        <button id="addCustomerBtn" class="btn primary">Thêm khách</button>
+                    </div>
+                    <div class="panel">
+                        <table class="table" id="customersTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ và tên</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Tài khoản</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Staff -->
+                <div id="staff" class="section">
+                    <div class="panel header-actions">
+                        <h2>Nhân viên</h2>
+                        <button id="addStaffBtn" class="btn primary">Thêm nhân viên</button>
+                    </div>
+                    <div class="panel">
+                        <table class="table" id="staffTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ Tên</th>
+                                    <th>Chức Vụ</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Ngày Sinh</th>
+                                    <th>Tài khoản</th>
+                                    <th>Chi nhánh</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Invoices -->
+                <div id="invoices" class="section">
+                    <div class="panel header-actions">
+                        <h2>Hoá đơn</h2>
+                        <button id="addStaffBtn" class="btn primary">Thêm hoá đơn</button>
+                    </div>
+                    <div class="panel">
+                        <table class="table" id="invoicesTable">
+                            <thead>
+                                <tr>
+                                    <th>Mã HĐ</th>
+                                    <th>Mã KM</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Hình Thức TT</th>
+                                    <th>Mã NV</th>
+                                    <th>Mã Lịch Hẹn</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Hành Động</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -114,16 +260,21 @@
 
                 <!-- Bookings -->
                 <div id="bookings" class="section">
+                    <div class="panel header-actions">
+                        <h2>Lịch hẹn</h2>
+                        <button id="addStaffBtn" class="btn primary">Thêm lịch hẹn</button>
+                    </div>
                     <div class="panel">
-                        <h2>Đặt lịch</h2>
                         <table class="table" id="bookingsTable">
                             <thead>
                                 <tr>
-                                    <th>Mã</th>
-                                    <th>Khách</th>
-                                    <th>Dịch vụ</th>
-                                    <th>Ngày/giờ</th>
-                                    <th>Trạng thái</th>
+                                    <th>Mã Lịch Hẹn</th>
+                                    <th>Ngày Hẹn</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Mã NV</th>
+                                    <th>Mã KH</th>
+                                    <th>Mã Chi Nhánh</th>
+                                    <th>Hành Động</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -131,59 +282,17 @@
                     </div>
                 </div>
 
-                <!-- Services -->
-                <div id="services" class="section">
-                    <div class="panel header-actions">
-                        <h2>Dịch vụ</h2>
-                        <button id="addServiceBtn" class="btn">Thêm dịch vụ</button>
-                    </div>
-                    <div class="panel">
-                        <table class="table" id="servicesTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Tên</th>
-                                    <th>Thời gian</th>
-                                    <th>Giá</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-
+                <!-- Reports -->
                 <div id="reports" class="section">
                     <div class="panel">
                         <h2>Báo cáo</h2>
                         <p>Coming soon.</p>
                     </div>
                 </div>
-                <div id="settings" class="section">
-                    <div class="panel">
-                        <h2>Cài đặt</h2>
-                        <p>Coming soon.</p>
-                    </div>
-                </div>
+
             </section>
         </main>
     </div>
-
-    <div id="modal" class="modal" aria-hidden="true">
-        <div class="modal-body">
-            <button class="modal-close" aria-label="Đóng">&times;</button>
-            <h3 id="modalTitle">Form</h3>
-            <form id="modalForm">
-                <div class="form-row"><label>Tên</label><input name="name" required /></div>
-                <div class="form-row"><label>Email / SĐT</label><input name="contact" required /></div>
-                <div class="form-row actions">
-                    <button type="submit" class="btn primary">Lưu</button>
-                    <button type="button" class="btn" id="cancelModal">Hủy</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="js/admin.js"></script>
 </body>
 
 </html>
