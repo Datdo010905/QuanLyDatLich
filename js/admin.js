@@ -60,7 +60,7 @@ function renderAllTables() {
 }
 
 
-// 1️⃣ TÀI KHOẢN
+// TÀI KHOẢN
 function renderAccounts() {
   const tbody = document.querySelector("#accountsTable tbody");
   if (!tbody) return;
@@ -78,7 +78,7 @@ function renderAccounts() {
   `).join("");
 }
 
-// 2️⃣ CHI NHÁNH
+// CHI NHÁNH
 function renderBranches() {
   const tbody = document.querySelector("#branchesTable tbody");
   if (!tbody) return;
@@ -96,7 +96,7 @@ function renderBranches() {
   `).join("");
 }
 
-// 3️⃣ KHÁCH HÀNG
+// KHÁCH HÀNG
 function renderCustomers() {
   const tbody = document.querySelector("#customersTable tbody");
   if (!tbody) return;
@@ -114,7 +114,7 @@ function renderCustomers() {
   `).join("");
 }
 
-// 4️⃣ NHÂN VIÊN
+// NHÂN VIÊN
 function renderStaff() {
   const tbody = document.querySelector("#staffTable tbody");
   if (!tbody) return;
@@ -136,7 +136,7 @@ function renderStaff() {
   `).join("");
 }
 
-// 5️⃣ DỊCH VỤ TÓC
+//DỊCH VỤ TÓC
 function renderServices() {
   const tbody = document.querySelector("#hairServicesTable tbody");
   if (!tbody) return;
@@ -158,7 +158,7 @@ function renderServices() {
   `).join("");
 }
 
-// 6️⃣ DỊCH VỤ CHĂM SÓC DA
+// DỊCH VỤ CHĂM SÓC DA
 function renderSkincare() {
   const tbody = document.querySelector("#skinCareServicesTable tbody");
   if (!tbody) return;
@@ -180,7 +180,7 @@ function renderSkincare() {
   `).join("");
 }
 
-// 7️⃣ KHUYẾN MÃI
+// KHUYẾN MÃI
 function renderPromotions() {
   const tbody = document.querySelector("#promotionsTable tbody");
   if (!tbody) return;
@@ -201,7 +201,7 @@ function renderPromotions() {
   `).join("");
 }
 
-// 8️⃣ LỊCH HẸN
+// LỊCH HẸN
 function renderBookings() {
   const tbody = document.querySelector("#bookingsTable tbody");
   if (!tbody) return;
@@ -221,7 +221,7 @@ function renderBookings() {
   `).join("");
 }
 
-// 9️⃣ CHI TIẾT LỊCH HẸN
+// CHI TIẾT LỊCH HẸN
 function renderBookingDetails() {
   const tbody = document.querySelector("#bookingDetailsTable tbody");
   if (!tbody) return;
@@ -239,7 +239,7 @@ function renderBookingDetails() {
   `).join("");
 }
 
-// 🔟 HÓA ĐƠN
+// HÓA ĐƠN
 function renderInvoices() {
   const tbody = document.querySelector("#invoicesTable tbody");
   if (!tbody) return;

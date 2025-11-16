@@ -12,6 +12,8 @@
   max-width: 1100px;
   padding: 25px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  overflow: hidden;
+  overflow-x: auto;
 }
 
 .lichsu-box h1 {
@@ -50,17 +52,43 @@
   font-weight: bold;
 }
 
-.status.success {
-  background-color: #d4edda;
-  color: #155724;
+.status.đã-đặt {
+  color: #1059ac;
 }
 
-.status.cancel {
-  background-color: #f8d7da;
-  color: #721c24;
+.status.đang-chờ {
+  color: #c6ba0f;
 }
 
-.status.pending {
-  background-color: #fff3cd;
+.status.đang-thực-hiện {
   color: #856404;
+}
+.status.hoàn-thành {
+  color: #148a30;
+}
+
+.status.đã-huỷ {
+  color: #fb0019;
+}
+
+.btn.small {
+  background: #f0f0f0;
+  border: none;
+  padding: 4px 6px;
+  margin: 0 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn.small:hover {
+  background: #dcdcdc;
+}
+
+.btn.small.view {
+  color: #0164f9;
+}
+
+.btn.small.delete {
+  color: #e53935;
 }

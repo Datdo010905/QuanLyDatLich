@@ -1,21 +1,20 @@
-<!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lịch sử lịch hẹn - 30Shine</title>
-  <link rel="icon" href="img/logo.png" type="image/png" sizes="16x16">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/lichhen.css">
-  <link rel="stylesheet" href="css/lichsu.css">
-  <script src="js/lichsu.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/login.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lịch sử lịch hẹn - 30Shine</title>
+	<link rel="icon" href="img/logo.png" type="image/png" sizes="16x16">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/lichsu.css">
+	<script src="js/data.js"></script>
+	<script src="js/lichsu.js"></script>
+	<script src="js/auth.js"></script>
+	<script src="js/login.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 
 <body>
-  <div id="header1">
+	<div id="header1">
 		<div id="top1">
 			<div id="h_left">
 				<div id="left_1">
@@ -94,7 +93,7 @@
 		</div>
 	</div>
 
-  <div id="menu">
+	<div id="menu">
 
 		<div id="menu-item">
 			<ul>
@@ -138,56 +137,48 @@
 		</div>
 	</div>
 
-  <!-- LỊCH SỬ LỊCH HẸN -->
-  <div id="lichsu-container">
-    <div class="lichsu-box">
-      <h1>LỊCH SỬ LỊCH HẸN CỦA BẠN</h1>
-      <table class="lichsu-table">
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Chi nhánh</th>
-            <th>Dịch vụ</th>
-            <th>Thợ cắt tóc</th>
-            <th>Ngày hẹn</th>
-            <th>Giờ hẹn</th>
-            <th>Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>30Shine - Nguyễn Trãi</td>
-            <td>Cắt tóc nam</td>
-            <td>Nguyễn Văn Dũng</td>
-            <td>2025-11-02</td>
-            <td>09:00</td>
-            <td><span class="status success">Hoàn thành</span></td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>30Shine - Cầu Giấy</td>
-            <td>Uốn tóc</td>
-            <td>Lê Thị Mai</td>
-            <td>2025-10-25</td>
-            <td>14:00</td>
-            <td><span class="status cancel">Đã huỷ</span></td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>30Shine - Đà Nẵng</td>
-            <td>Gội đầu thư giãn</td>
-            <td>Đỗ Thành Đạt</td>
-            <td>2025-10-10</td>
-            <td>10:30</td>
-            <td><span class="status pending">Chưa tới</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+	<!-- LỊCH SỬ LỊCH HẸN -->
+	<div id="lichsu-container">
+		<div class="lichsu-box">
+			<h1>LỊCH SỬ LỊCH HẸN CỦA BẠN</h1>
 
-  <div class="clear"></div>
+			<table class="lichsu-table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Chi nhánh</th>
+						<th>Thợ cắt tóc</th>
+						<th>Ngày hẹn</th>
+						<th>Giờ hẹn</th>
+						<th>Trạng thái</th>
+						<th>Hành động</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+
+			<div id="booking-details" class="booking-details" style="display: none;">
+				<h3 id="tieudechitiet">Chi tiết lịch hẹn</h3>
+				<table class="lichsu-table">
+					<thead>
+						<tr>
+							<th>Dịch vụ</th>
+							<th>Số lượng sử dụng</th>
+							<th>Đơn giá</th>
+							<th>Thành tiền</th>
+							<th>Ghi chú</th>
+						</tr>
+					</thead>
+					<tbody id="detail-table-body">
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="clear"></div>
 	<div id="footer">
 		<div id="fo-content">
 
@@ -263,4 +254,5 @@
 			</svg></a>
 	</div>
 </body>
+
 </html>
