@@ -6,14 +6,19 @@ let LICHHEN_KH = [];
 
 if (khachhang) {
     console.log("Khách hàng đăng nhập:", khachhang);
-    LICHHEN_KH = LICHHEN.filter(lh => lh.MAKH === khachhang.MAKH);
+    // LƯU LỊCH HẸN CỦA KHÁCH HÀNG VÀO LOCALSTORAGE NẾU CHƯA TỒN TẠI
+    if (!localStorage.getItem('danhSachLichHen')) {
+        const LICHHEN_KH = LICHHEN.filter(lh => lh.MAKH === khachhang.MAKH);
+        localStorage.setItem('danhSachLichHen', JSON.stringify(LICHHEN_KH));
+    } 
 } else {
-    alert("Không tìm thấy thông tin khách hàng hoặc chưa đăng nhập.");
+    console.warn("Không tìm thấy thông tin khách hàng hoặc chưa đăng nhập.");
 }
 
 // LỊCH HẸN
 function renderBookingsForCustomer() {
     const tbody = document.querySelector(".lichsu-table tbody");
+    const LICHHEN_KH = JSON.parse(localStorage.getItem('danhSachLichHen')) || [];
     if (!tbody) {
         return;
     }
@@ -27,7 +32,7 @@ function renderBookingsForCustomer() {
         const TENNV = NHANVIEN.find(nv => nv.MANV === lh.MANV)?.HOTEN || "Chưa rõ";
         const trangThaiClass = (lh.TRANGTHAI || "").toLowerCase()
             .replace(/ /g, '-') // thay ' ' bằng '-'
-            console.log("Trạng thái lớp:", trangThaiClass);
+            //console.log("Trạng thái lớp:", trangThaiClass);
         return `
       <tr>
         <td>${lh.MALICH}</td>
@@ -100,21 +105,22 @@ function xemChiTiet(malich) {
 document.addEventListener("DOMContentLoaded", () => {
     renderBookingsForCustomer();
 }); 
-
-// CHI TIẾT LỊCH HẸN
+//HỦY LỊCH HẸN
 function HuyLich(malich) {
-    const huylich = LICHHEN.filter(lh => lh.MALICH === malich);
-    if (!huylich || huylich.length === 0) {
+    let danhSach = JSON.parse(localStorage.getItem('danhSachLichHen')) || [];
+    const lichHenCanHuy = danhSach.find(lh => lh.MALICH === malich);
+    if (!lichHenCanHuy) {
         alert("Không tìm thấy lịch hẹn.");
         return;
     }
     //check trạng thái khi đang chờ rồi thì không được huỷ
-    else if (huylich[0].TRANGTHAI !== "Đang chờ") {
-        alert("Chỉ có thể hủy lịch hẹn đang chờ.");
+    if (lichHenCanHuy.TRANGTHAI !== "Đang chờ" && lichHenCanHuy.TRANGTHAI !== "Đã đặt") {
+        alert(`Không thể hủy lịch hẹn ở trạng thái "${lichHenCanHuy.TRANGTHAI}".`);
         return;
     }
     else if (confirm(`Bạn có chắc chắn muốn hủy lịch hẹn ${malich} không?`)) {
-        huylich[0].TRANGTHAI = "Đã huỷ";
+        lichHenCanHuy.TRANGTHAI = "Đã huỷ";
+        localStorage.setItem('danhSachLichHen', JSON.stringify(danhSach));
         alert(`Lịch hẹn ${malich} đã được hủy.`);
         renderBookingsForCustomer();
     }
