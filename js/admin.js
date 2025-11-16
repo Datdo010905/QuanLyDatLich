@@ -58,7 +58,7 @@ window.onload = function () {
 
   const taiKhoan = TAIKHOAN.find(tk => tk.MATK === loggedInUser);
   if (!taiKhoan) {
-    alert("Tài khoản không tồn tại!");
+    //alert("Tài khoản không tồn tại!");
     window.location.href = "login.html";
     return;
   }

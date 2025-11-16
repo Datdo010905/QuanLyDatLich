@@ -1,3 +1,19 @@
+function checkdangnhap() {
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    const loginElement = document.getElementById("login-hello");
+    
+    if (!loggedInUser) {
+        window.location.href = "login.html";
+        return;
+    }
+    if (loginElement) {
+        loginElement.innerHTML = ` ${loggedInUser} 
+            <button onclick="dangXuat()" class="logout-btn">
+                <i class="fas fa-right-from-bracket"></i>
+            </button>`;
+    }
+}
+window.addEventListener("DOMContentLoaded", checkdangnhap);
 //LẤY THÔNG TIN KHÁCH HÀNG ĐĂNG NHẬP THEO SĐT HOẶC MÃ TÀI KHOẢN
 const mataikhoan = localStorage.getItem("loggedInUser");
 const khachhang = KHACHHANG.find(kh => kh.MATK === mataikhoan || kh.SDT === mataikhoan);

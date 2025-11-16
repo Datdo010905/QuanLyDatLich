@@ -56,19 +56,13 @@ function dangNhapLocal(event) {
 function checkdangnhap() {
     const loggedInUser = localStorage.getItem("loggedInUser");
     const loginElement = document.getElementById("login-hello");
-    const isLoginPage = window.location.pathname.includes("login.html");
 
-    if (isLoginPage) return;
-    
-    if (!loggedInUser) {
-        window.location.href = "login.html";
-        return;
-    }
-    if (loginElement) {
-        loginElement.innerHTML = ` ${loggedInUser} 
-            <button onclick="dangXuat()" class="logout-btn">
-                <i class="fas fa-right-from-bracket"></i>
-            </button>`;
+    if (!loginElement) return;
+
+    if (loggedInUser) {
+        loginElement.innerHTML = ` ${loggedInUser} <button onclick="dangXuat()" class="logout-btn"><i class="fas fa-right-from-bracket"></i></button>`;
+    } else {
+        loginElement.innerHTML = `<a href="login.html"> Login</a>`;
     }
 }
 window.addEventListener("DOMContentLoaded", checkdangnhap);
