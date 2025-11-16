@@ -40,7 +40,6 @@ function dangNhapLocal(event) {
   }
 
   localStorage.setItem("loggedInUser", account.MATK);
-  localStorage.setItem("isLoggedIn", "true");
   localStorage.setItem("phanQuyen", account.PHANQUYEN);
 
   if (account.PHANQUYEN === 1 || account.PHANQUYEN === 2) {
@@ -54,21 +53,29 @@ function dangNhapLocal(event) {
   return false;
 }
 
-//kiếm tra trạng thái đăng nhập
 function checkdangnhap() {
     const loggedInUser = localStorage.getItem("loggedInUser");
     const loginElement = document.getElementById("login-hello");
+    const isLoginPage = window.location.pathname.includes("login.html");
+
+    if (isLoginPage) return;
     
-    if (loggedInUser && loginElement) {
-        loginElement.innerHTML = ` ${loggedInUser} <button onclick="dangXuat()" class="logout-btn"><i class="fas fa-right-from-bracket"></i></button>`;
+    if (!loggedInUser) {
+        window.location.href = "login.html";
+        return;
+    }
+    if (loginElement) {
+        loginElement.innerHTML = ` ${loggedInUser} 
+            <button onclick="dangXuat()" class="logout-btn">
+                <i class="fas fa-right-from-bracket"></i>
+            </button>`;
     }
 }
-window.addEventListener('DOMContentLoaded', checkdangnhap);
+window.addEventListener("DOMContentLoaded", checkdangnhap);
 
 //đăng xuất
 function dangXuat() {
     localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("isLoggedIn");
     
     const loginElement = document.getElementById("login-hello");
     if (loginElement) {

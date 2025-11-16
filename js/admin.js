@@ -1,13 +1,83 @@
+// Toggle sidebar khi bấm nút menu (mobile)
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebar = document.querySelector(".sidebar");
+  const toggleBtn = document.getElementById("toggleSidebar");
+  const navLinks = document.querySelectorAll(".sidebar nav a");
+  const sections = document.querySelectorAll(".section");
+
+  // Toggle sidebar khi bấm nút menu (mobile)
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", (e) => {
+      sidebar.classList.toggle("open");
+      e.stopPropagation(); // tránh kích hoạt listener document
+    });
+  }
+
+  // Đóng sidebar khi click ra ngoài (chỉ trên mobile)
+  document.addEventListener("click", (e) => {
+    if (window.innerWidth <= 768) {
+      if (!sidebar.contains(e.target) && e.target !== toggleBtn) {
+        sidebar.classList.remove("open");
+      }
+    }
+  });
+
+  // Khi bấm 1 mục menu: chuyển section và đóng sidebar (mobile)
+  navLinks.forEach(a => {
+    a.addEventListener("click", (e) => {
+      // active class cho nav
+      navLinks.forEach(n => n.classList.remove("active"));
+      a.classList.add("active");
+
+      // bật section tương ứng
+      const targetId = a.getAttribute("data-section");
+      if (targetId && sections.length) {
+        sections.forEach(s => {
+          if (s.id === targetId) s.classList.add("active-section");
+          else s.classList.remove("active-section");
+        });
+      }
+
+      // nếu mobile thì đóng sidebar
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove("open");
+      }
+    });
+  });
+
+  // Reset khi resize
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) sidebar.classList.remove("open");
+  });
+});
+
+
 // Kiểm tra quyền admin
 window.onload = function () {
   const loggedInUser = localStorage.getItem("loggedInUser");
-  // if (!userLogin) {
-  //   alert("Bạn không có quyền truy cập trang này!");
-  //   window.location.href = "login.html";
-  //   return;
-  // }
+
+  const taiKhoan = TAIKHOAN.find(tk => tk.MATK === loggedInUser);
+  if (!taiKhoan) {
+    alert("Tài khoản không tồn tại!");
+    window.location.href = "login.html";
+    return;
+  }
+  if (taiKhoan.PHANQUYEN !== 2 && taiKhoan.PHANQUYEN !== 1) {
+    alert("Bạn không có quyền truy cập trang này!");
+    window.location.href = "login.html";
+    return;
+  }
+  //check nếu là nhân viên thì ẩn mục quản lý tài khoản, khuyến mãi, hoá đơn
+  if (taiKhoan.PHANQUYEN === 2) {
+    document.querySelector("a[data-section='dashboard']").style.display = "none";
+    document.querySelector("a[data-section='accounts']").style.display = "none";
+    document.querySelector("a[data-section='promotions']").style.display = "none";
+    document.querySelector("a[data-section='invoices']").style.display = "none";
+    document.querySelector("a[data-section='reports']").style.display = "none";
+  }
 
   document.getElementById("login-hello").textContent = loggedInUser;
+  // sidebar toggle and navigation
 
   loadDashboard();
   renderAllTables();
@@ -15,7 +85,7 @@ window.onload = function () {
 
 // Đăng xuất
 function dangXuat() {
-  localStorage.removeItem("userLogin");
+  localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
 //chuyển nav
