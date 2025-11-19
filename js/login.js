@@ -26,20 +26,23 @@ function dangNhapLocal(event) {
   let account = TAIKHOAN.find(acc => acc.MATK.toLowerCase() === user.toLowerCase() && acc.PASS === pass);
 
   //tìm tài khoản new USER đăng ký
-  const registeredUser = JSON.parse(localStorage.getItem("registeredUser"));
-  if (!account && registeredUser) {
+  const registeredUsers = JSON.parse(localStorage.getItem("registeredUser")) || [];
+  const exists = registeredUsers.find(u => u.MATK.toLowerCase() === user.toLowerCase());
+
+  if (!account && exists) {
     if (
-      registeredUser.MATK.toLowerCase() === user.toLowerCase() &&
-      registeredUser.PASS === pass
+      exists.MATK.toLowerCase() === user.toLowerCase() &&
+      exists.PASS === pass
     ) {
       account = {
-        MATK: registeredUser.MATK,
-        PASS: registeredUser.PASS,
-        PHANQUYEN: 0,            
+        MATK: exists.MATK,
+        PASS: exists.PASS,
+        PHANQUYEN: 0,
         TRANGTHAI: "Hoạt động"
       };
     }
   }
+
   // Không tồn tại tài khoản
   if (!account) {
     alert("Sai thông tin đăng nhập hoặc tài khoản không tồn tại!");
@@ -84,7 +87,7 @@ window.addEventListener("DOMContentLoaded", checkdangnhap);
 //đăng xuất
 function dangXuat() {
   localStorage.removeItem("loggedInUser");
-  localStorage.removeItem("sdt");
+  localStorage.removeItem("sodienthoai-datlich");
   localStorage.removeItem("danhSachLichHen");
 
   const loginElement = document.getElementById("login-hello");
@@ -94,7 +97,6 @@ function dangXuat() {
   window.location.href = "login.html";
 }
 
-//đăng ký
 function dangKyLocal(event) {
   event.preventDefault();
 
@@ -111,27 +113,42 @@ function dangKyLocal(event) {
     alert('Mật khẩu phải có ít nhất 8 ký tự!');
     return false;
   }
+
   const taikhoan = TAIKHOAN.find(acc => acc.MATK.toLowerCase() === user.toLowerCase());
-  if (taikhoan) {
+
+  const registeredUsers = JSON.parse(localStorage.getItem("registeredUser")) || [];
+  const exists = registeredUsers.some(u => u.MATK.toLowerCase() === user.toLowerCase());//some trả về true/false
+
+  if (taikhoan || exists) {
     alert("Tài khoản đã tồn tại. Vui lòng chọn tên đăng nhập khác.");
     return;
   }
 
   try {
-    localStorage.setItem("registeredUser", JSON.stringify
-      ({
-        MATK: user,
-        PASS: pass1,
-        PHANQUYEN: 0,
-        TRANGTHAI: "Hoạt động"
-      }));
-    localStorage.setItem("KhachHang", JSON.stringify
-      ({
-        MAKH: "KH" + Date.now(),//tạo mã khách hàng theo ngày giờ hiện tại
-        HOTEN: fullname,
-        SDT: "",
-        MATK: user
-      }));
+    // Tạo user mới
+    const newUser = {
+      MATK: user,
+      PASS: pass1,
+      PHANQUYEN: 0,
+      TRANGTHAI: "Hoạt động"
+    };
+
+    const newKH = {
+      MAKH: "KH" + Date.now(), // mã khách hàng theo timestamp
+      HOTEN: fullname,
+      SDT: "",
+      MATK: user
+    };
+
+    // Thêm vào mảng registeredUser
+    registeredUsers.push(newUser);
+    localStorage.setItem("registeredUser", JSON.stringify(registeredUsers));
+
+    // Thêm khách hàng mới
+    const khachhangList = JSON.parse(localStorage.getItem("KhachHang")) || [];
+    khachhangList.push(newKH);
+    localStorage.setItem("KhachHang", JSON.stringify(khachhangList));
+
     alert("Đăng ký thành công! Vui lòng đăng nhập.");
     window.location.href = "login.html";
   }
