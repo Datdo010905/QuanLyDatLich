@@ -152,18 +152,12 @@
 				<h2>ĐẶT LỊCH GIỮ CHỖ CHỈ 30 GIÂY</h2>
 				<p>Cắt xong trả tiền, huỷ lịch không sao</p>
 				<div class="form-row">
-					<input id="input-sdt"  oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-					type="text" placeholder="Nhập SĐT để đặt lịch" required />
+					<input id="input-sdt" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+						type="text" placeholder="Nhập SĐT để đặt lịch" required />
 					<button onclick="luusodienthoai()" id="btn-datlich">ĐẶT LỊCH NGAY</button>
-					<script>
-					function luusodienthoai() {
-						const sdt = document.getElementById("input-sdt").value;
-						localStorage.setItem("sdt", sdt); // Lưu dữ liệu
-						window.location.href = "lichhen.html"; // Chuyển trang
-						}
-					</script>
+					
 				</div>
-				
+
 			</div>
 			<div class="danhgia">
 				<h3>MỜI BẠN ĐÁNH GIÁ CHẤT LƯỢNG PHỤC VỤ</h3>
@@ -185,7 +179,7 @@
 		<div class="product">
 			<h2 id="1" class="product-title"><i class="fa-solid fa-scissors"></i> DỊCH Vụ TÓC</h2>
 			<div class="row" id="ds-dichvu">
-			<!-- <div class="col-s-6 col-m-4 col-x-3">
+				<!-- <div class="col-s-6 col-m-4 col-x-3">
 				<div class="item">
 					<br />
 					<img class="pic_item" title="cat-goi-combo-1-1" src="img/product/cat-goi-combo-1-1.jpg" />
@@ -232,7 +226,7 @@
 			<div class="clear"></div>
 			<h2 id="2" class="product-title"><i class="fa-solid fa-spa"></i> THƯ GIÃN VÀ CHĂM SÓC DA</h2>
 			<div class="row" id="ds-chamsoc">
-			<!-- <div class="col-s-6 col-m-4 col-x-3">
+				<!-- <div class="col-s-6 col-m-4 col-x-3">
 				<div class="item">
 					<br />
 					<img class="pic_item" title="goi-thu-gian" src="img/product/goi-thu-gian.png" /> <br /><br />
@@ -886,8 +880,7 @@
 				</p>
 				<form>
 					<input class="input-field" type="email" placeholder="Email" /><br />
-					<input class="input-field" type="tel" required
-						placeholder="Số điện thoại*" /><br />
+					<input class="input-field" type="tel" required placeholder="Số điện thoại*" /><br />
 
 					<br />
 					<input id="btn-datlich" type="submit" value="ĐĂNG KÝ NGAY" />

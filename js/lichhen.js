@@ -1,7 +1,8 @@
 
 
 window.onload = function () {
-    const sdt = localStorage.getItem("sdt"); // Lấy dữ liệu
+    const sdt = localStorage.getItem("loggedInUser"); // Lấy dữ liệu
+    //localStorage.setItem("KhachHang", JSON.stringify(KHACHHANG));
     if (sdt) {
         document.getElementById("sdt-dat").value = sdt;
     }
@@ -9,7 +10,7 @@ window.onload = function () {
     const chinhanhSelect = document.getElementById("chinhanh");
     const dichvuSelect = document.getElementById("dichvu");
     const nhanvienSelect = document.getElementById("nhanvien");
-     // --- Load chi nhánh ---
+    // --- Load chi nhánh ---
     CHINHANH.forEach(cn => {
         const opt = document.createElement("option");
         opt.value = cn.MACHINHANH;
@@ -40,7 +41,9 @@ window.onload = function () {
     });
 };
 
-function themlichhen()
-{
+
+function themlichhen() {
+   
+
     alert("Đặt lịch hẹn thành công!");
 }

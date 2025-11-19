@@ -33,6 +33,55 @@ window.onload = function() {
     }
   });}
 
+  
+function luusodienthoai() {
+  const sdt = document.getElementById("input-sdt").value.trim();
+
+  if (!sdt) {
+    alert("Vui lòng nhập số điện thoại!");
+    return;
+  }
+
+  // Tìm khách hàng đã tồn tại
+  const khachhang = KHACHHANG.find(kh => kh.MATK === sdt || kh.SDT === sdt);
+
+  if (khachhang) {
+    // Đăng nhập tự động
+    localStorage.setItem("loggedInUser", khachhang.MATK);
+    localStorage.removeItem("danhSachLichHen");
+
+    window.location.href = "lichhen.html";
+  } else {
+    //Tạo tài khoản nếu chưa có
+    const newUser = {
+      MATK: sdt,
+      PASS: sdt,
+      PHANQUYEN: 0,
+      TRANGTHAI: "Hoạt động"
+    };
+
+    localStorage.setItem("registeredUser", JSON.stringify(newUser));
+
+    //Tạo khách hàng mới
+    const newKH = {
+      MAKH: "KH" + Date.now(),
+      HOTEN: "Khách hàng " + Date.now(),
+      SDT: sdt,
+      MATK: sdt
+    };
+
+    // Lưu vào localStorage
+    let dsKH = JSON.parse(localStorage.getItem("KhachHang")) || [];
+    dsKH.push(newKH);
+    localStorage.setItem("KhachHang", JSON.stringify(dsKH));
+
+    // Đăng nhập tự động
+    localStorage.setItem("loggedInUser", sdt);
+
+    window.location.href = "lichhen.html";
+  }
+}
+
 
 
 
