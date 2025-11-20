@@ -279,59 +279,6 @@
   background: #014b13c0;
 } 
 
-/* ========== MODAL ========== */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-body {
-  background: #fff;
-  border-radius: 10px;
-  width: 400px;
-  padding: 25px;
-  position: relative;
-  animation: fadeIn 0.2s ease;
-}
-
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-.form-row {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-row input {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #cbd5e1;
-  outline: none;
-}
-
-.form-row input:focus {
-  border-color: #3b82f6;
-}
-
-.form-row.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
@@ -400,3 +347,123 @@
   color: #e53935;
 }
 
+/* Nền modal */
+.modal {
+    display: none; /* ẩn mặc định */
+    position: fixed;
+    z-index: 9000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5); /* nền mờ */
+}
+
+/* Nội dung modal */
+.modal-content {
+    background-color: #fff;
+    margin: 80px auto; /* căn giữa theo chiều dọc */
+    padding: 0;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Header modal */
+.modal-header {
+    padding: 16px 24px;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close-btn {
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Body modal */
+.modal-body {
+    padding: 20px 24px;
+}
+
+/* Form nhóm */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Hành động button */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn.primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn.primary:hover {
+    background-color: #0056b3;
+}
+
+.btn.secondary {
+    background-color: #ccc;
+    color: #333;
+}
+
+.btn.secondary:hover {
+    background-color: #999;
+}
+
+/* Animation */
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .modal-content {
+        width: 95%;
+        margin: 50px auto;
+    }
+}

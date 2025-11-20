@@ -90,9 +90,9 @@ function themlichhen(event) {
         MADICHVU: dichvu
     };
 
-    let dsLichHen = JSON.parse(localStorage.getItem("danhSachLichHen")) || [];
+    let dsLichHen = JSON.parse(localStorage.getItem("LichHen")) || [];
     dsLichHen.push(newLichHen);
-    localStorage.setItem("danhSachLichHen", JSON.stringify(dsLichHen));
+    localStorage.setItem("LichHen", JSON.stringify(dsLichHen));
 
     alert("Đặt lịch hẹn thành công!");
 }

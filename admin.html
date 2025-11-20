@@ -1,4 +1,3 @@
-<!doctype html>
 <html lang="vi">
 
 <head>
@@ -81,7 +80,13 @@
                                     <th>Người dùng</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                <tr>
+                                    <td>Thời gian</td>
+                                    <td>Sự kiện</td>
+                                    <td>Người dùng</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -90,7 +95,8 @@
                 <div id="accounts" class="section">
                     <div class="panel header-actions">
                         <h2>Tài khoản</h2>
-                        <button id="addAccountBtn" class="btn primary">Thêm tài khoản</button>
+                        <button id="addAccountBtn" class="btn primary" onclick="openAccountModal()">Thêm tài
+                            khoản</button>
                     </div>
                     <div class="panel">
                         <table class="table" id="accountsTable">
@@ -107,6 +113,86 @@
                         </table>
                     </div>
                 </div>
+                <div id="addAccountModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Thêm Tài Khoản Mới</h3>
+                            <span class="close-btn" onclick="closeAccountModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addAccountForm">
+                                <div class="form-group">
+                                    <label for="accUsername">Tên đăng nhập:</label>
+                                    <input type="text" id="accUsername" placeholder="Nhập tên đăng nhập..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="accPassword">Mật khẩu:</label>
+                                    <input type="password" id="accPassword" placeholder="Nhập mật khẩu..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="accRole">Quyền hạn:</label>
+                                    <select id="accRole">
+                                        <option value="0">Khách hàng</option>
+                                        <option value="2">Nhân viên</option>
+                                        <option value="1">Quản lý</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="accStatus">Trạng thái:</label>
+                                    <select id="accStatus">
+                                        <option value="Hoạt động">Hoạt động</option>
+                                        <option value="Đã khóa">Đã khóa</option>
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeAccountModal()">Hủy</button>
+                                    <button type="submit" class="btn primary" onclick="themTaiKhoan(event)">Lưu tài khoản</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div id="editAccountModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Sửa Tài Khoản</h3>
+                            <span class="close-btn" onclick="closeEditModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editAccountForm">
+                                <div class="form-group">
+                                    <label for="editUsername">Tên đăng nhập:</label>
+                                    <input type="text" id="editUsername" placeholder="Nhập tên đăng nhập..." readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editPassword">Mật khẩu:</label>
+                                    <input type="password" id="editPassword" placeholder="Nhập mật khẩu..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editRole">Quyền hạn:</label>
+                                    <select id="editRole">
+                                        <option value="0">Khách hàng</option>
+                                        <option value="2">Nhân viên</option>
+                                        <option value="1">Quản lý</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editStatus">Trạng thái:</label>
+                                    <select id="editStatus">
+                                        <option value="Hoạt động">Hoạt động</option>
+                                        <option value="Đã khóa">Đã khóa</option>
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary" onclick="closeEditModal()">Hủy</button>
+                                    <button type="submit" class="btn primary" onclick="suaTaiKhoan(event)">Lưu thay đổi</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Promotions -->
                 <div id="promotions" class="section">
@@ -199,6 +285,7 @@
                                     <th>Họ và tên</th>
                                     <th>Số điện thoại</th>
                                     <th>Tài khoản</th>
+                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -277,6 +364,7 @@
                                 </tr>
                             </thead>
                             <tbody></tbody>
+
                         </table>
                     </div>
                 </div>
