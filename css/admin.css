@@ -472,3 +472,22 @@ textarea {
     width: 100%;
     padding: 10px;
 }
+/* Layout cho phần báo cáo */
+.report-filter {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.report-filter select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* Responsive cho biểu đồ khi xem trên mobile */
+@media (max-width: 768px) {
+    .charts-container {
+        grid-template-columns: 1fr !important; /* Chuyển thành 1 cột */
+    }
+}

@@ -176,7 +176,7 @@ function loadDashboard() {
 // ================== HIỂN THỊ DỮ LIỆU ==================
 function renderAllTables() {
   renderAccounts();
- // renderBranches();
+  // renderBranches();
   renderCustomers();
   renderStaff();
   renderServices();
@@ -328,8 +328,8 @@ function renderPromotions() {
       <td>${(km.GIATRI * 100).toFixed(0)}%</td>
       <td>${km.TRANGTHAI}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${km.MAKM}" onclick="openModal('editPromotionModal')"><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${km.MAKM}"><i class="fas fa-trash"></i></button>
+        <button class="btn small edit" data-id="${km.MAKM}" onclick="chuanBiSuaKhuyenMai('${km.MAKM}')"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${km.MAKM}" onclick = "xoaKhuyenMai('${km.MAKM}')"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
   `).join("");
@@ -537,26 +537,192 @@ function xoaTaiKhoan(mataikhoan) {
 
 // Hàm mở Modal bất kỳ theo ID
 function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = "block";
-        // Reset form bên trong nếu có
-        const form = modal.querySelector("form");
-        if (form) form.reset();
-    }
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = "block";
+    // Reset form bên trong nếu có
+    const form = modal.querySelector("form");
+    if (form) form.reset();
+  }
 }
 
 // Hàm đóng Modal bất kỳ theo ID
 function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = "none";
-    }
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = "none";
+  }
 }
 
 // Đóng modal khi click ra ngoài vùng content (cho tất cả modal)
-window.onclick = function(event) {
-    if (event.target.classList.contains('modal')) {
-        event.target.style.display = "none";
+window.onclick = function (event) {
+  if (event.target.classList.contains('modal')) {
+    event.target.style.display = "none";
+  }
+}
+
+
+
+//KHUYẾN MẠI
+function themKhuyenMai(event) {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+  const makhuyenmai = document.getElementById("promoID").value;
+  const tenkhuyenmai = document.getElementById("promoName").value;
+  const mota = document.getElementById("promoDesc").value;
+  const ngaybatdau = document.getElementById("promoStart").value;
+  const ngayketthuc = document.getElementById("promoEnd").value;
+  const giatri = parseFloat(document.getElementById("promoValue").value) / 100;
+  let trangthai = "";
+
+
+  if (makhuyenmai.trim() === "" || tenkhuyenmai.trim() === "" || ngaybatdau.trim() === "" || ngayketthuc.trim() === "" || isNaN(giatri) || mota.trim() === "") {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  if (!confirm("Bạn có chắc chắn muốn thêm khuyến mại này không?")) {
+    return;
+  }
+
+
+  const khuyenmaiExits = khuyenMaiLocal.some(km => km.MAKM === makhuyenmai);
+  if (khuyenmaiExits) {
+    alert("Khuyến mại đã tồn tại!");
+    return;
+  }
+  if (new Date(ngaybatdau) >= new Date(ngayketthuc)) {
+    alert("Ngày kết thúc phải sau ngày bắt đầu!");
+    return;
+  }
+  if (giatri <= 0 || giatri > 1) {
+    alert("Giá trị khuyến mãi phải lớn hơn 0 và nhỏ hơn hoặc bằng 100%");
+    return;
+  }
+  try {
+    if (ngayketthuc < new Date().toISOString().split('T')[0]) {
+      trangthai = "Hết hạn";
+    } else if (ngaybatdau > new Date().toISOString().split('T')[0]) {
+      trangthai = "Chưa áp dụng";
+    } else {
+      trangthai = "Đang áp dụng";
     }
+    const newKM = {
+      MAKM: makhuyenmai,
+      TENKM: tenkhuyenmai,
+      MOTA: mota,
+      NGAYBD: ngaybatdau,
+      NGAYKT: ngayketthuc,
+      GIATRI: giatri,
+      TRANGTHAI: trangthai
+    };
+
+    khuyenMaiLocal.push(newKM);
+    localStorage.setItem("KhuyenMai", JSON.stringify(khuyenMaiLocal));
+    renderPromotions();
+
+    alert("Thêm khuyến mại thành công!");
+    closeModal('addPromotionModal');
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi thêm khuyến mại: " + error.message);
+  }
+
+}
+function chuanBiSuaKhuyenMai(maKM) {
+  const kmCanSua = khuyenMaiLocal.find(km => km.MAKM === maKM);
+
+  if (!kmCanSua) {
+    alert("Không tìm thấy khuyến mại!");
+    return;
+  }
+  openModal('editPromotionModal');
+  document.getElementById("editPromoId").value = kmCanSua.MAKM;
+  document.getElementById("editPromoName").value = kmCanSua.TENKM;
+  document.getElementById("editPromoDesc").value = kmCanSua.MOTA;
+  document.getElementById("editPromoStart").value = kmCanSua.NGAYBD;
+  document.getElementById("editPromoEnd").value = kmCanSua.NGAYKT;
+  document.getElementById("editPromoValue").value = kmCanSua.GIATRI * 100;
+
+
+}
+function suaKhuyenMai(event) {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+  const makhuyenmai = document.getElementById("editPromoId").value;
+  const tenkhuyenmai = document.getElementById("editPromoName").value;
+  const mota = document.getElementById("editPromoDesc").value;
+  const ngaybatdau = document.getElementById("editPromoStart").value;
+  const ngayketthuc = document.getElementById("editPromoEnd").value;
+  const giatri = parseFloat(document.getElementById("editPromoValue").value) / 100;
+  let trangthai = "";
+
+  if (makhuyenmai.trim() === "" || tenkhuyenmai.trim() === "" || ngaybatdau.trim() === "" || ngayketthuc.trim() === "" || isNaN(giatri) || mota.trim() === "") {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  if (!confirm("Bạn có chắc chắn muốn sửa khuyến mại này không?")) {
+    return;
+  }
+  if (new Date(ngaybatdau) >= new Date(ngayketthuc)) {
+    alert("Ngày kết thúc phải sau ngày bắt đầu!");
+    return;
+  }
+  if (giatri <= 0 || giatri > 1) {
+    alert("Giá trị khuyến mãi phải lớn hơn 0 và nhỏ hơn hoặc bằng 100%");
+    return;
+  }
+  // Tìm index cần sửa
+  const index = khuyenMaiLocal.findIndex(km => km.MAKM === makhuyenmai);
+  if (index === -1) {
+    alert("Khuyến mại không tồn tại!");
+    return;
+  }
+  try {
+    // cập nhật thông tin
+    khuyenMaiLocal[index].TENKM = tenkhuyenmai;
+    khuyenMaiLocal[index].MOTA = mota;
+    khuyenMaiLocal[index].NGAYBD = ngaybatdau;
+    khuyenMaiLocal[index].NGAYKT = ngayketthuc;
+    khuyenMaiLocal[index].GIATRI = giatri;
+    if (ngayketthuc < new Date().toISOString().split('T')[0]) {
+      trangthai = "Hết hạn";
+    }
+    else if (ngaybatdau > new Date().toISOString().split('T')[0]) {
+      trangthai = "Chưa áp dụng";
+    }
+    else {
+      trangthai = "Đang áp dụng";
+    }
+    khuyenMaiLocal[index].TRANGTHAI = trangthai;
+
+    localStorage.setItem("KhuyenMai", JSON.stringify(khuyenMaiLocal));
+    renderPromotions();
+
+    alert("Sửa khuyến mại thành công!");
+    closeModal('editPromotionModal');
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi sửa khuyến mại: " + error.message);
+  }
+
+}
+function xoaKhuyenMai(makhuyenmai) {
+  if (!makhuyenmai) return;
+  if (!confirm("Bạn có chắc chắn muốn xoá khuyến mại này không?")) {
+    return;
+  }
+  // Không được xoá khuyến mại đang áp dụng
+  let km = khuyenMaiLocal.find(km => km.MAKM === makhuyenmai);
+  if (km.TRANGTHAI === "Đang áp dụng") {
+    alert("Không thể xoá khuyến mại đang áp dụng!");
+    return;
+  }
+  try {
+    // Lọc bỏ đối tượng cần xoá
+    khuyenMaiLocal = khuyenMaiLocal.filter(km => km.MAKM !== makhuyenmai);
+    localStorage.setItem("KhuyenMai", JSON.stringify(khuyenMaiLocal));
+    renderPromotions();
+    alert("Xoá khuyến mại thành công!");
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi xoá khuyến mại: " + error.message);
+  }
 }
