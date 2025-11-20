@@ -467,3 +467,8 @@
         margin: 50px auto;
     }
 }
+textarea {
+    resize: none; /* Không cho kéo */
+    width: 100%;
+    padding: 10px;
+}

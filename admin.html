@@ -32,8 +32,7 @@
 
             <div class="accounts">
                 <div class="row">
-                    <span><button onclick="dangXuat()" class="logout-btn"><i
-                                class="fas fa-right-from-bracket"></i></button> Người dùng:</span>
+                    <span> Người dùng:</span>
                     <strong id="login-hello"></strong>
                 </div>
             </div>
@@ -147,7 +146,8 @@
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeAccountModal()">Hủy</button>
-                                    <button type="submit" class="btn primary" onclick="themTaiKhoan(event)">Lưu tài khoản</button>
+                                    <button type="submit" class="btn primary" onclick="themTaiKhoan(event)">Lưu tài
+                                        khoản</button>
                                 </div>
                             </form>
                         </div>
@@ -186,7 +186,8 @@
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary" onclick="closeEditModal()">Hủy</button>
-                                    <button type="submit" class="btn primary" onclick="suaTaiKhoan(event)">Lưu thay đổi</button>
+                                    <button type="submit" class="btn primary" onclick="suaTaiKhoan(event)">Lưu thay
+                                        đổi</button>
                                 </div>
                             </form>
                         </div>
@@ -198,7 +199,8 @@
                 <div id="promotions" class="section">
                     <div class="panel header-actions">
                         <h2>Khuyến mại</h2>
-                        <button id="addPromotionBtn" class="btn primary">Thêm khuyến mại</button>
+                        <button id="addPromotionBtn" class="btn primary" onclick="openModal('addPromotionModal')">Thêm
+                            khuyến mại</button>
                     </div>
                     <div class="panel">
                         <table class="table" id="promotionsTable">
@@ -218,11 +220,127 @@
                         </table>
                     </div>
                 </div>
+                <div id="addPromotionModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Thêm Khuyến Mại</h3>
+                            <span class="close-btn" onclick="closeModal('addPromotionModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addPromotionForm">
+                                <div class="form-group">
+                                    <label>Tên chương trình:</label>
+                                    <input type="text" id="promoName" required placeholder="VD: Giảm giá mùa hè">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mô tả:</label>
+                                    <textarea id="promoDesc" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Ngày bắt đầu:</label>
+                                    <input type="date" id="promoStart">
+                                </div>
+                                <div class="form-group">
+                                    <label>Ngày kết thúc:</label>
+                                    <input type="date" id="promoEnd">
+                                </div>
+                                <div class="form-group">
+                                    <label>Giá trị giảm (% hoặc VND):</label>
+                                    <input type="text" id="promoValue" required>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('addPromotionModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Lưu khuyến mại</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div id="addPromotionModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Thêm Khuyến Mại</h3>
+                            <span class="close-btn" onclick="closeModal('addPromotionModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addPromotionForm">
+                                <div class="form-group">
+                                    <label>Tên chương trình:</label>
+                                    <input type="text" id="promoName" required placeholder="VD: Giảm giá mùa hè">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mô tả:</label>
+                                    <textarea id="promoDesc" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Ngày bắt đầu:</label>
+                                    <input type="date" id="promoStart">
+                                </div>
+                                <div class="form-group">
+                                    <label>Ngày kết thúc:</label>
+                                    <input type="date" id="promoEnd">
+                                </div>
+                                <div class="form-group">
+                                    <label>Giá trị giảm (% hoặc VND):</label>
+                                    <input type="text" id="promoValue" required>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('addPromotionModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Lưu khuyến mại</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div id="editPromotionModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Sửa Khuyến Mại</h3>
+                            <span class="close-btn" onclick="closeModal('editPromotionModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form onsubmit="capNhatKhuyenMai(event)">
+                                <input type="hidden" id="editPromoId">
+
+                                <div class="form-group">
+                                    <label>Tên chương trình:</label>
+                                    <input type="text" id="editPromoName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mô tả:</label>
+                                    <textarea id="editPromoDesc" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Ngày bắt đầu:</label>
+                                    <input type="date" id="editPromoStart">
+                                </div>
+                                <div class="form-group">
+                                    <label>Ngày kết thúc:</label>
+                                    <input type="date" id="editPromoEnd">
+                                </div>
+                                <div class="form-group">
+                                    <label>Giá trị giảm:</label>
+                                    <input type="text" id="editPromoValue" required>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('editPromotionModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Cập nhật</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
 
                 <div id="services" class="section">
                     <div class="panel header-actions">
                         <h2>Dịch vụ</h2>
-                        <button id="addServiceBtn" class="btn primary">Thêm dịch vụ</button>
+                        <button id="addServiceBtn" class="btn primary" onclick="openModal('addServiceModal')">Thêm dịch
+                            vụ</button>
                     </div>
 
                     <div class="panel">
@@ -268,14 +386,133 @@
                             </table>
                         </div>
                     </div>
-
                 </div>
+                <!-- Add Service Modal -->
+                <div id="addServiceModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Thêm Dịch Vụ Mới</h3>
+                            <span class="close-btn" onclick="closeModal('addServiceModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addServiceForm">
+                                <!-- Tên Dịch Vụ -->
+                                <div class="form-group">
+                                    <label>Mã dịch vụ:</label>
+                                    <input type="text" id="serviceID" required placeholder="VD: CSD001">
+                                </div>
+                                <!-- Tên Dịch Vụ -->
+                                <div class="form-group">
+                                    <label>Tên dịch vụ:</label>
+                                    <input type="text" id="serviceName" required placeholder="VD: Cắt tóc nam">
+                                </div>
+                                <div class="form-group"> <label>Loại dịch vụ:</label> <select id="serviceType">
+                                        <option value="hair">Làm Tóc</option>
+                                        <option value="skin">Chăm sóc da & Thư giãn</option>
+                                    </select> </div>
+                                <!-- Mô Tả -->
+                                <div class="form-group">
+                                    <label>Mô tả:</label>
+                                    <textarea id="serviceDesc" rows="3" placeholder="Nhập mô tả dịch vụ"></textarea>
+                                </div>
+                                <!-- Thời gian -->
+                                <div class="form-group">
+                                    <label>Thời gian (phút):</label>
+                                    <input type="number" id="serviceTime" required placeholder="VD: 60">
+                                </div>
+                                <!-- Giá -->
+                                <div class="form-group">
+                                    <label>Giá (VND):</label>
+                                    <input type="number" id="servicePrice" required placeholder="VD: 150000">
+                                </div>
+                                <!-- Trạng thái -->
+                                <div class="form-group">
+                                    <label>Trạng thái:</label>
+                                    <select id="serviceStatus">
+                                        <option value="active">Hoạt động</option>
+                                        <option value="inactive">Khóa</option>
+                                    </select>
+                                </div>
+                                <!-- Ảnh -->
+                                <div class="form-group">
+                                    <label>Ảnh:</label>
+                                    <input type="text" id="serviceImg" placeholder="Link ảnh minh họa">
+                                </div>
+                                <!-- Quy trình -->
+                                <div class="form-group">
+                                    <label>Quy trình:</label>
+                                    <textarea id="serviceProcedure" rows="3"
+                                        placeholder="Nhập quy trình dịch vụ"></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('addServiceModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Lưu dịch vụ</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Service Modal -->
+                <div id="editServiceModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Sửa Dịch Vụ</h3>
+                            <span class="close-btn" onclick="closeModal('editServiceModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form onsubmit="capNhatDichVu(event)">
+                                <input type="hidden" id="editServiceId">
+                                <div class="form-group">
+                                    <label>Tên dịch vụ:</label>
+                                    <input type="text" id="editServiceName" required placeholder="VD: Cắt tóc nam">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mô tả:</label>
+                                    <textarea id="editServiceDesc" rows="3" placeholder="Nhập mô tả dịch vụ"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Thời gian (phút):</label>
+                                    <input type="number" id="editServiceTime" required placeholder="VD: 60">
+                                </div>
+                                <div class="form-group">
+                                    <label>Giá (VND):</label>
+                                    <input type="number" id="editServicePrice" required placeholder="VD: 150000">
+                                </div>
+                                <div class="form-group">
+                                    <label>Trạng thái:</label>
+                                    <select id="editServiceStatus">
+                                        <option value="active">Hoạt động</option>
+                                        <option value="inactive">Khóa</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Ảnh:</label>
+                                    <input type="text" id="editServiceImg" placeholder="Link ảnh minh họa">
+                                </div>
+                                <div class="form-group">
+                                    <label>Quy trình:</label>
+                                    <textarea id="editServiceProcedure" rows="3"
+                                        placeholder="Nhập quy trình dịch vụ"></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('editServiceModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Cập nhật</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Customers -->
                 <div id="customers" class="section">
                     <div class="panel header-actions">
                         <h2>Khách hàng</h2>
-                        <button id="addCustomerBtn" class="btn primary">Thêm khách</button>
+                        <button id="addCustomerBtn" class="btn primary" onclick="openModal('addCustomerModal')">Thêm
+                            khách</button>
                     </div>
                     <div class="panel">
                         <table class="table" id="customersTable">
@@ -292,12 +529,83 @@
                         </table>
                     </div>
                 </div>
+                <!-- Thêm khách hàng -->
+                <div id="addCustomerModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Thêm Khách Hàng</h3>
+                            <span class="close-btn" onclick="closeModal('addCustomerModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addCustomerForm">
+                                <div class="form-group">
+                                    <label for="custName">Họ và tên:</label>
+                                    <input type="text" id="custName" placeholder="Nhập họ tên..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="custPhone">Số điện thoại:</label>
+                                    <input type="text" id="custPhone" placeholder="Nhập số điện thoại..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="custAccount">Tài khoản:</label>
+                                    <select id="custAccount">
+
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('addCustomerModal')">Hủy</button>
+                                    <button type="submit" class="btn primary" onclick="themKhachHang(event)">Lưu khách
+                                        hàng</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sửa khách hàng -->
+                <div id="editCustomerModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Sửa Khách Hàng</h3>
+                            <span class="close-btn" onclick="closeEditCustomerModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editCustomerForm">
+                                <div class="form-group">
+                                    <label for="editCustID">ID:</label>
+                                    <input type="text" id="editCustID" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editCustName">Họ và tên:</label>
+                                    <input type="text" id="editCustName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editCustPhone">Số điện thoại:</label>
+                                    <input type="text" id="editCustPhone" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editCustAccount">Tài khoản:</label>
+                                    <select id="editCustAccount"></select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeEditCustomerModal()">Hủy</button>
+                                    <button type="submit" class="btn primary" onclick="suaKhachHang(event)">Lưu thay
+                                        đổi</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Staff -->
                 <div id="staff" class="section">
                     <div class="panel header-actions">
                         <h2>Nhân viên</h2>
-                        <button id="addStaffBtn" class="btn primary">Thêm nhân viên</button>
+                        <button id="addStaffBtn" class="btn primary" onclick="openModal('addStaffModal')">Thêm nhân
+                            viên</button>
                     </div>
                     <div class="panel">
                         <table class="table" id="staffTable">
@@ -318,12 +626,121 @@
                         </table>
                     </div>
                 </div>
+                <div id="addStaffModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Thêm Nhân Viên</h3>
+                            <span class="close-btn" onclick="closeModal('addStaffModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addStaffForm">
+                                <div class="form-group">
+                                    <label>Họ tên:</label>
+                                    <input type="text" id="staffName" required>
+                                </div>
+                                <!-- Chức vụ -->
+                                <div class="form-group">
+                                    <label>Chức vụ:</label>
+                                    <select id="staffRole" required>
+                                        <option value="stylist">Stylist</option>
+                                        <option value="skincare">Chuyên viên da</option>
+                                        <option value="reception">Lễ tân</option>
+                                        <option value="manager">Quản lý</option>
+                                    </select>
+                                </div>
+                                <!-- Số điện thoại -->
+                                <div class="form-group">
+                                    <label>Số điện thoại:</label>
+                                    <input type="tel" id="staffPhone" required placeholder="VD: 0912345678">
+                                </div>
+                                <!-- Địa chỉ -->
+                                <div class="form-group">
+                                    <label>Địa chỉ:</label>
+                                    <input type="text" id="staffAddress" placeholder="Nhập địa chỉ nhân viên">
+                                </div>
+                                <!-- Ngày sinh -->
+                                <div class="form-group">
+                                    <label>Ngày sinh:</label>
+                                    <input type="date" id="staffBirth">
+                                </div>
+                                <!-- Tài khoản -->
+                                <div class="form-group">
+                                    <label>Tài khoản:</label>
+                                    <input type="text" id="staffAccount" placeholder="Nhập tài khoản">
+                                </div>
+                                <!-- Chi nhánh -->
+                                <div class="form-group">
+                                    <label>Chi nhánh:</label>
+                                    <input type="text" id="staffBranch" placeholder="Nhập mã chi nhánh">
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('addStaffModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Lưu nhân viên</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Edit Staff Modal -->
+                <div id="editStaffModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Sửa Nhân Viên</h3>
+                            <span class="close-btn" onclick="closeModal('editStaffModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form onsubmit="capNhatNhanVien(event)">
+                                <input type="hidden" id="editStaffId">
+
+                                <div class="form-group">
+                                    <label>Họ tên:</label>
+                                    <input type="text" id="editStaffName" required placeholder="Nhập họ tên">
+                                </div>
+                                <div class="form-group">
+                                    <label>Chức vụ:</label>
+                                    <select id="editStaffRole" required>
+                                        <option value="stylist">Stylist</option>
+                                        <option value="skincare">Chuyên viên da</option>
+                                        <option value="reception">Lễ tân</option>
+                                        <option value="manager">Quản lý</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Số điện thoại:</label>
+                                    <input type="tel" id="editStaffPhone" required placeholder="VD: 0912345678">
+                                </div>
+                                <div class="form-group">
+                                    <label>Địa chỉ:</label>
+                                    <input type="text" id="editStaffAddress" placeholder="Nhập địa chỉ nhân viên">
+                                </div>
+                                <div class="form-group">
+                                    <label>Ngày sinh:</label>
+                                    <input type="date" id="editStaffBirth">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tài khoản:</label>
+                                    <input type="text" id="editStaffAccount" placeholder="Nhập tài khoản">
+                                </div>
+                                <div class="form-group">
+                                    <label>Chi nhánh:</label>
+                                    <input type="text" id="editStaffBranch" placeholder="Nhập mã chi nhánh">
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('editStaffModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Cập nhật</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Invoices -->
                 <div id="invoices" class="section">
                     <div class="panel header-actions">
                         <h2>Hoá đơn</h2>
-                        <button id="addStaffBtn" class="btn primary">Thêm hoá đơn</button>
+                        <button id="addInvoiceBtn" class="btn primary" onclick="openModal('addInvoiceModal')">Thêm hoá đơn</button>
                     </div>
                     <div class="panel">
                         <table class="table" id="invoicesTable">
@@ -343,12 +760,115 @@
                         </table>
                     </div>
                 </div>
+                <!-- Add Invoice Modal -->
+                <div id="addInvoiceModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Thêm Hoá Đơn</h3>
+                            <span class="close-btn" onclick="closeModal('addInvoiceModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addInvoiceForm">
+                                <div class="form-group">
+                                    <label>Mã KM:</label>
+                                    <input type="text" id="invoicePromoId" placeholder="Nhập mã khuyến mại">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tổng tiền:</label>
+                                    <input type="number" id="invoiceTotal" required placeholder="VD: 500000">
+                                </div>
+                                <div class="form-group">
+                                    <label>Hình thức thanh toán:</label>
+                                    <select id="invoicePaymentMethod" required>
+                                        <option value="cash">Tiền mặt</option>
+                                        <option value="card">Thẻ</option>
+                                        <option value="online">Chuyển khoản/Online</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã NV:</label>
+                                    <input type="text" id="invoiceStaffId" placeholder="Nhập mã nhân viên">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã Lịch Hẹn:</label>
+                                    <input type="text" id="invoiceBookingId" placeholder="Nhập mã lịch hẹn">
+                                </div>
+                                <div class="form-group">
+                                    <label>Trạng thái:</label>
+                                    <select id="invoiceStatus">
+                                        <option value="paid">Đã thanh toán</option>
+                                        <option value="pending">Chưa thanh toán</option>
+                                        <option value="cancelled">Huỷ</option>
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('addInvoiceModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Lưu hoá đơn</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Invoice Modal -->
+                <div id="editInvoiceModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Sửa Hoá Đơn</h3>
+                            <span class="close-btn" onclick="closeModal('editInvoiceModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form onsubmit="capNhatHoaDon(event)">
+                                <input type="hidden" id="editInvoiceId">
+                                <div class="form-group">
+                                    <label>Mã KM:</label>
+                                    <input type="text" id="editInvoicePromoId" placeholder="Nhập mã khuyến mại">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tổng tiền:</label>
+                                    <input type="number" id="editInvoiceTotal" required placeholder="VD: 500000">
+                                </div>
+                                <div class="form-group">
+                                    <label>Hình thức thanh toán:</label>
+                                    <select id="editInvoicePaymentMethod" required>
+                                        <option value="cash">Tiền mặt</option>
+                                        <option value="card">Thẻ</option>
+                                        <option value="online">Chuyển khoản/Online</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã NV:</label>
+                                    <input type="text" id="editInvoiceStaffId" placeholder="Nhập mã nhân viên">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã Lịch Hẹn:</label>
+                                    <input type="text" id="editInvoiceBookingId" placeholder="Nhập mã lịch hẹn">
+                                </div>
+                                <div class="form-group">
+                                    <label>Trạng thái:</label>
+                                    <select id="editInvoiceStatus">
+                                        <option value="paid">Đã thanh toán</option>
+                                        <option value="pending">Chưa thanh toán</option>
+                                        <option value="cancelled">Huỷ</option>
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('editInvoiceModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Cập nhật</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Bookings -->
                 <div id="bookings" class="section">
                     <div class="panel header-actions">
                         <h2>Lịch hẹn</h2>
-                        <button id="addStaffBtn" class="btn primary">Thêm lịch hẹn</button>
+                        <button id="addBookingBtn" class="btn primary"  onclick="openModal('addBookingModal')">Thêm lịch hẹn</button>
                     </div>
                     <div class="panel">
                         <table class="table" id="bookingsTable">
@@ -368,6 +888,95 @@
                         </table>
                     </div>
                 </div>
+                <!-- Add Booking Modal -->
+                <div id="addBookingModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Thêm Lịch Hẹn</h3>
+                            <span class="close-btn" onclick="closeModal('addBookingModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addBookingForm">
+                                <div class="form-group">
+                                    <label>Ngày hẹn:</label>
+                                    <input type="date" id="bookingDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Trạng thái:</label>
+                                    <select id="bookingStatus" required>
+                                        <option value="pending">Chờ xác nhận</option>
+                                        <option value="confirmed">Đã xác nhận</option>
+                                        <option value="completed">Hoàn thành</option>
+                                        <option value="cancelled">Huỷ</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã NV:</label>
+                                    <input type="text" id="bookingStaffId" placeholder="Nhập mã nhân viên">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã KH:</label>
+                                    <input type="text" id="bookingCustomerId" placeholder="Nhập mã khách hàng">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã Chi Nhánh:</label>
+                                    <input type="text" id="bookingBranchId" placeholder="Nhập mã chi nhánh">
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('addBookingModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Lưu lịch hẹn</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Booking Modal -->
+                <div id="editBookingModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Sửa Lịch Hẹn</h3>
+                            <span class="close-btn" onclick="closeModal('editBookingModal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form onsubmit="capNhatLichHen(event)">
+                                <input type="hidden" id="editBookingId">
+                                <div class="form-group">
+                                    <label>Ngày hẹn:</label>
+                                    <input type="date" id="editBookingDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Trạng thái:</label>
+                                    <select id="editBookingStatus" required>
+                                        <option value="pending">Chờ xác nhận</option>
+                                        <option value="confirmed">Đã xác nhận</option>
+                                        <option value="completed">Hoàn thành</option>
+                                        <option value="cancelled">Huỷ</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã NV:</label>
+                                    <input type="text" id="editBookingStaffId" placeholder="Nhập mã nhân viên">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã KH:</label>
+                                    <input type="text" id="editBookingCustomerId" placeholder="Nhập mã khách hàng">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã Chi Nhánh:</label>
+                                    <input type="text" id="editBookingBranchId" placeholder="Nhập mã chi nhánh">
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn secondary"
+                                        onclick="closeModal('editBookingModal')">Hủy</button>
+                                    <button type="submit" class="btn primary">Cập nhật</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Reports -->
                 <div id="reports" class="section">

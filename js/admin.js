@@ -176,7 +176,7 @@ function loadDashboard() {
 // ================== HIỂN THỊ DỮ LIỆU ==================
 function renderAllTables() {
   renderAccounts();
-  renderBranches();
+ // renderBranches();
   renderCustomers();
   renderStaff();
   renderServices();
@@ -206,24 +206,24 @@ function renderAccounts() {
   `).join("");
 }
 
-// CHI NHÁNH
-function renderBranches() {
-  const tbody = document.querySelector("#branchesTable tbody");
-  const ChiNhanhLocal = JSON.parse(localStorage.getItem("ChiNhanh", JSON.stringify(CHINHANH)));
-  if (!tbody) return;
-  tbody.innerHTML = ChiNhanhLocal.map(cn => `
-    <tr>
-      <td>${cn.MACHINHANH}</td>
-      <td>${cn.TENCHINHANH}</td>
-      <td>${cn.DIACHI}</td>
-      <td>${cn.SDT}</td>
-      <td class="actions">
-        <button class="btn small edit" data-id="${cn.MACHINHANH}"><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${cn.MACHINHANH}"><i class="fas fa-trash"></i></button>
-      </td>
-    </tr>
-  `).join("");
-}
+// // CHI NHÁNH
+// function renderBranches() {
+//   const tbody = document.querySelector("#branchesTable tbody");
+//   const ChiNhanhLocal = JSON.parse(localStorage.getItem("ChiNhanh", JSON.stringify(CHINHANH)));
+//   if (!tbody) return;
+//   tbody.innerHTML = ChiNhanhLocal.map(cn => `
+//     <tr>
+//       <td>${cn.MACHINHANH}</td>
+//       <td>${cn.TENCHINHANH}</td>
+//       <td>${cn.DIACHI}</td>
+//       <td>${cn.SDT}</td>
+//       <td class="actions">
+//         <button class="btn small edit" data-id="${cn.MACHINHANH}" ><i class="fas fa-edit"></i></button>
+//         <button class="btn small delete" data-id="${cn.MACHINHANH}"><i class="fas fa-trash"></i></button>
+//       </td>
+//     </tr>
+//   `).join("");
+// }
 
 // KHÁCH HÀNG
 function renderCustomers() {
@@ -237,7 +237,7 @@ function renderCustomers() {
       <td>${kh.SDT}</td>
       <td>${kh.MATK}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${kh.MAKH}"><i class="fas fa-edit"></i></button>
+        <button class="btn small edit" data-id="${kh.MAKH}"  onclick="openModal('editCustomerModal')"><i class="fas fa-edit"></i></button>
         <button class="btn small delete" data-id="${kh.MAKH}"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
@@ -260,7 +260,7 @@ function renderStaff() {
       <td>${nv.MATK}</td>
       <td>${nv.MACHINHANH}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${nv.MANV}"><i class="fas fa-edit"></i></button>
+        <button class="btn small edit" data-id="${nv.MANV}"  onclick="openModal('editStaffModal')"><i class="fas fa-edit"></i></button>
         <button class="btn small delete" data-id="${nv.MANV}"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
@@ -283,7 +283,7 @@ function renderServices() {
       <td><img src="${dv.ANH}" alt="${dv.TENDV}" width="60"></td>
       <td>${dv.QUYTRINH}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${dv.MADV}"><i class="fas fa-edit"></i></button>
+        <button class="btn small edit" data-id="${dv.MADV}"  onclick="openModal('editServiceModal')"><i class="fas fa-edit"></i></button>
         <button class="btn small delete" data-id="${dv.MADV}"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
@@ -306,7 +306,7 @@ function renderSkincare() {
       <td><img src="${cs.ANH}" alt="${cs.TENDV}" width="60"></td>
       <td>${cs.QUYTRINH}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${cs.MADV}"><i class="fas fa-edit"></i></button>
+        <button class="btn small edit" data-id="${cs.MADV}"  onclick="openModal('editServiceModal')"><i class="fas fa-edit"></i></button>
         <button class="btn small delete" data-id="${cs.MADV}"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
@@ -328,7 +328,7 @@ function renderPromotions() {
       <td>${(km.GIATRI * 100).toFixed(0)}%</td>
       <td>${km.TRANGTHAI}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${km.MAKM}"><i class="fas fa-edit"></i></button>
+        <button class="btn small edit" data-id="${km.MAKM}" onclick="openModal('editPromotionModal')"><i class="fas fa-edit"></i></button>
         <button class="btn small delete" data-id="${km.MAKM}"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
@@ -349,7 +349,7 @@ function renderBookings() {
       <td>${lh.MAKH}</td>
       <td>${lh.MACHINHANH}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${lh.MALICH}"><i class="fas fa-edit"></i></button>
+        <button class="btn small edit" data-id="${lh.MALICH}"  onclick="openModal('editBookingModal')" ><i class="fas fa-edit"></i></button>
         <button class="btn small delete" data-id="${lh.MALICH}"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
@@ -390,7 +390,7 @@ function renderInvoices() {
       <td>${hd.MALICH}</td>
       <td>${hd.TRANGTHAI}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${hd.MAHD}"><i class="fas fa-edit"></i></button>
+        <button class="btn small edit" data-id="${hd.MAHD}"  onclick="openModal('editInvoiceModal')"><i class="fas fa-edit"></i></button>
         <button class="btn small delete" data-id="${hd.MAHD}"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
@@ -532,4 +532,31 @@ function xoaTaiKhoan(mataikhoan) {
   catch (error) {
     alert("Đã có lỗi xảy ra khi xoá tài khoản: " + error.message);
   }
+}
+
+
+// Hàm mở Modal bất kỳ theo ID
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = "block";
+        // Reset form bên trong nếu có
+        const form = modal.querySelector("form");
+        if (form) form.reset();
+    }
+}
+
+// Hàm đóng Modal bất kỳ theo ID
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Đóng modal khi click ra ngoài vùng content (cho tất cả modal)
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = "none";
+    }
 }
