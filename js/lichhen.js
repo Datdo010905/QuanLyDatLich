@@ -1,5 +1,3 @@
-
-
 window.onload = function () {
     const sdt = localStorage.getItem("sodienthoai-datlich"); // Lấy dữ liệu
     //localStorage.setItem("KhachHang", JSON.stringify(KHACHHANG));
@@ -43,8 +41,12 @@ window.onload = function () {
     });
 };
 
+if (!localStorage.getItem("KhachHang")) {
+    localStorage.setItem("KhachHang", JSON.stringify(KHACHHANG));
+}
 
-function themlichhen() {
+function themlichhen(event) {
+    event.preventDefault(); // Ngăn chặn submit form mặc định
     const hoten = document.getElementById("hoten-dat").value.trim();
     const chinhanh = document.getElementById("chinhanh").value;
     const dichvu = document.getElementById("dichvu").value;
@@ -52,21 +54,45 @@ function themlichhen() {
     const ngayhen = document.getElementById("ngayhen").value;
     const giohen = document.getElementById("giohen").value;
     const sdt = document.getElementById("sdt-dat").value.trim();
+
+    let khList = JSON.parse(localStorage.getItem("KhachHang")) || [];
+
     if (!hoten || !chinhanh || !dichvu || !nhanvien || !ngayhen || !giohen || !sdt) {
         alert("Vui lòng điền đầy đủ thông tin để đặt lịch hẹn!");
         return;
     }
+    // Trường hợp tên bị mặc định
+    if (hoten === "Khách hàng mới" ||
+        khList.find(k => k.HOTEN === "Khách hàng mới" && k.SDT === sdt)) 
+    {
+        alert("Vui lòng đổi tên khác tên mặc định 'Khách hàng mới' để đặt lịch hẹn!");
+        return;
+    }
+     // Cập nhật tên khách nếu đã tồn tại
+    let kh = khList.find(k => k.SDT === sdt);
+    if (kh) {
+        kh.HOTEN = hoten;
+        localStorage.setItem("KhachHang", JSON.stringify(khList));
+    } else {
+        alert("Không tìm thấy khách hàng từ số điện thoại! Vui lòng quay lại bước trước.");
+        return;
+    }
+
+    // Tạo lịch hẹn
     const newLichHen = {
         MALICH: "LH" + Date.now(),
-        NGAYHEN: NGAYHEN,
-        GIOHEN: GIOHEN,
+        NGAYHEN: ngayhen,
+        GIOHEN: giohen,
         TRANGTHAI: "Đã đặt",
-        MANV: NHANVIEN,
-        MAKH: "KH001",
-        MACHINHANH: CHINHANH
+        MANV: nhanvien,
+        MAKH: kh.MAKH,
+        MACHINHANH: chinhanh,
+        MADICHVU: dichvu
     };
+
     let dsLichHen = JSON.parse(localStorage.getItem("danhSachLichHen")) || [];
     dsLichHen.push(newLichHen);
     localStorage.setItem("danhSachLichHen", JSON.stringify(dsLichHen));
+
     alert("Đặt lịch hẹn thành công!");
 }
