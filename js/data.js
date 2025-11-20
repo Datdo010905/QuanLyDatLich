@@ -3,13 +3,9 @@ const TAIKHOAN = [
   { MATK: "admin", PASS: "1", PHANQUYEN: 1, TRANGTHAI: "Hoạt động" },
   { MATK: "nhanvien", PASS: "1", PHANQUYEN: 2, TRANGTHAI: "Hoạt động" },
   { MATK: "0352512556", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
-  { MATK: "dotiendat", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
-  { MATK: "dotiendat1", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
-  { MATK: "dotiendat2", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
-  { MATK: "dotiendat3", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
-  { MATK: "dotiendat4", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
-  { MATK: "dotiendat5", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
-  { MATK: "dotiendat6", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
+  { MATK: "0912345678", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
+  { MATK: "0987654321", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
+  { MATK: "0352512557", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
 ];
 // BẢNG CHI NHÁNH
 const CHINHANH = [
@@ -21,13 +17,13 @@ const CHINHANH = [
 
 // BẢNG KHÁCH HÀNG
 const KHACHHANG = [
-  { MAKH: "KH001", HOTEN: "Nguyễn Văn An", SDT: "0912345678", MATK: "dotiendat1" },
-  { MAKH: "KH002", HOTEN: "Trần Thị Bình", SDT: "0987654321", MATK: "dotiendat2" },
-  { MAKH: "KH003", HOTEN: "Lê Văn Cường", SDT: "0909123456", MATK: "dotiendat3" },
-  { MAKH: "KH004", HOTEN: "Phạm Thị Dung", SDT: "0911987654", MATK: "dotiendat4" },
-  { MAKH: "KH005", HOTEN: "Đỗ Hữu Phúc", SDT: "0978123456", MATK: "dotiendat5" },
+  { MAKH: "KH001", HOTEN: "Nguyễn Văn An", SDT: "0912345678", MATK: "0912345678" },
+  { MAKH: "KH002", HOTEN: "Trần Thị Bình", SDT: "0987654321", MATK: "0987654321" },
+  { MAKH: "KH003", HOTEN: "Lê Văn Cường", SDT: "0909123456", MATK: "0909123456" },
+  { MAKH: "KH004", HOTEN: "Phạm Thị Dung", SDT: "0911987654", MATK: "0911987654" },
+  { MAKH: "KH005", HOTEN: "Đỗ Hữu Phúc", SDT: "0978123456", MATK: "0978123456" },
   { MAKH: "KH006", HOTEN: "Đỗ Tiến Đạt", SDT: "0352512556", MATK: "0352512556" },
-  { MAKH: "KH007", HOTEN: "Đỗ Tiến Đạt", SDT: "0352512557", MATK: "dotiendat6" },
+  { MAKH: "KH007", HOTEN: "Đỗ Tiến Đạt", SDT: "0352512557", MATK: "0352512557" },
 ];
 
 const NHANVIEN = [

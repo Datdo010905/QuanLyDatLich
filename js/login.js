@@ -16,32 +16,28 @@ function togglePassword() {
 }
 
 
+if (!localStorage.getItem("KhachHang") || !localStorage.getItem("TaiKhoan")) {
+    localStorage.setItem("KhachHang", JSON.stringify(KHACHHANG));
+    localStorage.setItem("TaiKhoan", JSON.stringify(TAIKHOAN));
+}
+
+
+
 function dangNhapLocal(event) {
   event.preventDefault();
 
   const user = document.getElementById("username").value.trim();
   const pass = document.getElementById("password").value.trim();
 
-  // Tìm tài khoản trong data.js
-  let account = TAIKHOAN.find(acc => acc.MATK.toLowerCase() === user.toLowerCase() && acc.PASS === pass);
+  // LẤY DANH SÁCH TÀI KHOẢN TỪ LOCALSTORAGE
+  const dsTaiKhoan = JSON.parse(localStorage.getItem("TaiKhoan")) || [];
 
-  //tìm tài khoản new USER đăng ký
-  const registeredUsers = JSON.parse(localStorage.getItem("registeredUser")) || [];
-  const exists = registeredUsers.find(u => u.MATK.toLowerCase() === user.toLowerCase());
-
-  if (!account && exists) {
-    if (
-      exists.MATK.toLowerCase() === user.toLowerCase() &&
-      exists.PASS === pass
-    ) {
-      account = {
-        MATK: exists.MATK,
-        PASS: exists.PASS,
-        PHANQUYEN: 0,
-        TRANGTHAI: "Hoạt động"
-      };
-    }
-  }
+  // Tìm tài khoản
+  const account = dsTaiKhoan.find(
+    acc =>
+      acc.MATK.toLowerCase() === user.toLowerCase() &&
+      acc.PASS === pass
+  );
 
   // Không tồn tại tài khoản
   if (!account) {
@@ -65,7 +61,7 @@ function dangNhapLocal(event) {
     alert("Đăng nhập thành công!");
     window.location.href = "index.html";
   }
-  localStorage.removeItem("sdt");
+  localStorage.removeItem("sodienthoai-datlich");
   localStorage.removeItem("danhSachLichHen");
   return false;
 }
@@ -114,12 +110,18 @@ function dangKyLocal(event) {
     return false;
   }
 
-  const taikhoan = TAIKHOAN.find(acc => acc.MATK.toLowerCase() === user.toLowerCase());
+  // LẤY DANH SÁCH TÀI KHOẢN TỪ LOCALSTORAGE
+  const dsTaiKhoan = JSON.parse(localStorage.getItem("TaiKhoan")) || [];
 
-  const registeredUsers = JSON.parse(localStorage.getItem("registeredUser")) || [];
-  const exists = registeredUsers.some(u => u.MATK.toLowerCase() === user.toLowerCase());//some trả về true/false
+  // Tìm tài khoản
+  const taikhoan = dsTaiKhoan.find(
+    acc =>
+      acc.MATK.toLowerCase() === user.toLowerCase() &&
+      acc.PASS === pass
+  );
 
-  if (taikhoan || exists) {
+  //tồn tại tài khoản
+  if (taikhoan) {
     alert("Tài khoản đã tồn tại. Vui lòng chọn tên đăng nhập khác.");
     return;
   }
@@ -140,9 +142,9 @@ function dangKyLocal(event) {
       MATK: user
     };
 
-    // Thêm vào mảng registeredUser
-    registeredUsers.push(newUser);
-    localStorage.setItem("registeredUser", JSON.stringify(registeredUsers));
+    // Thêm vào mảng tài khoản và lưu vào localStorage
+    dsTaiKhoan.push(newUser);
+    localStorage.setItem("TaiKhoan", JSON.stringify(dsTaiKhoan));
 
     // Thêm khách hàng mới
     const khachhangList = JSON.parse(localStorage.getItem("KhachHang")) || [];

@@ -43,45 +43,83 @@ if (!localStorage.getItem("KhachHang") || !localStorage.getItem("TaiKhoan")) {
 }
 
 
-let list_KH = JSON.parse(localStorage.getItem("KhachHang")) || [];
+  
 
-  function luusodienthoai() {
-
+function luusodienthoai() {
   const sdt = document.getElementById("input-sdt").value.trim();
-  if(!sdt) { alert("Vui lòng nhập số điện thoại!"); return; }
+  if (!sdt) {
+    alert("Vui lòng nhập số điện thoại!");
+    return;
+  }
 
   localStorage.setItem("sodienthoai-datlich", sdt);
 
+  // Lấy danh sách khách hàng
   let khList = JSON.parse(localStorage.getItem("KhachHang")) || [];
-  let kh = khList.find(k => k.SDT === sdt);
 
-  if(!kh) {
-    // tạo khách hàng mới
-    kh = {
-      MAKH: "KH" + Date.now(),
-      HOTEN: "Khách hàng mới",
-      SDT: sdt,
-      MATK: sdt
-    };
-    list_KH.push(kh);
-    localStorage.setItem("KhachHang", JSON.stringify(list_KH));
+  // Lấy thông tin người đang đăng nhập
+  const logged = localStorage.getItem("loggedInUser");
+
+  let kh;
+
+  //NẾU ĐANG ĐĂNG NHẬP, tìm KH theo MATK
+  if (logged) {
+    kh = khList.find(k => k.MATK === logged);
+
+    // Khách đang đăng nhập nhưng chưa lưu trong KH thì tạo vào danh sách
+    if (!kh) {
+      kh = {
+        MAKH: "KH" + Date.now(),
+        HOTEN: "Khách hàng",
+        SDT: sdt,
+        MATK: logged
+      };
+      khList.push(kh);
+    } else {
+      // Đã có KH nhưng chưa có SDT hoặc SDT khác, cập nhật
+      if (!kh.SDT || kh.SDT !== sdt) {
+        kh.SDT = sdt;
+      }
+    }
+
+    localStorage.setItem("KhachHang", JSON.stringify(khList));
+
+  } else {
+    //KHÔNG ĐĂNG NHẬP, tìm KH theo SDT
+    kh = khList.find(k => k.SDT === sdt);
+
+    if (!kh) {
+      // KH mới hoàn toàn, tạo mới
+      kh = {
+        MAKH: "KH" + Date.now(),
+        HOTEN: "Khách hàng mới",
+        SDT: sdt,
+        MATK: sdt
+      };
+      khList.push(kh);
+      localStorage.setItem("KhachHang", JSON.stringify(khList));
+    }
   }
 
-  // tạo tài khoản nếu chưa có
+  //TẠO TÀI KHOẢN NẾU CHƯA CÓ
   let dsUser = JSON.parse(localStorage.getItem("TaiKhoan")) || [];
-  if(!dsUser.find(u => u.MATK === sdt)) {
-    dsUser.push(
-      { MATK: sdt,
-         PASS: sdt, 
-         PHANQUYEN: 0, 
-         TRANGTHAI: "Hoạt động" });
+  let tk = dsUser.find(u => u.MATK === kh.MATK);
+
+  if (!tk) {
+    dsUser.push({
+      MATK: kh.MATK,
+      PASS: sdt,
+      PHANQUYEN: 0,
+      TRANGTHAI: "Hoạt động"
+    });
     localStorage.setItem("TaiKhoan", JSON.stringify(dsUser));
+    alert("Tạo tài khoản tự động cho khách hàng mới. Vui lòng đăng nhập với số điện thoại làm tên đăng nhập và mật khẩu.");
   }
 
-  localStorage.setItem("loggedInUser", sdt);
+  //ĐĂNG NHẬP SAU KHI LƯU
+  localStorage.setItem("loggedInUser", kh.MATK);
   window.location.href = "lichhen.html";
 }
-
 
 
 
