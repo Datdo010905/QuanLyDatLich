@@ -1,7 +1,10 @@
 // BẢNG TÀI KHOẢN
 const TAIKHOAN = [
   { MATK: "admin", PASS: "1", PHANQUYEN: 1, TRANGTHAI: "Hoạt động" },
-  { MATK: "nhanvien", PASS: "1", PHANQUYEN: 2, TRANGTHAI: "Hoạt động" },
+  { MATK: "quanly", PASS: "1", PHANQUYEN: 2, TRANGTHAI: "Hoạt động" },
+  { MATK: "nhanvien1", PASS: "1", PHANQUYEN: 3, TRANGTHAI: "Hoạt động" },
+  { MATK: "nhanvien2", PASS: "1", PHANQUYEN: 3, TRANGTHAI: "Hoạt động" },
+  { MATK: "thungan", PASS: "1", PHANQUYEN: 4, TRANGTHAI: "Hoạt động" },
   { MATK: "0352512556", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
   { MATK: "0912345678", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
   { MATK: "0987654321", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
@@ -27,11 +30,12 @@ const KHACHHANG = [
 ];
 
 const NHANVIEN = [
-  { MANV: "NV001", HOTEN: "Hoàng Quốc Việt", CHUCVU: "Quản lý", SDT: "0911111111", DIACHI: "Hà Nội", NGAYSINH: "1985-06-10", MATK: "TK001", MACHINHANH: "CN001" },
-  { MANV: "NV002", HOTEN: "Lê Thị Mai", CHUCVU: "Lễ tân", SDT: "0911222333", DIACHI: "Hưng Yên", NGAYSINH: "1997-09-25", MATK: "TK002", MACHINHANH: "CN001" },
-  { MANV: "NV003", HOTEN: "Nguyễn Văn Dũng", CHUCVU: "Stylist", SDT: "0912333444", DIACHI: "Hải Dương", NGAYSINH: "1995-01-15", MATK: "TK005", MACHINHANH: "CN002" },
-  { MANV: "NV004", HOTEN: "Đỗ Thành Đạt", CHUCVU: "Stylist", SDT: "0913444555", DIACHI: "Hà Nam", NGAYSINH: "1996-08-30", MATK: "TK009", MACHINHANH: "CN003" },
-  { MANV: "NV005", HOTEN: "Nguyễn Tiến Đạt", CHUCVU: "Thu ngân", SDT: "0914555666", DIACHI: "Hà Nội", NGAYSINH: "1998-04-12", MATK: "TK010", MACHINHANH: "CN004" },
+  { MANV: "NV001", HOTEN: "Hoàng Quốc Việt", CHUCVU: "Quản lý", SDT: "0911111111", DIACHI: "Hà Nội", NGAYSINH: "1985-06-10", MATK: "quanly", MACHINHANH: "CN001" },
+  { MANV: "NV001", HOTEN: "Đỗ Tiến Đạt", CHUCVU: "Admin", SDT: "0352512556", DIACHI: "Hưng Yên", NGAYSINH: "2005-09-01", MATK: "admin", MACHINHANH: "CN001" },
+  { MANV: "NV002", HOTEN: "Lê Thị Mai", CHUCVU: "Lễ tân", SDT: "0911222333", DIACHI: "Hưng Yên", NGAYSINH: "1997-09-25", MATK: "letan", MACHINHANH: "CN001" },
+  { MANV: "NV003", HOTEN: "Nguyễn Văn Dũng", CHUCVU: "Stylist", SDT: "0912333444", DIACHI: "Hải Dương", NGAYSINH: "1995-01-15", MATK: "nhanvien1", MACHINHANH: "CN002" },
+  { MANV: "NV004", HOTEN: "Đỗ Thành Đạt", CHUCVU: "Stylist", SDT: "0913444555", DIACHI: "Hà Nam", NGAYSINH: "1996-08-30", MATK: "nhanvien2", MACHINHANH: "CN003" },
+  { MANV: "NV005", HOTEN: "Nguyễn Tiến Đạt", CHUCVU: "Thu ngân", SDT: "0914555666", DIACHI: "Hà Nội", NGAYSINH: "1998-04-12", MATK: "thungan", MACHINHANH: "CN004" },
 ];
 
 

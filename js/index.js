@@ -51,6 +51,13 @@ function luusodienthoai() {
     alert("Vui lòng nhập số điện thoại!");
     return;
   }
+  const checksdt = /^(03|05|07|08|09)[0-9]{8}$/;
+
+  if(!checksdt.test(sdt))
+  {
+    alert("Số điện thoại không hợp lệ!");
+    return;
+  }
 
   localStorage.setItem("sodienthoai-datlich", sdt);
 

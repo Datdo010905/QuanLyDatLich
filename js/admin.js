@@ -232,8 +232,8 @@ function renderCustomers() {
       <td>${kh.SDT}</td>
       <td>${kh.MATK}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${kh.MAKH}"  onclick="openModal('editCustomerModal')"><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${kh.MAKH}"><i class="fas fa-trash"></i></button>
+        <button class="btn small edit" data-id="${kh.MAKH}"  onclick="chuanbiSuaKhachHang('${kh.MAKH}')"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${kh.MAKH}" onclick="xoaKhachHang('${kh.MAKH}')"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
   `).join("");
@@ -242,9 +242,14 @@ function renderCustomers() {
 // NHÂN VIÊN
 function renderStaff() {
   const tbody = document.querySelector("#staffTable tbody");
-  const NhanVienLocal = JSON.parse(localStorage.getItem("NhanVien", JSON.stringify(NHANVIEN)));
   if (!tbody) return;
-  tbody.innerHTML = NhanVienLocal.map(nv => `
+  // Lọc theo chức vụ
+  const dsHienThi = nhanVienLocal.filter(nv =>
+    nv.CHUCVU === "Thu ngân" ||
+    nv.CHUCVU === "Lễ tân" ||
+    nv.CHUCVU === "Stylist"
+  );
+  tbody.innerHTML = dsHienThi.map(nv => `
     <tr>
       <td>${nv.MANV}</td>
       <td>${nv.HOTEN}</td>
@@ -424,6 +429,8 @@ function openEditModal(mataikhoan) {
 function closeEditModal() {
   document.getElementById("editAccountModal").style.display = "none";
 }
+
+//quản lý tài khoản
 function themTaiKhoan(event) {
   event.preventDefault(); // Ngăn chặn hành vi mặc định của form
   const mataikhoan = document.getElementById("accUsername").value;
@@ -965,5 +972,128 @@ function xoaDichVu(madichvu) {
   }
   catch (error) {
     alert("Đã có lỗi xảy ra khi xoá dịch vụ: " + error.message);
+  }
+}
+
+
+
+//quản lý khách hàng
+function themKhachHang(event) {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+  const makhachhang = document.getElementById("custID").value;
+  const tenkhachhang = document.getElementById("custName").value;
+  const sodienthoai = document.getElementById("custPhone").value;
+
+
+  if (makhachhang.trim() === "" || tenkhachhang.trim() === "" || sodienthoai.trim() === "") {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  if (!confirm("Bạn có chắc chắn muốn thêm khách hàng này không?")) {
+    return;
+  }
+
+  const exits = khachHangLocal.some(kh => kh.MAKH === makhachhang);
+  if (exits) {
+    alert("Khách hàng đã tồn tại!");
+    return;
+  }
+  const checksdt = /^(03|05|07|08|09)[0-9]{8}$/;
+
+  if (!checksdt.test(sodienthoai)) {
+    alert("Số điện thoại không hợp lệ!");
+    return;
+  }
+  try {
+    const newKH = {
+      MAKH: makhachhang,
+      HOTEN: tenkhachhang,
+      SDT: sodienthoai,
+      MATK: "",
+    };
+
+    khachHangLocal.push(newKH);
+    localStorage.setItem("KhachHang", JSON.stringify(khachHangLocal));
+    renderCustomers();
+
+    alert("Thêm khách hàng thành công!");
+    closeModal('addCustomerModal');
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi thêm khách hàng: " + error.message);
+  }
+
+}
+
+
+function chuanbiSuaKhachHang(makhachhang) {
+  const khcanSua = khachHangLocal.find(kh => kh.MAKH === makhachhang);
+
+  if (!khcanSua) {
+    alert("Không tìm thấy khách hàng!");
+    return;
+  }
+  openModal('editCustomerModal');
+  document.getElementById("editCustID").value = khcanSua.MAKH;
+  document.getElementById("editCustName").value = khcanSua.HOTEN;
+  document.getElementById("editCustPhone").value = khcanSua.SDT;
+}
+function suaKhachHang(event) {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+  const makhachhang = document.getElementById("editCustID").value;
+  const tenkhachhang = document.getElementById("editCustName").value;
+  const sodienthoai = document.getElementById("editCustPhone").value;
+
+  if (tenkhachhang.trim() === "" || sodienthoai.trim() === "") {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  if (!confirm("Bạn có chắc chắn muốn sửa khách hàng này không?")) {
+    return;
+  }
+  const checksdt = /^(03|05|07|08|09)[0-9]{8}$/;
+
+
+  // Tìm index cần sửa
+  const index = khachHangLocal.findIndex(kh => kh.MAKH === makhachhang);
+  if (index === -1) {
+    alert("Khách hàng không tồn tại!");
+    return;
+  }
+  if (!checksdt.test(sodienthoai)) {
+    alert("Số điện thoại không hợp lệ!");
+    return;
+  }
+  try {
+    // cập nhật thông tin
+    khachHangLocal[index].HOTEN = tenkhachhang;
+    khachHangLocal[index].SDT = sodienthoai;
+
+    localStorage.setItem("KhachHang", JSON.stringify(khachHangLocal));
+    renderCustomers();
+
+    alert("Sửa khách hàng thành công!");
+    closeModal('editCustomerModal');
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi sửa khách hàng: " + error.message);
+  }
+
+}
+function xoaKhachHang(makhachhang) {
+  if (!makhachhang) return;
+  if (!confirm("Bạn có chắc chắn muốn xoá khách hàng này không?")) {
+    return;
+  }
+  try {
+    // Lọc bỏ cần xoá
+    khachHangLocal = khachHangLocal.filter(kh => kh.MAKH !== makhachhang);
+    localStorage.setItem("KhachHang", JSON.stringify(khachHangLocal));
+    renderCustomers();
+    alert("Xoá khách hàng thành công!");
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi xoá khách hàng: " + error.message);
   }
 }
