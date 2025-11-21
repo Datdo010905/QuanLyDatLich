@@ -39,7 +39,48 @@ window.onload = function () {
             nhanvienSelect.appendChild(opt);
         });
     });
+    loadHours();
+     document.getElementById("nhanvien").addEventListener("change", loadHours);
+    document.getElementById("ngayhen").addEventListener("change", loadHours);
 };
+
+
+function loadHours() {
+    const select = document.getElementById("giohen");
+    const nhanvien = document.getElementById("nhanvien").value;
+    const ngayhen = document.getElementById("ngayhen").value;
+
+    select.innerHTML = "";
+    if (!nhanvien || !ngayhen) {
+        return;
+    }
+
+    //check trùng lịch hẹn
+    let dsLichHenCheck = JSON.parse(localStorage.getItem("LichHen")) || [];
+
+    const trunglich = dsLichHenCheck.filter(lh => lh.MANV === nhanvien && lh.NGAYHEN === ngayhen && lh.TRANGTHAI !== "Hủy");
+
+    // Lấy danh sách GIOHEN trùng
+    bookedHours = trunglich.map(lh => lh.GIOHEN);
+
+    for (let h = 8; h <= 22; h++) {
+        for (let m of [0, 30]) { // chia 30 phút/lần
+            let hh = h.toString().padStart(2, "0");
+            let mm = m.toString().padStart(2, "0");
+            let time = `${hh}:${mm}`;
+
+            // chỉ thêm giờ chưa bị trùng
+            if (!bookedHours.includes(time)) {
+                const option = document.createElement("option");
+                option.value = time;
+                option.textContent = time;
+                select.appendChild(option);
+            }
+        }
+    }
+}
+
+
 
 if (!localStorage.getItem("KhachHang")) {
     localStorage.setItem("KhachHang", JSON.stringify(KHACHHANG));
@@ -62,13 +103,28 @@ function themlichhen(event) {
         return;
     }
 
-     // Cập nhật tên khách nếu đã tồn tại
+    // Cập nhật tên khách nếu đã tồn tại
     let kh = khList.find(k => k.SDT === sdt);
     if (kh) {
         kh.HOTEN = hoten;
         localStorage.setItem("KhachHang", JSON.stringify(khList));
     } else {
         alert("Không tìm thấy khách hàng từ số điện thoại! Vui lòng quay lại bước trước.");
+        return;
+    }
+    if (new Date(ngayhen + ' ' + giohen) < new Date()) {
+        alert("Ngày hẹn phải là ngày trong tương lai!");
+        return;
+    }
+    if (nhanvien === "") {
+        alert("Vui lòng chọn chi nhánh -> thợ (nhân viên) để đặt lịch hẹn!");
+        return;
+    }
+    //check trùng lịch hẹn
+    let dsLichHenCheck = JSON.parse(localStorage.getItem("LichHen")) || [];
+    const isConflict = dsLichHenCheck.some(lh => lh.MANV === nhanvien && lh.NGAYHEN === ngayhen && lh.GIOHEN === giohen && lh.TRANGTHAI !== "Hủy");
+    if (isConflict) {
+        alert("Lịch hẹn bị trùng! Vui lòng chọn ngày giờ khác.");
         return;
     }
 

@@ -1,4 +1,5 @@
 <html>
+
 <head>
 	<title> 30Shine - Cắt tóc theo phong cách của bạn! </title>
 	<meta charset="UTF-8" />
@@ -140,11 +141,11 @@
 			<h1>ĐẶT LỊCH GIỮ CHỖ</h1>
 			<form onsubmit="themlichhen(event)">
 				<span>Họ và tên:<span style="color: red">*</span></span><br>
-				<input id = "hoten-dat"class="input-field" maxlength="50" type="text" placeholder="Nhập họ và tên của bạn"
-					required /><br>
+				<input id="hoten-dat" class="input-field" maxlength="50" type="text"
+					placeholder="Nhập họ và tên của bạn" required /><br>
 
 				<span>Số điện thoại:<span style="color: red">*</span></span><br>
-				<input type="text" readonly maxlength="10" id = "sdt-dat"class="input-field" placeholder="Nhập số"
+				<input type="text" readonly maxlength="10" id="sdt-dat" class="input-field" placeholder="Nhập số"
 					oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
 				<br>
 				<span>Chi nhánh:<span style="color: red">*</span></span><br>
@@ -161,7 +162,9 @@
 				<input id="ngayhen" class="input-field" type="date" required /><br>
 
 				<span>Giờ hẹn:<span style="color: red">*</span></span><br>
-				<input id="giohen" class="input-field" type="time" required /><br><br>
+				<select id="giohen" class="input-field" required></select>
+				<br><br>
+
 
 				<input id="btn-datlich" type="submit" value="ĐẶT LỊCH NGAY" />
 			</form>
