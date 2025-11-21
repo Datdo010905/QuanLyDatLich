@@ -145,18 +145,13 @@ let hoaDonLocal = JSON.parse(localStorage.getItem("HoaDon")) || HOADON;
 
 // ================== DASHBOARD ==================
 function loadDashboard() {
-  const khachhangLocal = JSON.parse(localStorage.getItem("KhachHang", JSON.stringify(TAIKHOAN)));
-  document.getElementById("totalUsers").textContent = khachhangLocal.length;
-
-  const lichHenLocal = JSON.parse(localStorage.getItem("LichHen", JSON.stringify(LICHHEN)));
+  document.getElementById("totalUsers").textContent = khachHangLocal.length;
   lichHenLocal.forEach(lh => {
     if (new Date(lh.NGAYHEN).toDateString() === new Date().toDateString()) {
       document.getElementById("todayBookings").textContent = (parseInt(document.getElementById("todayBookings").textContent) || 0) + 1;
     }
   });
-
-  const hoadonLocal = JSON.parse(localStorage.getItem("HoaDon", JSON.stringify(HOADON)));
-  const tongDoanhThu = hoadonLocal.reduce((sum, hd) => sum + hd.TONGTIEN, 0);
+  const tongDoanhThu = hoaDonLocal.reduce((sum, hd) => sum + hd.TONGTIEN, 0);
   document.getElementById("revenue").textContent = tongDoanhThu.toLocaleString("vi-VN") + "₫";
 
   // Thêm sự kiện mới nhất vào bảng hoạt động
@@ -283,8 +278,8 @@ function renderServices() {
       <td><img src="${dv.ANH}" alt="${dv.TENDV}" width="60"></td>
       <td>${dv.QUYTRINH}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${dv.MADV}"  onclick="openModal('editServiceModal')"><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${dv.MADV}"><i class="fas fa-trash"></i></button>
+        <button class="btn small edit" data-id="${dv.MADV}" onclick="chuanBiSuaDichVu('${dv.MADV}')"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${dv.MADV}" onclick="xoaDichVu('${dv.MADV}')"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
   `).join("");
@@ -306,8 +301,8 @@ function renderSkincare() {
       <td><img src="${cs.ANH}" alt="${cs.TENDV}" width="60"></td>
       <td>${cs.QUYTRINH}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${cs.MADV}"  onclick="openModal('editServiceModal')"><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${cs.MADV}"><i class="fas fa-trash"></i></button>
+        <button class="btn small edit" data-id="${cs.MADV}" onclick="chuanBiSuaDichVu('${cs.MADV}')"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${cs.MADV}" onclick="xoaDichVu('${cs.MADV}')"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
   `).join("");
@@ -724,5 +719,251 @@ function xoaKhuyenMai(makhuyenmai) {
   }
   catch (error) {
     alert("Đã có lỗi xảy ra khi xoá khuyến mại: " + error.message);
+  }
+}
+
+
+//DỊCH VỤ
+function themDichVu(event) {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+  const madichvu = document.getElementById("serviceID").value;
+  const tendichvu = document.getElementById("serviceName").value;
+  const mota = document.getElementById("serviceDesc").value;
+  const thoigian = parseInt(document.getElementById("serviceTime").value);
+  const giadv = parseFloat(document.getElementById("servicePrice").value);
+  const trangthai = document.getElementById("serviceStatus").value;
+  const anh = document.getElementById("serviceImg").value;
+  const quytrinh = document.getElementById("serviceProcedure").value;
+  const loaidichvu = document.getElementById("serviceType").value;
+
+
+
+  if (madichvu.trim() === "" || tendichvu.trim() === "" || isNaN(thoigian) || isNaN(giadv) || mota.trim() === "" || anh.trim() === "" || quytrinh.trim() === "") {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  if (!confirm("Bạn có chắc chắn muốn thêm dịch vụ này không?")) {
+    return;
+  }
+
+
+  const dichvuExits = dichVuLocal.some(dv => dv.MADV === madichvu);
+  if (dichvuExits) {
+    alert("Dịch vụ đã tồn tại!");
+    return;
+  }
+  if (giadv <= 0) {
+    alert("Giá dịch vụ phải lớn hơn 0");
+    return;
+  }
+  if (thoigian <= 0) {
+    alert("Thời gian dịch vụ phải lớn hơn 0");
+    return;
+  }
+  // Regex mô tả
+  const motaPattern = /^[a-zA-Z0-9]+(?:,\s*[a-zA-Z0-9]+)*$/;
+  if (!motaPattern.test(mota)) {
+    alert("Mô tả phải là các mục cách nhau bởi dấu phẩy, không có mục trống!");
+    return;
+  }
+
+  // Regex quy trình
+  const quytrinhPattern = /^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/;
+  if (!quytrinhPattern.test(quytrinh)) {
+    alert("Quy trình phải ngăn cách bằng dấu - !");
+    return;
+  }
+  // Regex ảnh
+  const imgPattern = /\.(png|jpg|jpeg|gif|webp)$/i;
+  if (!imgPattern.test(anh)) {
+    alert("Ảnh phải kết thúc bằng .png, .jpg, .jpeg, .gif, .webp!");
+    return;
+  }
+
+
+  try {
+    const newDV = {
+      MADV: madichvu,
+      TENDV: tendichvu,
+      MOTA: mota,
+      THOIGIAN: thoigian,
+      GIADV: giadv,
+      TRANGTHAI: trangthai,
+      ANH: anh,
+      QUYTRINH: quytrinh,
+    };
+    if (loaidichvu === "skin") {
+      chamSocDaLocal.push(newDV);
+      localStorage.setItem("ChamSocDa", JSON.stringify(chamSocDaLocal));
+      renderSkincare();
+      alert("Thêm dịch vụ chăm sóc da thành công!");
+      closeModal('addServiceModal');
+      return;
+    }
+    else if (loaidichvu === "hair") {
+
+      dichVuLocal.push(newDV);
+      localStorage.setItem("DichVu", JSON.stringify(dichVuLocal));
+      renderServices();
+
+      alert("Thêm dịch vụ tóc thành công!");
+      closeModal('addServiceModal');
+    }
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi thêm dịch vụ: " + error.message);
+  }
+
+}
+function chuanBiSuaDichVu(maDVu) {
+  const dvCanSua = dichVuLocal.find(dv => dv.MADV === maDVu);
+  const csCanSua = chamSocDaLocal.find(cs => cs.MADV === maDVu);
+
+  let kmCanSua = dvCanSua || csCanSua;
+
+  if (!kmCanSua) {
+    alert("Không tìm thấy dịch vụ cần sửa!");
+    return;
+  }
+  openModal('editServiceModal');
+
+  document.getElementById("editServiceId").value = kmCanSua.MADV;
+  document.getElementById("editServiceName").value = kmCanSua.TENDV;
+  document.getElementById("editServiceDesc").value = kmCanSua.MOTA;
+  document.getElementById("editServiceTime").value = kmCanSua.THOIGIAN;
+  document.getElementById("editServicePrice").value = kmCanSua.GIADV;
+  document.getElementById("editServiceStatus").value = kmCanSua.TRANGTHAI;
+  document.getElementById("editServiceImg").value = kmCanSua.ANH;
+  document.getElementById("editServiceProcedure").value = kmCanSua.QUYTRINH;
+
+}
+function suaDichVu(event) {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+  const madichvu = document.getElementById("editServiceId").value;
+  const tendichvu = document.getElementById("editServiceName").value;
+  const mota = document.getElementById("editServiceDesc").value;
+  const thoigian = parseInt(document.getElementById("editServiceTime").value);
+  const giadv = parseFloat(document.getElementById("editServicePrice").value);
+  const trangthai = document.getElementById("editServiceStatus").value;
+  const fileInput = document.getElementById("editServiceImg");
+  const anhFile = fileInput.files.length > 0 ? fileInput.files[0] : null;
+  const quytrinh = document.getElementById("editServiceProcedure").value;
+
+  if (!confirm("Bạn có chắc chắn muốn sửa dịch vụ này không?")) {
+    return;
+  }
+
+  if (madichvu.trim() === "" || tendichvu.trim() === "" || isNaN(thoigian) || isNaN(giadv) || mota.trim() === "" || anh.trim() === "" || quytrinh.trim() === "") {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  if (giadv <= 0) {
+    alert("Giá dịch vụ phải lớn hơn 0");
+    return;
+  }
+  if (thoigian <= 0) {
+    alert("Thời gian dịch vụ phải lớn hơn 0");
+    return;
+  }
+  // Regex mô tả
+  const motaPattern = /^[a-zA-Z0-9]+(?:,\s*[a-zA-Z0-9]+)*$/;
+  if (!motaPattern.test(mota)) {
+    alert("Mô tả phải là các mục cách nhau bởi dấu phẩy, không có mục trống!");
+    return;
+  }
+
+  // Regex quy trình
+  const quytrinhPattern = /^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/;
+  if (!quytrinhPattern.test(quytrinh)) {
+    alert("Quy trình phải ngăn cách bằng dấu - !");
+    return;
+  }
+  // Regex ảnh
+  const imgPattern = /\.(png|jpg|jpeg|gif|webp)$/i;
+  if (!imgPattern.test(anh)) {
+    alert("Ảnh phải kết thúc bằng .png, .jpg, .jpeg, .gif, .webp!");
+    return;
+  }
+
+  // Kiểm tra dịch vụ thuộc bảng nào
+  let index = dichVuLocal.findIndex(dv => dv.MADV === madichvu);
+  let indexCS = chamSocDaLocal.findIndex(cs => cs.MADV === madichvu);
+
+  let targetList = null;
+  let targetIndex = -1;
+
+  if (index !== -1) {
+    targetList = dichVuLocal;
+    targetIndex = index;
+  }
+  else if (indexCS !== -1) {
+    targetList = chamSocDaLocal;
+    targetIndex = indexCS;
+  }
+  else {
+    alert("Không tìm thấy dịch vụ!");
+    return;
+  }
+  try {
+    // Cập nhật
+    targetList[targetIndex] = {
+      ...targetList[targetIndex],
+      TENDV: tendichvu,
+      MOTA: mota,
+      THOIGIAN: thoigian,
+      GIADV: giadv,
+      TRANGTHAI: trangthai,
+      ANH: anhFile,
+      QUYTRINH: quytrinh
+    };
+
+    // Lưu đúng bảng
+    localStorage.setItem("DichVu", JSON.stringify(dichVuLocal));
+    localStorage.setItem("ChamSocDa", JSON.stringify(chamSocDaLocal));
+
+    renderServices();
+    renderSkincare();
+
+    alert("Sửa dịch vụ thành công!");
+    closeModal('editServiceModal');
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi sửa dịch vụ: " + error.message);
+  }
+
+}
+function xoaDichVu(madichvu) {
+  if (!madichvu) return;
+  if (!confirm("Bạn có chắc chắn muốn xoá dịch vụ này không?")) {
+    return;
+  }
+  // Không được xoá dịch vụ đang hoạt động
+  const dvCanXoa = dichVuLocal.find(dv => dv.MADV === madichvu);
+  const csCanXoa = chamSocDaLocal.find(cs => cs.MADV === madichvu);
+
+  let dichVuCanXoa = dvCanXoa || csCanXoa;
+
+  if (!dichVuCanXoa) {
+    alert("Dịch vụ không tồn tại!");
+    return;
+  }
+  if (dichVuCanXoa.TRANGTHAI === "Đang cung cấp") {
+    alert("Không thể xoá dịch vụ đang cung cấp!");
+    return;
+  }
+  try {
+    // Lọc bỏ đối tượng cần xoá
+    dichVuLocal = dichVuLocal.filter(dv => dv.MADV !== madichvu);
+    chamSocDaLocal = chamSocDaLocal.filter(cs => cs.MADV !== madichvu);
+
+    localStorage.setItem("ChamSocDa", JSON.stringify(chamSocDaLocal));
+    localStorage.setItem("DichVu", JSON.stringify(dichVuLocal));
+
+    renderSkincare();
+    renderServices();
+    alert("Xoá dịch vụ thành công!");
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi xoá dịch vụ: " + error.message);
   }
 }

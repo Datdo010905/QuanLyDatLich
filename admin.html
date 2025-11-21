@@ -375,13 +375,13 @@
                                     <input type="text" id="serviceName" required placeholder="VD: Cắt tóc nam">
                                 </div>
                                 <div class="form-group"> <label>Loại dịch vụ:</label> <select id="serviceType">
-                                        <option value="hair">Làm Tóc</option>
-                                        <option value="skin">Chăm sóc da & Thư giãn</option>
+                                        <option value="hair">Dịch vụ tóc</option>
+                                        <option value="skin">Chăm sóc da</option>
                                     </select> </div>
                                 <!-- Mô Tả -->
                                 <div class="form-group">
                                     <label>Mô tả:</label>
-                                    <textarea id="serviceDesc" rows="3" placeholder="Nhập mô tả dịch vụ"></textarea>
+                                    <textarea id="serviceDesc" rows="3" placeholder="Nhập mô tả dịch vụ, VD: mota1, mota2, mota3"></textarea>
                                 </div>
                                 <!-- Thời gian -->
                                 <div class="form-group">
@@ -397,25 +397,25 @@
                                 <div class="form-group">
                                     <label>Trạng thái:</label>
                                     <select id="serviceStatus">
-                                        <option value="active">Hoạt động</option>
-                                        <option value="inactive">Khóa</option>
+                                        <option value="Đang cung cấp">Đang cung cấp</option>
+                                        <option value="Ngừng cung cấp">Ngừng cung cấp</option>
                                     </select>
                                 </div>
                                 <!-- Ảnh -->
                                 <div class="form-group">
                                     <label>Ảnh:</label>
-                                    <input type="text" id="serviceImg" placeholder="Link ảnh minh họa">
+                                    <input type="text" id="serviceImg" placeholder="Link ảnh minh họa, VD: 'img/product/goi-thu-gian-2.png'">
                                 </div>
                                 <!-- Quy trình -->
                                 <div class="form-group">
                                     <label>Quy trình:</label>
                                     <textarea id="serviceProcedure" rows="3"
-                                        placeholder="Nhập quy trình dịch vụ"></textarea>
+                                        placeholder="Nhập quy trình dịch vụ, VD: quytrinh1-quytrinh2-quytrinh3"></textarea>
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('addServiceModal')">Hủy</button>
-                                    <button type="submit" class="btn primary">Lưu dịch vụ</button>
+                                    <button type="submit" class="btn primary" onclick="themDichVu(event)">Lưu dịch vụ</button>
                                 </div>
                             </form>
                         </div>
@@ -430,7 +430,7 @@
                             <span class="close-btn" onclick="closeModal('editServiceModal')">&times;</span>
                         </div>
                         <div class="modal-body">
-                            <form onsubmit="capNhatDichVu(event)">
+                            <form>
                                 <input type="hidden" id="editServiceId">
                                 <div class="form-group">
                                     <label>Tên dịch vụ:</label>
@@ -451,13 +451,13 @@
                                 <div class="form-group">
                                     <label>Trạng thái:</label>
                                     <select id="editServiceStatus">
-                                        <option value="active">Hoạt động</option>
-                                        <option value="inactive">Khóa</option>
+                                        <option value="Đang cung cấp">Đang cung cấp</option>
+                                        <option value="Ngừng cung cấp">Ngừng cung cấp</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Ảnh:</label>
-                                    <input type="text" id="editServiceImg" placeholder="Link ảnh minh họa">
+                                    <input type="text" id="editServiceImg" placeholder="Link ảnh minh họa, VD: 'img/product/goi-thu-gian-2.png'">
                                 </div>
                                 <div class="form-group">
                                     <label>Quy trình:</label>
@@ -467,7 +467,7 @@
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('editServiceModal')">Hủy</button>
-                                    <button type="submit" class="btn primary">Cập nhật</button>
+                                    <button type="submit" class="btn primary" onclick="suaDichVu(event)">Cập nhật</button>
                                 </div>
                             </form>
                         </div>
