@@ -61,13 +61,7 @@ function themlichhen(event) {
         alert("Vui lòng điền đầy đủ thông tin để đặt lịch hẹn!");
         return;
     }
-    // Trường hợp tên bị mặc định
-    if (hoten === "Khách hàng mới" ||
-        khList.find(k => k.HOTEN === "Khách hàng mới" && k.SDT === sdt)) 
-    {
-        alert("Vui lòng đổi tên khác tên mặc định 'Khách hàng mới' để đặt lịch hẹn!");
-        return;
-    }
+
      // Cập nhật tên khách nếu đã tồn tại
     let kh = khList.find(k => k.SDT === sdt);
     if (kh) {
@@ -95,4 +89,5 @@ function themlichhen(event) {
     localStorage.setItem("LichHen", JSON.stringify(dsLichHen));
 
     alert("Đặt lịch hẹn thành công!");
+    window.location.href = "lichsu.html";
 }

@@ -16,17 +16,11 @@ function checkdangnhap() {
 window.addEventListener("DOMContentLoaded", checkdangnhap);
 //LẤY THÔNG TIN KHÁCH HÀNG ĐĂNG NHẬP THEO SĐT HOẶC MÃ TÀI KHOẢN
 const mataikhoan = localStorage.getItem("loggedInUser");
-const khachhang = KHACHHANG.find(kh => kh.MATK === mataikhoan || kh.SDT === mataikhoan);
-
-let LICHHEN_KH = [];
+let khachHangLocal = JSON.parse(localStorage.getItem("KhachHang")) || [];
+const khachhang = khachHangLocal.find(kh => kh.MATK === mataikhoan || kh.SDT === mataikhoan);
 
 if (khachhang) {
     console.log("Khách hàng đăng nhập:", khachhang);
-    // LƯU LỊCH HẸN CỦA KHÁCH HÀNG VÀO LOCALSTORAGE NẾU CHƯA TỒN TẠI
-    if (!localStorage.getItem('danhSachLichHen')) {
-        const LICHHEN_KH = LICHHEN.filter(lh => lh.MAKH === khachhang.MAKH);
-        localStorage.setItem('danhSachLichHen', JSON.stringify(LICHHEN_KH));
-    } 
 } else {
     console.warn("Không tìm thấy thông tin khách hàng hoặc chưa đăng nhập.");
 }
@@ -34,7 +28,8 @@ if (khachhang) {
 // LỊCH HẸN
 function renderBookingsForCustomer() {
     const tbody = document.querySelector(".lichsu-table tbody");
-    const LICHHEN_KH = JSON.parse(localStorage.getItem('danhSachLichHen')) || [];
+    let lichHenLocal = JSON.parse(localStorage.getItem('LichHen')) || [];
+    const LICHHEN_KH = lichHenLocal.filter(lh => lh.MAKH === khachhang.MAKH);
     if (!tbody) {
         return;
     }
