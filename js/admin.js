@@ -243,13 +243,7 @@ function renderCustomers() {
 function renderStaff() {
   const tbody = document.querySelector("#staffTable tbody");
   if (!tbody) return;
-  // Lọc theo chức vụ
-  const dsHienThi = nhanVienLocal.filter(nv =>
-    nv.CHUCVU === "Thu ngân" ||
-    nv.CHUCVU === "Lễ tân" ||
-    nv.CHUCVU === "Stylist"
-  );
-  tbody.innerHTML = dsHienThi.map(nv => `
+  tbody.innerHTML = nhanVienLocal.map(nv => `
     <tr>
       <td>${nv.MANV}</td>
       <td>${nv.HOTEN}</td>
@@ -260,8 +254,8 @@ function renderStaff() {
       <td>${nv.MATK}</td>
       <td>${nv.MACHINHANH}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${nv.MANV}"  onclick="openModal('editStaffModal')"><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${nv.MANV}"><i class="fas fa-trash"></i></button>
+        <button class="btn small edit" data-id="${nv.MANV}" onclick="chuanbiSuaNhanVien('${nv.MANV}')"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${nv.MANV}" onclick="xoaNhanVien('${nv.MANV}')"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
   `).join("");
@@ -1095,5 +1089,182 @@ function xoaKhachHang(makhachhang) {
   }
   catch (error) {
     alert("Đã có lỗi xảy ra khi xoá khách hàng: " + error.message);
+  }
+}
+
+
+//quản lý nhân viên
+function themNhanVien(event) {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+  const manhanvien = document.getElementById("staffID").value;
+  const tennhanvien = document.getElementById("staffName").value;
+  const chucvu = document.getElementById("staffRole").value;
+  const sodienthoai = document.getElementById("staffPhone").value;
+  const diachi = document.getElementById("staffAddress").value;
+  const ngaysinh = document.getElementById("staffBirth").value;
+  const taikhoan = document.getElementById("staffAccount").value;
+  const chinhanh = document.getElementById("staffBranch").value;
+
+
+  if (manhanvien.trim() === "" || tennhanvien.trim() === "" || sodienthoai.trim() === "" || diachi.trim() === "") {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  if (!confirm("Bạn có chắc chắn muốn thêm nhân viên này không?")) {
+    return;
+  }
+
+  const exits = nhanVienLocal.some(nv => nv.MANV === manhanvien);
+  if (exits) {
+    alert("Nhân viên đã tồn tại!");
+    return;
+  }
+  const exitsSDT = nhanVienLocal.some(nv => nv.SDT === sodienthoai && nv.MANV !== manhanvien);
+  if (exitsSDT) {
+    alert("Số điện thoại đã trùng với nhân viên khác!");
+    return;
+  }
+  const checksdt = /^(03|05|07|08|09)[0-9]{8}$/;
+
+  if (!checksdt.test(sodienthoai)) {
+    alert("Số điện thoại không hợp lệ!");
+    return;
+  }
+  const year = parseInt(ngaysinh.split("-")[0]); // Lấy năm sinh VD:"2001-05-12"
+  if (year > 2005 || year < 1980) {
+    alert("Năm sinh không hợp lệ!");
+    return;
+  }
+  try {
+    const newNV = {
+      MANV: manhanvien,
+      HOTEN: tennhanvien,
+      CHUCVU: chucvu,
+      SDT: sodienthoai,
+      DIACHI: diachi,
+      NGAYSINH: ngaysinh,
+      MATK: taikhoan,
+      MACHINHANH: chinhanh
+    };
+
+    nhanVienLocal.push(newNV);
+    localStorage.setItem("NhanVien", JSON.stringify(nhanVienLocal));
+    renderStaff();
+
+    alert("Thêm nhân viên thành công!");
+    closeModal('addStaffModal');
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi thêm nhân viên: " + error.message);
+  }
+
+}
+
+
+function chuanbiSuaNhanVien(manhanvien) {
+  const canSua = nhanVienLocal.find(nv => nv.MANV === manhanvien);
+
+  if (!canSua) {
+    alert("Không tìm thấy nhân viên!");
+    return;
+  }
+  openModal('editStaffModal');
+  document.getElementById("editStaffId").value = canSua.MANV;
+  document.getElementById("editStaffName").value = canSua.HOTEN;
+  document.getElementById("editStaffRole").value = canSua.CHUCVU;
+  document.getElementById("editStaffPhone").value = canSua.SDT;
+  document.getElementById("editStaffAddress").value = canSua.DIACHI;
+  document.getElementById("editStaffBirth").value = canSua.NGAYSINH;
+  document.getElementById("editStaffAccount").value = canSua.MATK;
+  document.getElementById("editStaffBranch").value= canSua.MACHINHANH;
+}
+function suaNhanVien(event) {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+  const manhanvien = document.getElementById("editStaffId").value;
+  const tennhanvien = document.getElementById("editStaffName").value;
+  const chucvu = document.getElementById("editStaffRole").value;
+  const sodienthoai = document.getElementById("editStaffPhone").value;
+  const diachi = document.getElementById("editStaffAddress").value;
+  const ngaysinh = document.getElementById("editStaffBirth").value;
+  const taikhoan = document.getElementById("editStaffAccount").value;
+  const chinhanh = document.getElementById("editStaffBranch").value;
+
+  if (manhanvien.trim() === "" || tennhanvien.trim() === "" || sodienthoai.trim() === "" || diachi.trim() === "") {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  if (!confirm("Bạn có chắc chắn muốn sửa nhân viên này không?")) {
+    return;
+  }
+  const checksdt = /^(03|05|07|08|09)[0-9]{8}$/;
+
+
+  // Tìm index cần sửa
+  const index = nhanVienLocal.findIndex(nv => nv.MANV === manhanvien);
+  if (index === -1) {
+    alert("Nhân viên không tồn tại!");
+    return;
+  }
+  if (!checksdt.test(sodienthoai)) {
+    alert("Số điện thoại không hợp lệ!");
+    return;
+  }
+  const exitsSDT = nhanVienLocal.some(nv => nv.SDT === sodienthoai && nv.MANV !== manhanvien);
+  if (exitsSDT) {
+    alert("Số điện thoại đã trùng với nhân viên khác!");
+    return;
+  }
+  const year = parseInt(ngaysinh.split("-")[0]); // Lấy năm sinh VD:"2001-05-12"
+  if (year > 2005 || year < 1980) {
+    alert("Năm sinh không hợp lệ!");
+    return;
+  }
+  const isAdmin = nhanVienLocal.some(nv => nv.MANV === manhanvien && nv.CHUCVU === "Admin")
+  if(isAdmin){
+    alert("Không thể chỉnh quyền chủ shop!");
+    return;
+  }
+  try {
+    // cập nhật thông tin
+    nhanVienLocal[index].HOTEN = tennhanvien;
+    nhanVienLocal[index].CHUCVU = chucvu;
+    nhanVienLocal[index].SDT = sodienthoai;
+    nhanVienLocal[index].DIACHI = diachi;
+    nhanVienLocal[index].NGAYSINH = ngaysinh;
+    nhanVienLocal[index].MATK = taikhoan;
+    nhanVienLocal[index].MACHINHANH = chinhanh;
+
+
+    localStorage.setItem("NhanVien", JSON.stringify(nhanVienLocal));
+    renderStaff();
+
+    alert("Sửa nhân viên thành công!");
+    closeModal('editStaffModal');
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi sửa nhân viên: " + error.message);
+  }
+
+}
+function xoaNhanVien(manhanvien) {
+  if (!manhanvien) return;
+  if (!confirm("Bạn có chắc chắn muốn xoá nhân viên này không?")) {
+    return;
+  }
+  const isAdmin = nhanVienLocal.some(nv => nv.MANV === manhanvien && nv.CHUCVU === "Admin")
+  if(isAdmin){
+    alert("Không thể xoá chủ shop!");
+    return;
+  }
+  try {
+    // Lọc bỏ cần xoá
+    nhanVienLocal = nhanVienLocal.filter(nv => nv.MANV !== manhanvien);
+    localStorage.setItem("NhanVien", JSON.stringify(nhanVienLocal));
+    renderStaff();
+    alert("Xoá nhân viên thành công!");
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi xoá nhân viên: " + error.message);
   }
 }

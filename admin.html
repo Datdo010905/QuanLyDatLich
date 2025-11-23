@@ -255,7 +255,8 @@
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('addPromotionModal')">Hủy</button>
-                                    <button type="submit" class="btn primary" onclick = "themKhuyenMai(event)">Lưu khuyến mại</button>
+                                    <button type="submit" class="btn primary" onclick="themKhuyenMai(event)">Lưu khuyến
+                                        mại</button>
                                 </div>
                             </form>
                         </div>
@@ -295,7 +296,8 @@
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('editPromotionModal')">Hủy</button>
-                                    <button type="submit" class="btn primary" onclick = "suaKhuyenMai(event)">Cập nhật</button>
+                                    <button type="submit" class="btn primary" onclick="suaKhuyenMai(event)">Cập
+                                        nhật</button>
                                 </div>
                             </form>
                         </div>
@@ -381,7 +383,8 @@
                                 <!-- Mô Tả -->
                                 <div class="form-group">
                                     <label>Mô tả:</label>
-                                    <textarea id="serviceDesc" rows="3" placeholder="Nhập mô tả dịch vụ, VD: mota1, mota2, mota3"></textarea>
+                                    <textarea id="serviceDesc" rows="3"
+                                        placeholder="Nhập mô tả dịch vụ, VD: mota1, mota2, mota3"></textarea>
                                 </div>
                                 <!-- Thời gian -->
                                 <div class="form-group">
@@ -404,7 +407,8 @@
                                 <!-- Ảnh -->
                                 <div class="form-group">
                                     <label>Ảnh:</label>
-                                    <input type="text" id="serviceImg" placeholder="Link ảnh minh họa, VD: 'img/product/goi-thu-gian-2.png'">
+                                    <input type="text" id="serviceImg"
+                                        placeholder="Link ảnh minh họa, VD: 'img/product/goi-thu-gian-2.png'">
                                 </div>
                                 <!-- Quy trình -->
                                 <div class="form-group">
@@ -415,7 +419,8 @@
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('addServiceModal')">Hủy</button>
-                                    <button type="submit" class="btn primary" onclick="themDichVu(event)">Lưu dịch vụ</button>
+                                    <button type="submit" class="btn primary" onclick="themDichVu(event)">Lưu dịch
+                                        vụ</button>
                                 </div>
                             </form>
                         </div>
@@ -457,7 +462,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Ảnh:</label>
-                                    <input type="text" id="editServiceImg" placeholder="Link ảnh minh họa, VD: 'img/product/goi-thu-gian-2.png'">
+                                    <input type="text" id="editServiceImg"
+                                        placeholder="Link ảnh minh họa, VD: 'img/product/goi-thu-gian-2.png'">
                                 </div>
                                 <div class="form-group">
                                     <label>Quy trình:</label>
@@ -467,7 +473,8 @@
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('editServiceModal')">Hủy</button>
-                                    <button type="submit" class="btn primary" onclick="suaDichVu(event)">Cập nhật</button>
+                                    <button type="submit" class="btn primary" onclick="suaDichVu(event)">Cập
+                                        nhật</button>
                                 </div>
                             </form>
                         </div>
@@ -516,7 +523,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="custPhone">Số điện thoại:</label>
-                                    <input type="text" id="custPhone" maxlength = "10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="Nhập số điện thoại..." required>
+                                    <input type="text" id="custPhone" maxlength="10"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                        placeholder="Nhập số điện thoại..." required>
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
@@ -547,7 +556,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="editCustPhone">Số điện thoại:</label>
-                                    <input type="text" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" id="editCustPhone" required>
+                                    <input type="text" maxlength="10"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" id="editCustPhone"
+                                        required>
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
@@ -595,7 +606,7 @@
                         </div>
                         <div class="modal-body">
                             <form id="addStaffForm">
-                                 <div class="form-group">
+                                <div class="form-group">
                                     <label>Mã nhân viên:</label>
                                     <input type="text" id="staffID" required>
                                 </div>
@@ -607,16 +618,18 @@
                                 <div class="form-group">
                                     <label>Chức vụ:</label>
                                     <select id="staffRole" required>
-                                        <option value="stylist">Stylist</option>
-                                        <option value="skincare">Chuyên viên da</option>
-                                        <option value="reception">Lễ tân</option>
-                                        <option value="manager">Quản lý</option>
+                                        <option value="Stylist">Stylist</option>
+                                        <option value="Thu ngân">Thu ngân</option>
+                                        <option value="Lễ tân">Lễ tân</option>
+                                        <option value="Quản lý">Quản lý</option>
                                     </select>
                                 </div>
                                 <!-- Số điện thoại -->
                                 <div class="form-group">
                                     <label>Số điện thoại:</label>
-                                    <input type="tel" id="staffPhone" required placeholder="VD: 0912345678">
+                                    <input type="tel" maxlength="10"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" id="staffPhone"
+                                        required placeholder="VD: 0912345678">
                                 </div>
                                 <!-- Địa chỉ -->
                                 <div class="form-group">
@@ -636,12 +649,19 @@
                                 <!-- Chi nhánh -->
                                 <div class="form-group">
                                     <label>Chi nhánh:</label>
-                                    <input type="text" id="staffBranch" placeholder="Nhập mã chi nhánh">
+                                    <select id="StaffBranch">
+                                        <option value="">-- Chọn chi nhánh --</option>
+                                        <option value="CN001">30Shine - Nguyễn Trãi</option>
+                                        <option value="CN002">30Shine - Cầu Giấy</option>
+                                        <option value="CN003">30Shine - Tân Bình</option>
+                                        <option value="CN004">30Shine - Đà Nẵng</option>
+                                    </select>
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('addStaffModal')">Hủy</button>
-                                    <button type="submit" class="btn primary">Lưu nhân viên</button>
+                                    <button type="submit" class="btn primary" onclick="themNhanVien(event)">Lưu nhân
+                                        viên</button>
                                 </div>
                             </form>
                         </div>
@@ -665,15 +685,17 @@
                                 <div class="form-group">
                                     <label>Chức vụ:</label>
                                     <select id="editStaffRole" required>
-                                        <option value="stylist">Stylist</option>
-                                        <option value="skincare">Chuyên viên da</option>
-                                        <option value="reception">Lễ tân</option>
-                                        <option value="manager">Quản lý</option>
+                                        <option value="Stylist">Stylist</option>
+                                        <option value="Thu ngân">Thu ngân</option>
+                                        <option value="Lễ tân">Lễ tân</option>
+                                        <option value="Quản lý">Quản lý</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Số điện thoại:</label>
-                                    <input type="tel" id="editStaffPhone" required placeholder="VD: 0912345678">
+                                    <input type="tel" maxlength="10"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" id="editStaffPhone"
+                                        required placeholder="VD: 0912345678">
                                 </div>
                                 <div class="form-group">
                                     <label>Địa chỉ:</label>
@@ -689,12 +711,19 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Chi nhánh:</label>
-                                    <input type="text" id="editStaffBranch" placeholder="Nhập mã chi nhánh">
+                                    <select id="editStaffBranch">
+                                        <option value="">-- Chọn chi nhánh --</option>
+                                        <option value="CN001">30Shine - Nguyễn Trãi</option>
+                                        <option value="CN002">30Shine - Cầu Giấy</option>
+                                        <option value="CN003">30Shine - Tân Bình</option>
+                                        <option value="CN004">30Shine - Đà Nẵng</option>
+                                    </select>
                                 </div>
+
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('editStaffModal')">Hủy</button>
-                                    <button type="submit" class="btn primary">Cập nhật</button>
+                                    <button type="submit" class="btn primary" onclick="suaNhanVien(event)">Cập nhật</button>
                                 </div>
                             </form>
                         </div>
