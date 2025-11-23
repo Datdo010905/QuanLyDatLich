@@ -7,10 +7,22 @@ window.onload = function () {
 
     const dsdv = document.getElementById("ds-dichvu");
     const dscs = document.getElementById("ds-chamsoc");
+    if (!localStorage.getItem("DichVu")) {
+        localStorage.setItem("DichVu", JSON.stringify(DICHVU));
+    }
+    if (!localStorage.getItem("ChamSocDa")) {
+        localStorage.setItem("ChamSocDa", JSON.stringify(CHAMSOCDA));
+    }
+    let dichVuLocal = JSON.parse(localStorage.getItem("DichVu")) || DICHVU;
+    let chamSocDaLocal = JSON.parse(localStorage.getItem("ChamSocDa")) || CHAMSOCDA;
+
+    const dsDVcungcap = dichVuLocal.filter(dv => dv.TRANGTHAI === "Đang cung cấp");
+    const dsCSDcungcap = chamSocDaLocal.filter(dv => dv.TRANGTHAI === "Đang cung cấp");
+
     let danhsachdv = "";
     let danhsachcs = "";
 
-    DICHVU.forEach(dv => {
+    dsDVcungcap.forEach(dv => {
         danhsachdv += `
                 <div class="col-s-6 col-m-4 col-x-3">
                     <div class="item">
@@ -33,7 +45,7 @@ window.onload = function () {
         dsdv.innerHTML = danhsachdv;
     });
     
-    CHAMSOCDA.forEach(cs => {
+    dsCSDcungcap.forEach(cs => {
         danhsachcs += `
                 <div class="col-s-6 col-m-4 col-x-3">
 				<div class="item">

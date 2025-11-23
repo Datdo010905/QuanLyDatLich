@@ -28,10 +28,18 @@ window.addEventListener('DOMContentLoaded', function () {
 
     const maDichVu = localStorage.getItem('madichvuCanXem');
     const ctdv = document.getElementById("chitietdichvu");
+    if (!localStorage.getItem("DichVu")) {
+        localStorage.setItem("DichVu", JSON.stringify(DICHVU));
+    }
+    if (!localStorage.getItem("ChamSocDa")) {
+        localStorage.setItem("ChamSocDa", JSON.stringify(CHAMSOCDA));
+    }
+    let dichVuLocal = JSON.parse(localStorage.getItem("DichVu")) || DICHVU;
+    let chamSocDaLocal = JSON.parse(localStorage.getItem("ChamSocDa")) || CHAMSOCDA;
 
     if (maDichVu) {
-        const dv = DICHVU.find(item => item.MADV === maDichVu);
-        const cs = CHAMSOCDA.find(item => item.MADV === maDichVu);
+        const dv = dichVuLocal.find(item => item.MADV === maDichVu);
+        const cs = chamSocDaLocal.find(item => item.MADV === maDichVu);
 
         if (dv) {
             let chitietdvHTML = `

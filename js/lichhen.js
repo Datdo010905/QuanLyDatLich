@@ -1,6 +1,20 @@
 window.onload = function () {
     const sdt = localStorage.getItem("sodienthoai-datlich"); // Lấy dữ liệu
-    //localStorage.setItem("KhachHang", JSON.stringify(KHACHHANG));
+
+
+
+    if (!localStorage.getItem("DichVu")) {
+        localStorage.setItem("DichVu", JSON.stringify(DICHVU));
+    }
+    if (!localStorage.getItem("ChamSocDa")) {
+        localStorage.setItem("ChamSocDa", JSON.stringify(CHAMSOCDA));
+    }
+    if (!localStorage.getItem("NhanVien")) {
+        localStorage.setItem("NhanVien", JSON.stringify(DICHVU));
+    }
+    let dichVuLocal = JSON.parse(localStorage.getItem("DichVu")) || DICHVU;
+    let chamSocDaLocal = JSON.parse(localStorage.getItem("ChamSocDa")) || CHAMSOCDA;
+    let nhanVienLocal = JSON.parse(localStorage.getItem("NhanVien")) || NHANVIEN;
     if (sdt) {
         document.getElementById("sdt-dat").value = sdt;
     }
@@ -16,7 +30,7 @@ window.onload = function () {
         chinhanhSelect.appendChild(opt);
     });
 
-    const allServicesOption = [...DICHVU, ...CHAMSOCDA];
+    const allServicesOption = [...dichVuLocal, ...chamSocDaLocal];
 
     // --- Load dịch vụ ---
     allServicesOption.filter(dv => dv.TRANGTHAI === "Đang cung cấp").forEach(dv => {
@@ -31,7 +45,7 @@ window.onload = function () {
         const machinhanh = this.value;
         nhanvienSelect.innerHTML = "<option value=''>-- Chọn thợ --</option>";
 
-        const nvTheoChiNhanh = NHANVIEN.filter(nv => nv.MACHINHANH === machinhanh);
+        const nvTheoChiNhanh = nhanVienLocal.filter(nv => nv.MACHINHANH === machinhanh);
         nvTheoChiNhanh.forEach(nv => {
             const opt = document.createElement("option");
             opt.value = nv.MANV;
@@ -40,7 +54,7 @@ window.onload = function () {
         });
     });
     loadHours();
-     document.getElementById("nhanvien").addEventListener("change", loadHours);
+    document.getElementById("nhanvien").addEventListener("change", loadHours);
     document.getElementById("ngayhen").addEventListener("change", loadHours);
 };
 

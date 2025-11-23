@@ -761,19 +761,6 @@ function themDichVu(event) {
     alert("Thời gian dịch vụ phải lớn hơn 0");
     return;
   }
-  // Regex mô tả
-  const motaPattern = /^[a-zA-Z0-9]+(?:,\s*[a-zA-Z0-9]+)*$/;
-  if (!motaPattern.test(mota)) {
-    alert("Mô tả phải là các mục cách nhau bởi dấu phẩy, không có mục trống!");
-    return;
-  }
-
-  // Regex quy trình
-  const quytrinhPattern = /^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/;
-  if (!quytrinhPattern.test(quytrinh)) {
-    alert("Quy trình phải ngăn cách bằng dấu - !");
-    return;
-  }
   // Regex ảnh
   const imgPattern = /\.(png|jpg|jpeg|gif|webp)$/i;
   if (!imgPattern.test(anh)) {
@@ -846,15 +833,15 @@ function suaDichVu(event) {
   const thoigian = parseInt(document.getElementById("editServiceTime").value);
   const giadv = parseFloat(document.getElementById("editServicePrice").value);
   const trangthai = document.getElementById("editServiceStatus").value;
-  const fileInput = document.getElementById("editServiceImg");
-  const anhFile = fileInput.files.length > 0 ? fileInput.files[0] : null;
+  const anh = document.getElementById("editServiceImg").value;
   const quytrinh = document.getElementById("editServiceProcedure").value;
 
   if (!confirm("Bạn có chắc chắn muốn sửa dịch vụ này không?")) {
     return;
   }
+  
 
-  if (madichvu.trim() === "" || tendichvu.trim() === "" || isNaN(thoigian) || isNaN(giadv) || mota.trim() === "" || anh.trim() === "" || quytrinh.trim() === "") {
+  if (tendichvu.trim() === "" || isNaN(thoigian) || isNaN(giadv) || mota.trim() === "" || anh.trim() === "" || quytrinh.trim() === "") {
     alert("Vui lòng điền đầy đủ thông tin!");
     return;
   }
@@ -864,19 +851,6 @@ function suaDichVu(event) {
   }
   if (thoigian <= 0) {
     alert("Thời gian dịch vụ phải lớn hơn 0");
-    return;
-  }
-  // Regex mô tả
-  const motaPattern = /^[a-zA-Z0-9]+(?:,\s*[a-zA-Z0-9]+)*$/;
-  if (!motaPattern.test(mota)) {
-    alert("Mô tả phải là các mục cách nhau bởi dấu phẩy, không có mục trống!");
-    return;
-  }
-
-  // Regex quy trình
-  const quytrinhPattern = /^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/;
-  if (!quytrinhPattern.test(quytrinh)) {
-    alert("Quy trình phải ngăn cách bằng dấu - !");
     return;
   }
   // Regex ảnh
@@ -914,7 +888,7 @@ function suaDichVu(event) {
       THOIGIAN: thoigian,
       GIADV: giadv,
       TRANGTHAI: trangthai,
-      ANH: anhFile,
+      ANH: anh,
       QUYTRINH: quytrinh
     };
 
@@ -1092,7 +1066,6 @@ function xoaKhachHang(makhachhang) {
   }
 }
 
-
 //quản lý nhân viên
 function themNhanVien(event) {
   event.preventDefault(); // Ngăn chặn hành vi mặc định của form
@@ -1136,6 +1109,15 @@ function themNhanVien(event) {
     alert("Năm sinh không hợp lệ!");
     return;
   }
+  // Nếu tài khoản rỗng, KHÔNG kiểm tra trùng, cho phép bỏ qua
+  if (taikhoan.trim() !== "") {
+    const exitsTAIKHOAN = nhanVienLocal.some(nv => nv.MATK === taikhoan && nv.MANV !== manhanvien);
+    if (exitsTAIKHOAN) {
+      alert("Tài khoản đã trùng với nhân viên khác!");
+      return;
+    }
+  }
+
   try {
     const newNV = {
       MANV: manhanvien,
@@ -1177,7 +1159,7 @@ function chuanbiSuaNhanVien(manhanvien) {
   document.getElementById("editStaffAddress").value = canSua.DIACHI;
   document.getElementById("editStaffBirth").value = canSua.NGAYSINH;
   document.getElementById("editStaffAccount").value = canSua.MATK;
-  document.getElementById("editStaffBranch").value= canSua.MACHINHANH;
+  document.getElementById("editStaffBranch").value = canSua.MACHINHANH;
 }
 function suaNhanVien(event) {
   event.preventDefault(); // Ngăn chặn hành vi mặc định của form
@@ -1221,10 +1203,19 @@ function suaNhanVien(event) {
     return;
   }
   const isAdmin = nhanVienLocal.some(nv => nv.MANV === manhanvien && nv.CHUCVU === "Admin")
-  if(isAdmin){
+  if (isAdmin) {
     alert("Không thể chỉnh quyền chủ shop!");
     return;
   }
+  // Nếu tài khoản rỗng => KHÔNG kiểm tra trùng, cho phép bỏ qua
+  if (taikhoan.trim() !== "") {
+    const exitsTAIKHOAN = nhanVienLocal.some(nv => nv.MATK === taikhoan && nv.MANV !== manhanvien);
+    if (exitsTAIKHOAN) {
+      alert("Tài khoản đã trùng với nhân viên khác!");
+      return;
+    }
+  }
+
   try {
     // cập nhật thông tin
     nhanVienLocal[index].HOTEN = tennhanvien;
@@ -1253,7 +1244,7 @@ function xoaNhanVien(manhanvien) {
     return;
   }
   const isAdmin = nhanVienLocal.some(nv => nv.MANV === manhanvien && nv.CHUCVU === "Admin")
-  if(isAdmin){
+  if (isAdmin) {
     alert("Không thể xoá chủ shop!");
     return;
   }
