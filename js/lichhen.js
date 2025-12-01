@@ -151,12 +151,21 @@ function themlichhen(event) {
         MANV: nhanvien,
         MAKH: kh.MAKH,
         MACHINHANH: chinhanh,
-        MADICHVU: dichvu
+    };
+    const newCTLichHen = {
+        MALICH: "LH" + Date.now(),
+        MADV: dichvu,
+        SOLUONG: 1,
+        GHICHU: "Không"
     };
 
     let dsLichHen = JSON.parse(localStorage.getItem("LichHen")) || [];
     dsLichHen.push(newLichHen);
     localStorage.setItem("LichHen", JSON.stringify(dsLichHen));
+    //thêm chi tiết
+    let chitietlichhen = JSON.parse(localStorage.getItem("ChiTietLichHen")) || [];
+    chitietlichhen.push(newCTLichHen);
+    localStorage.setItem("ChiTietLichHen", JSON.stringify(chitietlichhen));
 
     alert("Đặt lịch hẹn thành công!");
     window.location.href = "lichsu.html";

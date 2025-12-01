@@ -80,6 +80,10 @@ window.onload = function () {
 
   loadDashboard();
   renderAllTables();
+  loadBookingOptions();
+  loadHours();
+  document.getElementById("bookingStaffId").addEventListener("change", loadHours);
+  document.getElementById("bookingDate").addEventListener("change", loadHours);
 };
 
 // Đăng xuất
@@ -185,7 +189,6 @@ function renderAllTables() {
 // TÀI KHOẢN
 function renderAccounts() {
   const tbody = document.querySelector("#accountsTable tbody");
-  const taiKhoanLocal = JSON.parse(localStorage.getItem("TaiKhoan", JSON.stringify(TAIKHOAN)));
   if (!tbody) return;
   tbody.innerHTML = taiKhoanLocal.map(tk => `
     <tr>
@@ -201,31 +204,11 @@ function renderAccounts() {
   `).join("");
 }
 
-// // CHI NHÁNH
-// function renderBranches() {
-//   const tbody = document.querySelector("#branchesTable tbody");
-//   const ChiNhanhLocal = JSON.parse(localStorage.getItem("ChiNhanh", JSON.stringify(CHINHANH)));
-//   if (!tbody) return;
-//   tbody.innerHTML = ChiNhanhLocal.map(cn => `
-//     <tr>
-//       <td>${cn.MACHINHANH}</td>
-//       <td>${cn.TENCHINHANH}</td>
-//       <td>${cn.DIACHI}</td>
-//       <td>${cn.SDT}</td>
-//       <td class="actions">
-//         <button class="btn small edit" data-id="${cn.MACHINHANH}" ><i class="fas fa-edit"></i></button>
-//         <button class="btn small delete" data-id="${cn.MACHINHANH}"><i class="fas fa-trash"></i></button>
-//       </td>
-//     </tr>
-//   `).join("");
-// }
-
 // KHÁCH HÀNG
 function renderCustomers() {
   const tbody = document.querySelector("#customersTable tbody");
-  const khachhangLocal = JSON.parse(localStorage.getItem("KhachHang", JSON.stringify(KHACHHANG)));
   if (!tbody) return;
-  tbody.innerHTML = khachhangLocal.map(kh => `
+  tbody.innerHTML = khachHangLocal.map(kh => `
     <tr>
       <td>${kh.MAKH}</td>
       <td>${kh.HOTEN}</td>
@@ -264,9 +247,8 @@ function renderStaff() {
 //DỊCH VỤ TÓC
 function renderServices() {
   const tbody = document.querySelector("#hairServicesTable tbody");
-  const DichVuTocLocal = JSON.parse(localStorage.getItem("DichVu", JSON.stringify(DICHVU)));
   if (!tbody) return;
-  tbody.innerHTML = DichVuTocLocal.map(dv => `
+  tbody.innerHTML = dichVuLocal.map(dv => `
     <tr>
       <td>${dv.MADV}</td>
       <td>${dv.TENDV}</td>
@@ -287,9 +269,8 @@ function renderServices() {
 // DỊCH VỤ CHĂM SÓC DA
 function renderSkincare() {
   const tbody = document.querySelector("#skinCareServicesTable tbody");
-  const ChamSocDaLocal = JSON.parse(localStorage.getItem("ChamSocDa", JSON.stringify(CHAMSOCDA)));
   if (!tbody) return;
-  tbody.innerHTML = ChamSocDaLocal.map(cs => `
+  tbody.innerHTML = chamSocDaLocal.map(cs => `
     <tr>
       <td>${cs.MADV}</td>
       <td>${cs.TENDV}</td>
@@ -310,9 +291,8 @@ function renderSkincare() {
 // KHUYẾN MÃI
 function renderPromotions() {
   const tbody = document.querySelector("#promotionsTable tbody");
-  const KhuyenMaiLocal = JSON.parse(localStorage.getItem("KhuyenMai", JSON.stringify(KHUYENMAI)));
   if (!tbody) return;
-  tbody.innerHTML = KhuyenMaiLocal.map(km => `
+  tbody.innerHTML = khuyenMaiLocal.map(km => `
     <tr>
       <td>${km.MAKM}</td>
       <td>${km.TENKM}</td>
@@ -330,43 +310,124 @@ function renderPromotions() {
 }
 
 // LỊCH HẸN
+function getStatusPriority(status) {
+    switch (status) {
+        case "Đã đặt":
+        case "Đang chờ":
+            return 1; // Ưu tiên cao nhất: Cần xử lý/xác nhận
+        case "Đang thực hiện":
+            return 2; // Ưu tiên trung bình: Đang làm
+        case "Huỷ":
+            return 3; // Trạng thái kết thúc (không cần hành động ngay)
+        case "Hoàn thành":
+            return 4; // Trạng thái kết thúc (đã xong)
+        default:
+            return 99; // Trạng thái không xác định
+    }
+}
 function renderBookings() {
   const tbody = document.querySelector("#bookingsTable tbody");
-  const lichHenLocal = JSON.parse(localStorage.getItem("LichHen", JSON.stringify(LICHHEN)));
+  
   if (!tbody) return;
-  tbody.innerHTML = lichHenLocal.map(lh => `
-    <tr>
-      <td>${lh.MALICH}</td>
-      <td>${lh.NGAYHEN}</td>
-      <td>${lh.TRANGTHAI}</td>
-      <td>${lh.MANV}</td>
-      <td>${lh.MAKH}</td>
-      <td>${lh.MACHINHANH}</td>
-      <td class="actions">
-        <button class="btn small edit" data-id="${lh.MALICH}"  onclick="openModal('editBookingModal')" ><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${lh.MALICH}"><i class="fas fa-trash"></i></button>
-      </td>
-    </tr>
-  `).join("");
+  const sortedBookings = [...lichHenLocal].sort((a, b) => {
+      const priorityA = getStatusPriority(a.TRANGTHAI);
+      const priorityB = getStatusPriority(b.TRANGTHAI);
+
+      // Sắp xếp chính: Theo độ ưu tiên trạng thái (tăng dần)
+      if (priorityA !== priorityB) {
+          return priorityA - priorityB;
+      }
+
+      // Sắp xếp phụ: Nếu cùng trạng thái, sắp xếp theo Ngày và Giờ (sắp đến trước)
+      const dateA = new Date(`${a.NGAYHEN} ${a.GIOHEN}`);
+      const dateB = new Date(`${b.NGAYHEN} ${b.GIOHEN}`);
+      return dateA - dateB;
+  });
+
+  tbody.innerHTML = sortedBookings.map(lh => {
+    
+    //Lấy Tên Nhân Viên
+    const nvObj = nhanVienLocal.find(nv => nv.MANV === lh.MANV);
+    const tenNV = nvObj ? nvObj.HOTEN : lh.MANV;
+
+    //Lấy Tên Khách Hàng
+    const khObj = khachHangLocal.find(kh => kh.MAKH === lh.MAKH);
+    const tenKH = khObj ? khObj.HOTEN : lh.MAKH;
+
+    //Lấy Tên Chi Nhánh
+    const cnObj = chiNhanhLocal.find(cn => cn.MACHINHANH === lh.MACHINHANH);
+    const tenCN = cnObj ? cnObj.TENCHINHANH : lh.MACHINHANH;
+
+    const trangThaiClass = (lh.TRANGTHAI || "").toLowerCase()
+            .replace(/ /g, '-') // thay ' ' bằng '-'
+            //console.log("Trạng thái lớp:", trangThaiClass);
+    return `
+      <tr>
+        <td>${lh.MALICH}</td>
+        <td>${lh.NGAYHEN}</td>
+        <td>${lh.GIOHEN}</td>
+        
+        <td><span class="status ${trangThaiClass}">${lh.TRANGTHAI}</span></td>
+        
+        <td>${tenNV}</td>
+        <td>${tenKH}</td>
+        <td>${tenCN}</td>
+        
+        <td class="actions">
+          <button class="btn small view" onclick="xemChiTiet('${lh.MALICH}')"><i class="fas fa-eye"></i></button>
+          <button class="btn small edit" data-id="${lh.MALICH}" onclick="chuanBiSuaLichHen('${lh.MALICH}')" ><i class="fas fa-edit"></i></button>
+          <button class="btn small delete" data-id="${lh.MALICH}" onclick="xoaLichHen('${lh.MALICH}')" ><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>
+    `;
+  }).join(""); // Đóng map và nối chuỗi
+}
+// CHI TIẾT LỊCH HẸN
+function xemChiTiet(malich) {
+  const chitiet = chiTietLichHenLocal.filter(ct => ct.MALICH === malich);
+  if (!chitiet || chitiet.length === 0) {
+    alert("Không tìm thấy chi tiết lịch hẹn.");
+    return;
+  }
+  const h3 = document.getElementById("tieudechitiet");
+  h3.innerHTML = `Chi tiết lịch hẹn ${malich} 
+                    <button class="btn small delete" onclick="closeviewCT()" style="float: right;">
+                        <i class="fas fa-circle-xmark"></i>
+                    </button>`;
+
+  const tableBody = document.getElementById("detail-table-body");
+  tableBody.innerHTML = "";
+
+  chitiet.forEach(ct => {
+    const allServices = [...DICHVU, ...CHAMSOCDA];
+    const TENDV = allServices.find(dv => dv.MADV === ct.MADV)?.TENDV || "Chưa rõ";
+    const dongia = allServices.find(dv => dv.MADV === ct.MADV)?.GIADV || 0;
+    const thanhtien = dongia * ct.SOLUONG;
+    const row = `
+                <tr>
+                  <td>${TENDV}</td>
+                  <td>${ct.SOLUONG}</td>
+                  <td>${formatCurrency(dongia)}</td>
+                  <td>${formatCurrency(thanhtien)}</td>
+                  <td>${ct.GHICHU}</td>
+                </tr>`;
+    tableBody.innerHTML += row;
+  });
+
+
+
+  document.getElementById('booking-details').style.display = 'block';
+}// CHI TIẾT LỊCH HẸN
+function closeviewCT() {
+  document.getElementById('booking-details').style.display = 'none';
 }
 
-// CHI TIẾT LỊCH HẸN
-function renderBookingDetails() {
-  const tbody = document.querySelector("#bookingDetailsTable tbody");
-  const ChiTietLichHenLocal = JSON.parse(localStorage.getItem("ChiTietLichHen", JSON.stringify(CHITIETLICHHEN)));
-  if (!tbody) return;
-  tbody.innerHTML = ChiTietLichHenLocal.map(ct => `
-    <tr>
-      <td>${ct.MALICH}</td>
-      <td>${ct.MADV}</td>
-      <td>${ct.SOLUONG}</td>
-      <td>${ct.GHICHU}</td>
-      <td class="actions">
-        <button class="btn small edit" data-id="${ct.MALICH}-${ct.MADV}"><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${ct.MALICH}-${ct.MADV}"><i class="fas fa-trash"></i></button>
-      </td>
-    </tr>
-  `).join("");
+// Format tiền tệ
+function formatCurrency(amount) {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(amount);
 }
 
 // HÓA ĐƠN
@@ -384,8 +445,8 @@ function renderInvoices() {
       <td>${hd.MALICH}</td>
       <td>${hd.TRANGTHAI}</td>
       <td class="actions">
-        <button class="btn small edit" data-id="${hd.MAHD}"  onclick="openModal('editInvoiceModal')"><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${hd.MAHD}"><i class="fas fa-trash"></i></button>
+        <button class="btn small edit" data-id="${hd.MAHD}"  onclick="chuanBiSuaHoaDon('${hd.MAHD}')"><i class="fas fa-edit"></i></button>
+        <button class="btn small delete" data-id="${hd.MAHD}" onclick="xoaHoaDon('${hd.MAHD}')"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
   `).join("");
@@ -839,7 +900,7 @@ function suaDichVu(event) {
   if (!confirm("Bạn có chắc chắn muốn sửa dịch vụ này không?")) {
     return;
   }
-  
+
 
   if (tendichvu.trim() === "" || isNaN(thoigian) || isNaN(giadv) || mota.trim() === "" || anh.trim() === "" || quytrinh.trim() === "") {
     alert("Vui lòng điền đầy đủ thông tin!");
@@ -1257,5 +1318,411 @@ function xoaNhanVien(manhanvien) {
   }
   catch (error) {
     alert("Đã có lỗi xảy ra khi xoá nhân viên: " + error.message);
+  }
+}
+
+
+//quản lý hoá đơn
+//lấy lịch hẹn đã hoàn thành để chọn thêm hoá đơn
+function themHoaDon(event) {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+  const maHD = document.getElementById("invoiceId").value;
+  const maKM = document.getElementById("invoicePromoId").value;
+  const tongTien = document.getElementById("invoiceTotal").value;
+  const hinhThuc = document.getElementById("invoicePaymentMethod").value;
+  const maNV = document.getElementById("invoiceStaffId").value;
+  const maLH = document.getElementById("invoiceBookingId").value;
+  const trangThai = document.getElementById("invoiceStatus").value;
+
+  if (!maHD.trim() || !tongTien.trim() || !maNV.trim()) {
+    alert("Vui lòng nhập đầy đủ thông tin bắt buộc!");
+    return;
+  }
+
+  // Kiểm tra trùng mã hoá đơn
+  const exits = hoaDonLocal.some(hd => hd.MAHD === maHD);
+  if (exits) {
+    alert("Mã hoá đơn đã tồn tại!");
+    return;
+  }
+  if (!confirm("Bạn có chắc chắn muốn thêm hoá đơn này không?")) {
+    return;
+  }
+  const exitsLichHen = hoaDonLocal.some(hd => hd.MALICH === maLH && hd.MAHD !== maHD);
+  if (exitsLichHen) {
+    alert("Lịch hẹn này đã nằm trong hoá đơn khác!");
+    return;
+  }
+
+
+  try {
+    const newHD = {
+      MAHD: maHD,
+      MAKM: maKM,
+      TONGTIEN: Number(tongTien),
+      THANHTOAN: hinhThuc,
+      MANV: maNV,
+      MALH: maLH,
+      TRANGTHAI: trangThai
+    };
+
+    hoaDonLocal.push(newHD);
+    localStorage.setItem("HoaDon", JSON.stringify(hoaDonLocal));
+
+    renderInvoices();
+    alert("Thêm hoá đơn thành công!");
+    closeModal('addInvoiceModal');
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi thêm hoá đơn: " + error.message);
+  }
+
+}
+
+function chuanBiSuaHoaDon(mahoadon) {
+  const hd = hoaDonLocal.find(h => h.MAHD === mahoadon);
+  if (!hd) {
+    alert("Không tìm thấy hoá đơn!");
+    return;
+  }
+
+  openModal("editInvoiceModal");
+
+  document.getElementById("editInvoiceId").value = hd.MAHD;
+  document.getElementById("editInvoicePromoId").value = hd.MAKM;
+  document.getElementById("editInvoiceTotal").value = hd.TONGTIEN;
+  document.getElementById("editInvoicePaymentMethod").value = hd.THANHTOAN;
+  document.getElementById("editInvoiceStaffId").value = hd.MANV;
+  document.getElementById("editInvoiceBookingId").value = hd.MALH;
+  document.getElementById("editInvoiceStatus").value = hd.TRANGTHAI;
+}
+
+function suaHoaDon(event) {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+  const maHD = document.getElementById("editInvoiceId").value;
+  const maKM = document.getElementById("editInvoicePromoId").value;
+  const tongTien = document.getElementById("editInvoiceTotal").value;
+  const hinhThuc = document.getElementById("editInvoicePaymentMethod").value;
+  const maNV = document.getElementById("editInvoiceStaffId").value;
+  const maLH = document.getElementById("editInvoiceBookingId").value;
+  const trangThai = document.getElementById("editInvoiceStatus").value;
+
+  if (!maHD.trim() || !tongTien.trim() || !maNV.trim()) {
+    alert("Vui lòng nhập đầy đủ thông tin bắt buộc!");
+    return;
+  }
+  if (!confirm("Bạn có chắc chắn muốn sửa hoá đơn này không?")) {
+    return;
+  }
+
+
+  // Tìm index cần sửa
+  const index = hoaDonLocal.findIndex(h => h.MAHD === maHD);
+  if (index === -1) {
+    alert("Không tìm thấy hoá đơn!");
+    return;
+  }
+  const exitsLichHen = hoaDonLocal.some(hd => hd.MALICH === MALICH && hd.MAHD !== maHD);
+  if (exitsLichHen) {
+    alert("Lịch hẹn này đã nằm trong hoá đơn khác!");
+    return;
+  }
+
+
+  try {
+    hoaDonLocal[index].MAKM = maKM;
+    hoaDonLocal[index].TONGTIEN = Number(tongTien);
+    hoaDonLocal[index].THANHTOAN = hinhThuc;
+    hoaDonLocal[index].MANV = maNV;
+    hoaDonLocal[index].MALH = maLH;
+    hoaDonLocal[index].TRANGTHAI = trangThai;
+
+    localStorage.setItem("HoaDon", JSON.stringify(hoaDonLocal));
+    renderInvoices();
+
+    alert("Cập nhật hoá đơn thành công!");
+    closeModal('editInvoiceModal');
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi sửa hoá đơn: " + error.message);
+  }
+
+}
+function xoaHoaDon(mahoadon) {
+  if (!mahoadon) return;
+  if (!confirm("Bạn có chắc chắn muốn xoá hoá đơn này không?")) return;
+  const isDaThanhToan = hoaDonLocal.some(hd => hd.MAHD === mahoadon && hd.TRANGTHAI === "Đã thanh toán")
+  if (isDaThanhToan) {
+    alert("Không thể xoá hoá đơn đã thanh toán!");
+    return;
+  }
+  try {
+    // Lọc bỏ cần xoá
+    hoaDonLocal = hoaDonLocal.filter(h => h.MAHD !== mahoadon);
+    localStorage.setItem("HoaDon", JSON.stringify(hoaDonLocal));
+    renderInvoices();
+
+    alert("Xoá hoá đơn thành công!");
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi xoá hoá đơn: " + error.message);
+  }
+}
+
+
+//quản lý lịch hẹn
+function xoaLichHen(malich) {
+  if (!malich) return;
+  if (!confirm("Bạn có chắc chắn muốn xoá lịch hẹn này không?")) return;
+  const lichHenCanXoa = lichHenLocal.find(lh => lh.MALICH === malich);
+
+  if (!lichHenCanXoa) {
+    alert("Lịch hẹn không tồn tại!");
+    return;
+  }
+  if (lichHenCanXoa.TRANGTHAI !== "Huỷ") {
+    alert("Chỉ có thể xoá lịch hẹn có trạng thái huỷ! (Trạng thái hiện tại: " + lichHenCanXoa.TRANGTHAI + ")");
+    return;
+  }
+  try {
+    // Lọc bỏ cần xoá
+    //xoá chi tiết trước
+    chiTietLichHenLocal = chiTietLichHenLocal.filter(h => h.MALICH !== malich);
+    localStorage.setItem("ChiTietLichHen", JSON.stringify(chiTietLichHenLocal));
+
+    lichHenLocal = lichHenLocal.filter(h => h.MALICH !== malich);
+    localStorage.setItem("LichHen", JSON.stringify(lichHenLocal));
+    renderBookings();
+
+    alert("Xoá lịch hẹn thành công!");
+  }
+  catch (error) {
+    alert("Đã có lỗi xảy ra khi xoá lịch hẹn: " + error.message);
+  }
+}
+
+function loadBookingOptions() {
+  // Load Chi Nhánh
+  const branchSelect = document.getElementById("bookingBranchId");
+
+  branchSelect.innerHTML = '<option value="">-- Chọn chi nhánh --</option>' +
+    chiNhanhLocal.map(cn => `<option value="${cn.MACHINHANH}">${cn.TENCHINHANH}</option>`).join("");
+
+  // Load Nhân Viên
+  const staffSelect = document.getElementById("bookingStaffId");
+
+  // Khi chọn chi nhánh, load thợ (nhân viên) theo chi nhánh
+  branchSelect.addEventListener("change", function () {
+    const machinhanh = this.value;
+
+    staffSelect.innerHTML = '<option value="">-- Chọn nhân viên --</option>';
+    if (!machinhanh) return;
+    //Lọc nhân viên thuộc chi nhánh đó
+    const nvTheoChiNhanh = nhanVienLocal.filter(nv => nv.MACHINHANH === machinhanh);
+    staffSelect.innerHTML += nvTheoChiNhanh.map(nv =>
+      `<option value="${nv.MANV}">${nv.HOTEN} (${nv.MANV})</option>`
+    ).join("");
+  });
+  const dichvuSelect = document.getElementById("dichvu");
+  const allServicesOption = [...dichVuLocal, ...chamSocDaLocal];
+
+  // --- Load dịch vụ ---
+  allServicesOption.filter(dv => dv.TRANGTHAI === "Đang cung cấp").forEach(dv => {
+    const opt = document.createElement("option");
+    opt.value = dv.MADV;
+    opt.textContent = `${dv.TENDV} - ${dv.THOIGIAN.toLocaleString()} phút - ${dv.GIADV.toLocaleString()} VNĐ`;
+    dichvuSelect.appendChild(opt);
+  });
+  //Load Khách Hàng
+  const customerSelect = document.getElementById("bookingCustomerId");
+
+  customerSelect.innerHTML = '<option value="">-- Chọn khách hàng --</option>' +
+    khachHangLocal.map(kh => `<option value="${kh.MAKH}">${kh.HOTEN} - ${kh.SDT}</option>`).join("");
+}
+
+function loadHours() {
+  const select = document.getElementById("giohen");
+  const nhanvien = document.getElementById("bookingStaffId").value;
+  const ngayhen = document.getElementById("bookingDate").value;
+
+  select.innerHTML = "";
+  if (!nhanvien || !ngayhen) {
+    return;
+  }
+
+  const trunglich = lichHenLocal.filter(lh => lh.MANV === nhanvien && lh.NGAYHEN === ngayhen && lh.TRANGTHAI !== "Hủy");
+
+  // Lấy danh sách GIOHEN trùng
+  bookedHours = trunglich.map(lh => lh.GIOHEN);
+
+  for (let h = 8; h <= 22; h++) {
+    for (let m of [0, 30]) { // chia 30 phút/lần
+      let hh = h.toString().padStart(2, "0");
+      let mm = m.toString().padStart(2, "0");
+      let time = `${hh}:${mm}`;
+
+      // chỉ thêm giờ chưa bị trùng
+      if (!bookedHours.includes(time)) {
+        const option = document.createElement("option");
+        option.value = time;
+        option.textContent = time;
+        select.appendChild(option);
+      }
+    }
+  }
+}
+function themLichHen(event) {
+  event.preventDefault();
+
+  const bookingId = document.getElementById("bookingId").value.trim();
+  const chiNhanh = document.getElementById("bookingBranchId").value;
+  const nhanVien = document.getElementById("bookingStaffId").value;
+  const ngayHen = document.getElementById("bookingDate").value;
+  const gioHen = document.getElementById("giohen").value;
+  const khachHang = document.getElementById("bookingCustomerId").value;
+  const dichvu = document.getElementById("dichvu").value;
+  const soLuong = parseInt(document.getElementById("bookingQuantity").value);
+
+  if (!bookingId || !chiNhanh || !nhanVien || !ngayHen || !gioHen || !khachHang || !dichvu || !soLuong) {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  if (!confirm("Bạn có chắc chắn muốn thêm lịch hẹn này không?")) return;
+  const existed = lichHenLocal.some(lh => lh.MALICH === bookingId);
+  if (existed) {
+    alert("Mã lịch hẹn đã tồn tại! Vui lòng nhập mã khác.");
+    return;
+  }
+
+  // Check ngày giờ phải trong tương lai
+  if (new Date(ngayHen + " " + gioHen) < new Date()) {
+    alert("Ngày hẹn phải là ngày trong tương lai!");
+    return;
+  }
+
+  // Check trùng lịch (nhân viên, ngày, giờ, không phải trạng thái Huỷ)
+  let dsLichHenCheck = JSON.parse(localStorage.getItem("LichHen")) || [];
+  const isConflict = dsLichHenCheck.some(
+    lh => lh.MANV === nhanVien && lh.NGAYHEN === ngayHen && lh.GIOHEN === gioHen && lh.TRANGTHAI !== "Huỷ"
+  );
+
+  if (isConflict) {
+    alert("Nhân viên đã có lịch tại thời điểm này. Vui lòng chọn giờ khác.");
+    return;
+  }
+
+  // Tạo lịch hẹn (dùng bookingId do bạn nhập)
+  const newLichHen = {
+    MALICH: bookingId,
+    NGAYHEN: ngayHen,
+    GIOHEN: gioHen,
+    TRANGTHAI: "Đã đặt",
+    MANV: nhanVien,
+    MAKH: khachHang,
+    MACHINHANH: chiNhanh,
+  };
+
+  // Chi tiết lịch hẹn
+  const newCTLichHen = {
+    MALICH: bookingId,
+    MADV: dichvu,
+    SOLUONG: soLuong,
+    GHICHU: "Không"
+  };
+
+  // Lưu lịch hẹn
+  let dsLichHen = JSON.parse(localStorage.getItem("LichHen")) || [];
+  dsLichHen.push(newLichHen);
+  localStorage.setItem("LichHen", JSON.stringify(dsLichHen));
+
+  // Lưu chi tiết lịch hẹn
+  let dsCT = JSON.parse(localStorage.getItem("ChiTietLichHen")) || [];
+  dsCT.push(newCTLichHen);
+  localStorage.setItem("ChiTietLichHen", JSON.stringify(dsCT));
+
+  alert("Thêm lịch hẹn thành công!");
+  closeModal("addBookingModal");
+}
+//cập nhật trạng thái lịch hẹn
+function chuanBiSuaLichHen(malich) {
+  const lh = lichHenLocal.find(l => l.MALICH === malich);
+  if (!lh) {
+    alert("Không tìm thấy lịch hẹn!");
+    return;
+  }
+  openModal("editBookingModal");
+
+  document.getElementById("editBookingId").value = lh.MALICH;
+  document.getElementById("editBookingStatus").value = lh.TRANGTHAI;
+}
+
+function suaLichHen(event) {
+  event.preventDefault();
+  const maLich = document.getElementById("editBookingId").value;
+  const trangThaiMoi = document.getElementById("editBookingStatus").value;
+
+  // Tìm vị trí trong mảng
+  const index = lichHenLocal.findIndex(lh => lh.MALICH === maLich);
+  if (index === -1) {
+    alert("Lỗi: Không tìm thấy lịch hẹn gốc.");
+    return;
+  }
+  //check thứ tự trạng thái
+  const trangThaiCu = lichHenLocal[index].TRANGTHAI;
+  if (trangThaiMoi === trangThaiCu) {
+    closeModal("editBookingModal");
+    return;
+  }
+  if (trangThaiCu === "Hoàn thành" || trangThaiCu === "Đã huỷ") {
+    alert(`Lịch hẹn đã "${trangThaiCu}", không thể thay đổi trạng thái nữa!`);
+    return;
+  }
+  //check thứ tự trạng thái 
+  //QUY TRÌNH 5 BƯỚC
+
+  if (trangThaiCu === "Hoàn thành" || trangThaiCu === "Đã huỷ") {
+    alert(`Lịch hẹn đã "${trangThaiCu}", không thể thay đổi trạng thái nữa!`);
+    return;
+  }
+
+  if (trangThaiCu === "Đã đặt") {
+    // Từ "Đã đặt" chỉ được sang "Đang chờ" hoặc "Đã huỷ"
+    if (trangThaiMoi === "Đang thực hiện" || trangThaiMoi === "Hoàn thành") {
+      alert("Lỗi quy trình: Từ 'Đã đặt' phải chuyển sang 'Đang chờ' trước!");
+      return;
+    }
+  }
+  else if (trangThaiCu === "Đang chờ") {
+    // Từ "Đang chờ" chỉ được sang "Đang thực hiện" hoặc "Đã huỷ"
+    if (trangThaiMoi === "Hoàn thành") {
+      alert("Lỗi quy trình: Phải chuyển sang 'Đang thực hiện' trước khi 'Hoàn thành'!");
+      return;
+    }
+    if (trangThaiMoi === "Đã đặt") {
+      alert("Không thể quay ngược trạng thái về 'Đã đặt'!");
+      return;
+    }
+  }
+  else if (trangThaiCu === "Đang thực hiện") {
+    // Từ "Đang thực hiện" chỉ được sang "Hoàn thành" (hoặc "Huỷ" nếu có sự cố)
+    if (trangThaiMoi === "Đã đặt" || trangThaiMoi === "Đang chờ") {
+      alert("Lỗi: Dịch vụ đang thực hiện, không thể quay về trạng thái trước!");
+      return;
+    }
+  }
+
+  if (!confirm(`Bạn có chắc chắn muốn chuyển từ "${trangThaiCu}" sang "${trangThai}" không?`)) return;
+
+  try {
+    lichHenLocal[index].TRANGTHAI = trangThaiMoi;
+
+    localStorage.setItem("LichHen", JSON.stringify(lichHenLocal));
+    renderBookings();
+    alert("Cập nhật lịch hẹn thành công!");
+    closeModal("editBookingModal");
+
+  } catch (error) {
+    alert("Có lỗi xảy ra: " + error.message);
   }
 }

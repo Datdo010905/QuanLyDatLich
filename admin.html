@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Admin - 30Shine</title>
     <link rel="stylesheet" href="css/admin.css" />
+    <link rel="stylesheet" href="css/lichsu.css" />
     <script src="js/data.js"></script>
     <script src="js/login.js"></script>
     <script src="js/admin.js"></script>
+    <!-- <script src="js/lichsu.js"></script> -->
     <link rel="icon" href="img/logo.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -443,7 +445,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Mô tả:</label>
-                                    <textarea id="editServiceDesc" rows="3" placeholder="Nhập mô tả dịch vụ, VD: mota1, mota2, mota3"></textarea>
+                                    <textarea id="editServiceDesc" rows="3"
+                                        placeholder="Nhập mô tả dịch vụ, VD: mota1, mota2, mota3"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Thời gian (phút):</label>
@@ -645,7 +648,7 @@
                                 <div class="form-group">
                                     <label>Tài khoản:</label>
                                     <input type="text" id="staffAccount" placeholder="Nhập tài khoản">
-                                    
+
                                 </div>
                                 <!-- Chi nhánh -->
                                 <div class="form-group">
@@ -724,7 +727,8 @@
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('editStaffModal')">Hủy</button>
-                                    <button type="submit" class="btn primary" onclick="suaNhanVien(event)">Cập nhật</button>
+                                    <button type="submit" class="btn primary" onclick="suaNhanVien(event)">Cập
+                                        nhật</button>
                                 </div>
                             </form>
                         </div>
@@ -766,7 +770,11 @@
                         <div class="modal-body">
                             <form id="addInvoiceForm">
                                 <div class="form-group">
-                                    <label>Mã KM:</label>
+                                    <label>Mã Hoá đơn:</label>
+                                    <input type="text" id="invoiceId" placeholder="Nhập mã hoá đơn">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã Khuyến mại:</label>
                                     <input type="text" id="invoicePromoId" placeholder="Nhập mã khuyến mại">
                                 </div>
                                 <div class="form-group">
@@ -776,9 +784,9 @@
                                 <div class="form-group">
                                     <label>Hình thức thanh toán:</label>
                                     <select id="invoicePaymentMethod" required>
-                                        <option value="cash">Tiền mặt</option>
-                                        <option value="card">Thẻ</option>
-                                        <option value="online">Chuyển khoản/Online</option>
+                                        <option value="Tiền mặt">Tiền mặt</option>
+                                        <option value="Thẻ">Thẻ</option>
+                                        <option value="Chuyển khoản/Online">Chuyển khoản/Online</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -792,15 +800,16 @@
                                 <div class="form-group">
                                     <label>Trạng thái:</label>
                                     <select id="invoiceStatus">
-                                        <option value="paid">Đã thanh toán</option>
-                                        <option value="pending">Chưa thanh toán</option>
-                                        <option value="cancelled">Huỷ</option>
+                                        <option value="Đã thanh toán">Đã thanh toán</option>
+                                        <option value="Đang xử lý">Đang xử lý</option>
+                                        <option value="Huỷ">Huỷ</option>
                                     </select>
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('addInvoiceModal')">Hủy</button>
-                                    <button type="submit" class="btn primary">Lưu hoá đơn</button>
+                                    <button type="submit" class="btn primary" onclick="themHoaDon(event)">Lưu hoá
+                                        đơn</button>
                                 </div>
                             </form>
                         </div>
@@ -815,7 +824,7 @@
                             <span class="close-btn" onclick="closeModal('editInvoiceModal')">&times;</span>
                         </div>
                         <div class="modal-body">
-                            <form onsubmit="capNhatHoaDon(event)">
+                            <form>
                                 <input type="hidden" id="editInvoiceId">
                                 <div class="form-group">
                                     <label>Mã KM:</label>
@@ -828,9 +837,9 @@
                                 <div class="form-group">
                                     <label>Hình thức thanh toán:</label>
                                     <select id="editInvoicePaymentMethod" required>
-                                        <option value="cash">Tiền mặt</option>
-                                        <option value="card">Thẻ</option>
-                                        <option value="online">Chuyển khoản/Online</option>
+                                        <option value="Tiền mặt">Tiền mặt</option>
+                                        <option value="Thẻ">Thẻ</option>
+                                        <option value="Chuyển khoản/Online">Chuyển khoản/Online</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -844,15 +853,16 @@
                                 <div class="form-group">
                                     <label>Trạng thái:</label>
                                     <select id="editInvoiceStatus">
-                                        <option value="paid">Đã thanh toán</option>
-                                        <option value="pending">Chưa thanh toán</option>
-                                        <option value="cancelled">Huỷ</option>
+                                        <option value="Đã thanh toán">Đã thanh toán</option>
+                                        <option value="Đang xử lý">Đang xử lý</option>
+                                        <option value="Huỷ">Huỷ</option>
                                     </select>
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('editInvoiceModal')">Hủy</button>
-                                    <button type="submit" class="btn primary">Cập nhật</button>
+                                    <button type="submit" class="btn primary" onclick="suaHoaDon(event)">Cập
+                                        nhật</button>
                                 </div>
                             </form>
                         </div>
@@ -861,11 +871,28 @@
 
 
                 <!-- Bookings -->
+
                 <div id="bookings" class="section">
                     <div class="panel header-actions">
                         <h2>Lịch hẹn</h2>
                         <button id="addBookingBtn" class="btn primary" onclick="openModal('addBookingModal')">Thêm lịch
                             hẹn</button>
+                    </div>
+                    <div id="booking-details" class="booking-details" style="display: none;">
+                        <h3 id="tieudechitiet">Chi tiết lịch hẹn</h3>
+                        <table class="lichsu-table">
+                            <thead>
+                                <tr>
+                                    <th>Dịch vụ</th>
+                                    <th>Số lượng sử dụng</th>
+                                    <th>Đơn giá</th>
+                                    <th>Thành tiền</th>
+                                    <th>Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detail-table-body">
+                            </tbody>
+                        </table>
                     </div>
                     <div class="panel">
                         <table class="table" id="bookingsTable">
@@ -873,10 +900,11 @@
                                 <tr>
                                     <th>Mã Lịch Hẹn</th>
                                     <th>Ngày Hẹn</th>
+                                    <th>Giờ Hẹn</th>
                                     <th>Trạng Thái</th>
-                                    <th>Mã NV</th>
-                                    <th>Mã KH</th>
-                                    <th>Mã Chi Nhánh</th>
+                                    <th>Nhân viên</th>
+                                    <th>Khách Hàng</th>
+                                    <th>Chi Nhánh</th>
                                     <th>Hành Động</th>
                                 </tr>
                             </thead>
@@ -885,6 +913,7 @@
                         </table>
                     </div>
                 </div>
+
                 <!-- Add Booking Modal -->
                 <div id="addBookingModal" class="modal">
                     <div class="modal-content">
@@ -895,34 +924,52 @@
                         <div class="modal-body">
                             <form id="addBookingForm">
                                 <div class="form-group">
+                                    <label>Mã lịch hẹn:</label>
+                                    <input type="text" id="bookingId" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Chi Nhánh:</label>
+                                    <select id="bookingBranchId" required>
+                                        <option value="">-- Chọn chi nhánh --</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Nhân Viên:</label>
+                                    <select id="bookingStaffId" required>
+                                        <option value="">-- Chọn nhân viên --</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label>Ngày hẹn:</label>
                                     <input type="date" id="bookingDate" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Trạng thái:</label>
-                                    <select id="bookingStatus" required>
-                                        <option value="pending">Chờ xác nhận</option>
-                                        <option value="confirmed">Đã xác nhận</option>
-                                        <option value="completed">Hoàn thành</option>
-                                        <option value="cancelled">Huỷ</option>
+                                    <label>Giờ hẹn:</label>
+                                    <select id="giohen" class="input-field" required></select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Khách Hàng:</label>
+                                    <select id="bookingCustomerId" required>
+                                        <option value="">-- Chọn khách hàng --</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Mã NV:</label>
-                                    <input type="text" id="bookingStaffId" placeholder="Nhập mã nhân viên">
+                                    <label>Dịch vụ:</label>
+                                    <select id="dichvu" required>
+                                        <option value="">-- Chọn dịch vụ --</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Mã KH:</label>
-                                    <input type="text" id="bookingCustomerId" placeholder="Nhập mã khách hàng">
-                                </div>
-                                <div class="form-group">
-                                    <label>Mã Chi Nhánh:</label>
-                                    <input type="text" id="bookingBranchId" placeholder="Nhập mã chi nhánh">
+                                    <label>Số lượng:</label>
+                                    <input type="number" id="bookingQuantity" min="1" max="20" required>
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
                                         onclick="closeModal('addBookingModal')">Hủy</button>
-                                    <button type="submit" class="btn primary">Lưu lịch hẹn</button>
+                                    <button type="submit" class="btn primary" onclick="themLichHen(event)">Lưu lịch
+                                        hẹn</button>
                                 </div>
                             </form>
                         </div>
@@ -933,46 +980,40 @@
                 <div id="editBookingModal" class="modal">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3>Sửa Lịch Hẹn</h3>
+                            <h3>Cập nhật lịch hẹn</h3>
                             <span class="close-btn" onclick="closeModal('editBookingModal')">&times;</span>
                         </div>
                         <div class="modal-body">
-                            <form onsubmit="capNhatLichHen(event)">
-                                <input type="hidden" id="editBookingId">
-                                <div class="form-group">
-                                    <label>Ngày hẹn:</label>
-                                    <input type="date" id="editBookingDate" required>
-                                </div>
+                            <form id="editBookingForm">
+                                <input type="hidden" id="editBookingId" readonly>
+                            
                                 <div class="form-group">
                                     <label>Trạng thái:</label>
                                     <select id="editBookingStatus" required>
-                                        <option value="pending">Chờ xác nhận</option>
-                                        <option value="confirmed">Đã xác nhận</option>
-                                        <option value="completed">Hoàn thành</option>
-                                        <option value="cancelled">Huỷ</option>
+                                        <option value="Đã đặt">Đã đặt</option>
+                                        <option value="Đang chờ">Đang chờ</option>
+                                        <option value="Đang thực hiện">Đang thực hiện</option>
+                                        <option value="Hoàn thành">Hoàn thành</option>
+                                        <option value="Huỷ">Huỷ</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label>Mã NV:</label>
-                                    <input type="text" id="editBookingStaffId" placeholder="Nhập mã nhân viên">
-                                </div>
-                                <div class="form-group">
-                                    <label>Mã KH:</label>
-                                    <input type="text" id="editBookingCustomerId" placeholder="Nhập mã khách hàng">
-                                </div>
-                                <div class="form-group">
-                                    <label>Mã Chi Nhánh:</label>
-                                    <input type="text" id="editBookingBranchId" placeholder="Nhập mã chi nhánh">
-                                </div>
+
+
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
-                                        onclick="closeModal('editBookingModal')">Hủy</button>
-                                    <button type="submit" class="btn primary">Cập nhật</button>
+                                        onclick="closeModal('editBookingModal')">
+                                        Hủy
+                                    </button>
+                                    <button type="submit" class="btn primary" onclick="suaLichHen(event)">
+                                        Cập nhật
+                                    </button>
                                 </div>
+
                             </form>
                         </div>
                     </div>
                 </div>
+
 
 
                 <!-- Reports -->
