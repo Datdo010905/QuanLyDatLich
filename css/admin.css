@@ -492,3 +492,14 @@ textarea {
     }
 }
 
+.status.đang-xử-lý {
+  color: #c6ba0f;
+}
+
+.status.đã-thanh-toán {
+  color: #148a30;
+}
+
+.status.đã-huỷ {
+  color: #fb0019;
+}

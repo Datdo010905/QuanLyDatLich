@@ -12,6 +12,7 @@
     <!-- <script src="js/lichsu.js"></script> -->
     <link rel="icon" href="img/logo.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 
 <body>
@@ -27,8 +28,8 @@
                 <a data-section="services"><i class="fas fa-concierge-bell"></i> Dịch vụ</a>
                 <a data-section="customers"><i class="fas fa-users"></i> Khách hàng</a>
                 <a data-section="staff"><i class="fas fa-user-tie"></i> Nhân viên</a>
-                <a data-section="invoices"><i class="fas fa-file-invoice-dollar"></i> Hoá đơn</a>
                 <a data-section="bookings"><i class="fas fa-calendar-check"></i> Lịch hẹn</a>
+                <a data-section="invoices"><i class="fas fa-file-invoice-dollar"></i> Hoá đơn</a>
                 <a data-section="reports"><i class="fas fa-chart-line"></i> Báo cáo</a>
             </nav>
 
@@ -746,12 +747,12 @@
                         <table class="table" id="invoicesTable">
                             <thead>
                                 <tr>
-                                    <th>Mã HĐ</th>
-                                    <th>Mã KM</th>
+                                    <th>Mã hoá đơn</th>
+                                    <th>Mã khuyến mại</th>
                                     <th>Tổng Tiền</th>
-                                    <th>Hình Thức TT</th>
-                                    <th>Mã NV</th>
-                                    <th>Mã Lịch Hẹn</th>
+                                    <th>Hình Thức Thanh toán</th>
+                                    <th>Nhân viên</th>
+                                    <th>Lịch Hẹn</th>
                                     <th>Trạng Thái</th>
                                     <th>Hành Động</th>
                                 </tr>
@@ -774,13 +775,18 @@
                                     <input type="text" id="invoiceId" placeholder="Nhập mã hoá đơn">
                                 </div>
                                 <div class="form-group">
-                                    <label>Mã Khuyến mại:</label>
-                                    <input type="text" id="invoicePromoId" placeholder="Nhập mã khuyến mại">
+                                    <label>Mã Lịch Hẹn:</label>
+                                    <select id="invoiceBookingId">
+                                        <option value="">-- Chọn mã lịch hẹn --</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Tổng tiền:</label>
-                                    <input type="number" id="invoiceTotal" required placeholder="VD: 500000">
+                                    <label>Mã Khuyến Mại:</label>
+                                    <select id="invoicePromoId">
+                                        <option value="">-- Chọn mã khuyến mại --</option>
+                                    </select>
                                 </div>
+
                                 <div class="form-group">
                                     <label>Hình thức thanh toán:</label>
                                     <select id="invoicePaymentMethod" required>
@@ -790,20 +796,17 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Mã NV:</label>
-                                    <input type="text" id="invoiceStaffId" placeholder="Nhập mã nhân viên">
-                                </div>
-                                <div class="form-group">
-                                    <label>Mã Lịch Hẹn:</label>
-                                    <input type="text" id="invoiceBookingId" placeholder="Nhập mã lịch hẹn">
-                                </div>
-                                <div class="form-group">
-                                    <label>Trạng thái:</label>
-                                    <select id="invoiceStatus">
-                                        <option value="Đã thanh toán">Đã thanh toán</option>
-                                        <option value="Đang xử lý">Đang xử lý</option>
-                                        <option value="Huỷ">Huỷ</option>
+                                    <label>Nhân viên lập hoá đơn:</label>
+                                    <select id="invoiceStaffId">
+                                        <option value="">-- Chọn nhân viên --</option>
                                     </select>
+                                </div>
+                                
+                                
+                                
+                                <div class="form-group">
+                                    <label>Tổng tiền:</label>
+                                    <input type="number" id="invoiceTotal" readonly>
                                 </div>
                                 <div class="form-actions">
                                     <button type="button" class="btn secondary"
@@ -827,14 +830,6 @@
                             <form>
                                 <input type="hidden" id="editInvoiceId">
                                 <div class="form-group">
-                                    <label>Mã KM:</label>
-                                    <input type="text" id="editInvoicePromoId" placeholder="Nhập mã khuyến mại">
-                                </div>
-                                <div class="form-group">
-                                    <label>Tổng tiền:</label>
-                                    <input type="number" id="editInvoiceTotal" required placeholder="VD: 500000">
-                                </div>
-                                <div class="form-group">
                                     <label>Hình thức thanh toán:</label>
                                     <select id="editInvoicePaymentMethod" required>
                                         <option value="Tiền mặt">Tiền mặt</option>
@@ -843,19 +838,11 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Mã NV:</label>
-                                    <input type="text" id="editInvoiceStaffId" placeholder="Nhập mã nhân viên">
-                                </div>
-                                <div class="form-group">
-                                    <label>Mã Lịch Hẹn:</label>
-                                    <input type="text" id="editInvoiceBookingId" placeholder="Nhập mã lịch hẹn">
-                                </div>
-                                <div class="form-group">
                                     <label>Trạng thái:</label>
                                     <select id="editInvoiceStatus">
                                         <option value="Đã thanh toán">Đã thanh toán</option>
                                         <option value="Đang xử lý">Đang xử lý</option>
-                                        <option value="Huỷ">Huỷ</option>
+                                        <option value="Đã huỷ">Đã huỷ</option>
                                     </select>
                                 </div>
                                 <div class="form-actions">
@@ -986,7 +973,7 @@
                         <div class="modal-body">
                             <form id="editBookingForm">
                                 <input type="hidden" id="editBookingId" readonly>
-                            
+
                                 <div class="form-group">
                                     <label>Trạng thái:</label>
                                     <select id="editBookingStatus" required>

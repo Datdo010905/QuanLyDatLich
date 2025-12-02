@@ -84,9 +84,9 @@ function xemChiTiet(malich) {
         return;
     }
     const h3 = document.getElementById("tieudechitiet");
-    h3.innerHTML = `Chi tiết lịch hẹn ${malich} 
-                    <button class="btn small delete" onclick="closeviewCT()" style="float: right;">
-                        <i class="fas fa-circle-xmark"></i>
+    h3.innerHTML = `Chi tiết lịch hẹn ${malich}
+                    <button class="btn small delete" onclick="closeviewCT()">
+                        <i class="fa-solid fa-circle-xmark"></i>
                     </button>`;
 
     const tableBody = document.getElementById("detail-table-body");

@@ -82,8 +82,14 @@ window.onload = function () {
   renderAllTables();
   loadBookingOptions();
   loadHours();
+  loadLichHenHoanThanh();
   document.getElementById("bookingStaffId").addEventListener("change", loadHours);
   document.getElementById("bookingDate").addEventListener("change", loadHours);
+
+
+  document.getElementById("invoiceBookingId").addEventListener('change', tudongtinhtien);
+  document.getElementById("invoicePromoId").addEventListener('change', tudongtinhtien);
+  document.getElementById("invoicePromoId").addEventListener('input', tudongtinhtien);
 };
 
 // Đăng xuất
@@ -155,7 +161,9 @@ function loadDashboard() {
       document.getElementById("todayBookings").textContent = (parseInt(document.getElementById("todayBookings").textContent) || 0) + 1;
     }
   });
-  const tongDoanhThu = hoaDonLocal.reduce((sum, hd) => sum + hd.TONGTIEN, 0);
+
+  const hoadonDaThanhToan = hoaDonLocal.filter(hd => hd.TRANGTHAI === "Đã thanh toán")
+  const tongDoanhThu = hoadonDaThanhToan.reduce((sum, hd) => sum + hd.TONGTIEN, 0);
   document.getElementById("revenue").textContent = tongDoanhThu.toLocaleString("vi-VN") + "₫";
 
   // Thêm sự kiện mới nhất vào bảng hoạt động
@@ -311,41 +319,42 @@ function renderPromotions() {
 
 // LỊCH HẸN
 function getStatusPriority(status) {
-    switch (status) {
-        case "Đã đặt":
-        case "Đang chờ":
-            return 1; // Ưu tiên cao nhất: Cần xử lý/xác nhận
-        case "Đang thực hiện":
-            return 2; // Ưu tiên trung bình: Đang làm
-        case "Huỷ":
-            return 3; // Trạng thái kết thúc (không cần hành động ngay)
-        case "Hoàn thành":
-            return 4; // Trạng thái kết thúc (đã xong)
-        default:
-            return 99; // Trạng thái không xác định
-    }
+  switch (status) {
+    case "Đã đặt":
+    case "Đang chờ":
+      return 1; // Ưu tiên cao nhất: Cần xử lý/xác nhận
+    case "Đang thực hiện": case "Đang xử lý":
+      return 2; // Ưu tiên trung bình: Đang làm
+    case "Huỷ": case "Đã huỷ":
+      return 3; // Trạng thái kết thúc (không cần hành động ngay)
+    case "Hoàn thành": case "Đã thanh toán":
+      return 4; // Trạng thái kết thúc (đã xong)
+    default:
+      return 99; // Trạng thái không xác định
+  }
 }
 function renderBookings() {
   const tbody = document.querySelector("#bookingsTable tbody");
-  
+
   if (!tbody) return;
+
   const sortedBookings = [...lichHenLocal].sort((a, b) => {
-      const priorityA = getStatusPriority(a.TRANGTHAI);
-      const priorityB = getStatusPriority(b.TRANGTHAI);
+    const priorityA = getStatusPriority(a.TRANGTHAI);
+    const priorityB = getStatusPriority(b.TRANGTHAI);
 
-      // Sắp xếp chính: Theo độ ưu tiên trạng thái (tăng dần)
-      if (priorityA !== priorityB) {
-          return priorityA - priorityB;
-      }
+    // Sắp xếp chính: Theo độ ưu tiên trạng thái (tăng dần)
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
 
-      // Sắp xếp phụ: Nếu cùng trạng thái, sắp xếp theo Ngày và Giờ (sắp đến trước)
-      const dateA = new Date(`${a.NGAYHEN} ${a.GIOHEN}`);
-      const dateB = new Date(`${b.NGAYHEN} ${b.GIOHEN}`);
-      return dateA - dateB;
+    // Sắp xếp phụ: Nếu cùng trạng thái, sắp xếp theo Ngày và Giờ (sắp đến trước)
+    const dateA = new Date(`${a.NGAYHEN} ${a.GIOHEN}`);
+    const dateB = new Date(`${b.NGAYHEN} ${b.GIOHEN}`);
+    return dateA - dateB;
   });
 
   tbody.innerHTML = sortedBookings.map(lh => {
-    
+
     //Lấy Tên Nhân Viên
     const nvObj = nhanVienLocal.find(nv => nv.MANV === lh.MANV);
     const tenNV = nvObj ? nvObj.HOTEN : lh.MANV;
@@ -359,8 +368,8 @@ function renderBookings() {
     const tenCN = cnObj ? cnObj.TENCHINHANH : lh.MACHINHANH;
 
     const trangThaiClass = (lh.TRANGTHAI || "").toLowerCase()
-            .replace(/ /g, '-') // thay ' ' bằng '-'
-            //console.log("Trạng thái lớp:", trangThaiClass);
+      .replace(/ /g, '-') // thay ' ' bằng '-'
+    //console.log("Trạng thái lớp:", trangThaiClass);
     return `
       <tr>
         <td>${lh.MALICH}</td>
@@ -370,7 +379,7 @@ function renderBookings() {
         <td><span class="status ${trangThaiClass}">${lh.TRANGTHAI}</span></td>
         
         <td>${tenNV}</td>
-        <td>${tenKH}</td>
+        <td>${lh.MAKH} - ${tenKH}</td>
         <td>${tenCN}</td>
         
         <td class="actions">
@@ -382,6 +391,10 @@ function renderBookings() {
     `;
   }).join(""); // Đóng map và nối chuỗi
 }
+function closeviewCT() {
+  document.getElementById('booking-details').style.display = 'none';
+}
+
 // CHI TIẾT LỊCH HẸN
 function xemChiTiet(malich) {
   const chitiet = chiTietLichHenLocal.filter(ct => ct.MALICH === malich);
@@ -390,9 +403,9 @@ function xemChiTiet(malich) {
     return;
   }
   const h3 = document.getElementById("tieudechitiet");
-  h3.innerHTML = `Chi tiết lịch hẹn ${malich} 
-                    <button class="btn small delete" onclick="closeviewCT()" style="float: right;">
-                        <i class="fas fa-circle-xmark"></i>
+  h3.innerHTML = `Chi tiết lịch hẹn ${malich}
+                    <button class="btn small delete" onclick="closeviewCT()">
+                        <i class="fa-solid fa-circle-xmark"></i>
                     </button>`;
 
   const tableBody = document.getElementById("detail-table-body");
@@ -434,8 +447,22 @@ function formatCurrency(amount) {
 function renderInvoices() {
   const tbody = document.querySelector("#invoicesTable tbody");
   if (!tbody) return;
-  const hoadonLocal = JSON.parse(localStorage.getItem("HoaDon", JSON.stringify(HOADON)));
-  tbody.innerHTML = hoadonLocal.map(hd => `
+
+  const sortedHoaDon = [...hoaDonLocal].sort((a, b) => {
+    const priorityA = getStatusPriority(a.TRANGTHAI);
+    const priorityB = getStatusPriority(b.TRANGTHAI);
+
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
+  });
+
+  tbody.innerHTML = sortedHoaDon.map(hd => {
+
+    const trangThaiClass = (hd.TRANGTHAI || "").toLowerCase()
+      .replace(/ /g, '-') // thay ' ' bằng '-'
+    //console.log("Trạng thái lớp:", trangThaiClass);
+    return `
     <tr>
       <td>${hd.MAHD}</td>
       <td>${hd.MAKM ?? "Không có"}</td>
@@ -443,13 +470,13 @@ function renderInvoices() {
       <td>${hd.HINHTHUCTHANHTOAN}</td>
       <td>${hd.MANV}</td>
       <td>${hd.MALICH}</td>
-      <td>${hd.TRANGTHAI}</td>
+      <td class="status ${trangThaiClass}">${hd.TRANGTHAI}</td>
       <td class="actions">
         <button class="btn small edit" data-id="${hd.MAHD}"  onclick="chuanBiSuaHoaDon('${hd.MAHD}')"><i class="fas fa-edit"></i></button>
         <button class="btn small delete" data-id="${hd.MAHD}" onclick="xoaHoaDon('${hd.MAHD}')"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
-  `).join("");
+  `}).join("");
 }
 
 
@@ -1322,20 +1349,79 @@ function xoaNhanVien(manhanvien) {
 }
 
 
+
 //quản lý hoá đơn
-//lấy lịch hẹn đã hoàn thành để chọn thêm hoá đơn
+
+function loadLichHenHoanThanh() {
+  //lấy lịch hẹn đã hoàn thành để chọn thêm hoá đơn
+  const LichHenHoanThanh = lichHenLocal.filter(lh => lh.TRANGTHAI === "Hoàn thành");
+  const lichHenSelect = document.getElementById("invoiceBookingId");
+
+  lichHenSelect.innerHTML = '<option value="">-- Chọn lịch hẹn --</option>' +
+    LichHenHoanThanh.map(lhht => `<option value="${lhht.MALICH}">${lhht.MALICH} | ${lhht.NGAYHEN} | ${lhht.GIOHEN} | ${lhht.MAKH}</option>`).join("");
+
+  const NVSelect = document.getElementById("invoiceStaffId");
+  const thungan = nhanVienLocal.filter(nv => nv.CHUCVU === "Thu ngân");
+
+  NVSelect.innerHTML = '<option value="">-- Chọn nhân viên --</option>' +
+    thungan.map(nv => `<option value="${nv.MANV}">${nv.MANV} - ${nv.HOTEN}</option>`).join("");
+
+
+  const KMSelect = document.getElementById("invoicePromoId");
+  const khuyenMaiConHan = khuyenMaiLocal.filter(km => km.TRANGTHAI === "Đang áp dụng");
+
+  KMSelect.innerHTML = '<option value="">-- Chọn khuyến mại --</option>' +
+    khuyenMaiConHan.map(km => `<option value="${km.MAKM}">${km.MAKM} - ${km.MOTA}</option>`).join("");
+}
+// Hàm này để tính toán và hiển thị tiền lên form (không lưu, chỉ hiển thị)
+function tudongtinhtien() {
+  const maLH = document.getElementById("invoiceBookingId").value;
+  const maKM = document.getElementById("invoicePromoId").value;
+  const totalInput = document.getElementById("invoiceTotal");
+
+  if (!maLH) {
+    totalInput.value = 0;
+    return;
+  }
+
+  //lấy giá dịch vụ từ lịch hẹn đã chọn
+  const hoaDonTheoCTLichHen = chiTietLichHenLocal.filter(hdct => hdct.MALICH === maLH);
+
+  const allServices = [...dichVuLocal, ...chamSocDaLocal]
+  //LẤY GIÁ TỪ DỊCH VỤ
+  let tongTien = 0;
+  hoaDonTheoCTLichHen.forEach(ct => {
+    const dichvu = allServices.find(dv => dv.MADV === ct.MADV)
+    if (dichvu) {
+      tongTien += Number(ct.SOLUONG) * Number(dichvu.GIADV);
+    }
+  })
+
+  let giatriKM = 0;
+
+  if (maKM) {
+    const khuyenmai = khuyenMaiLocal.find(km => km.MAKM === maKM);
+    if (khuyenmai) {
+      giatriKM = Number(khuyenmai.GIATRI);
+    }
+  }
+
+  tongTien = tongTien - (tongTien * giatriKM);
+
+  totalInput.value = tongTien;
+  return tongTien;
+}
+
 function themHoaDon(event) {
   event.preventDefault(); // Ngăn chặn hành vi mặc định của form
 
   const maHD = document.getElementById("invoiceId").value;
   const maKM = document.getElementById("invoicePromoId").value;
-  const tongTien = document.getElementById("invoiceTotal").value;
   const hinhThuc = document.getElementById("invoicePaymentMethod").value;
   const maNV = document.getElementById("invoiceStaffId").value;
   const maLH = document.getElementById("invoiceBookingId").value;
-  const trangThai = document.getElementById("invoiceStatus").value;
 
-  if (!maHD.trim() || !tongTien.trim() || !maNV.trim()) {
+  if (!maHD.trim() || maNV.length === 0 || maLH.length === 0 || maKM.length === 0) {
     alert("Vui lòng nhập đầy đủ thông tin bắt buộc!");
     return;
   }
@@ -1355,16 +1441,17 @@ function themHoaDon(event) {
     return;
   }
 
+  const tongTien = tudongtinhtien();
 
   try {
     const newHD = {
       MAHD: maHD,
       MAKM: maKM,
-      TONGTIEN: Number(tongTien),
-      THANHTOAN: hinhThuc,
+      TONGTIEN: tongTien,
+      HINHTHUCTHANHTOAN: hinhThuc,
       MANV: maNV,
-      MALH: maLH,
-      TRANGTHAI: trangThai
+      MALICH: maLH,
+      TRANGTHAI: "Đang xử lý"
     };
 
     hoaDonLocal.push(newHD);
@@ -1390,31 +1477,15 @@ function chuanBiSuaHoaDon(mahoadon) {
   openModal("editInvoiceModal");
 
   document.getElementById("editInvoiceId").value = hd.MAHD;
-  document.getElementById("editInvoicePromoId").value = hd.MAKM;
-  document.getElementById("editInvoiceTotal").value = hd.TONGTIEN;
-  document.getElementById("editInvoicePaymentMethod").value = hd.THANHTOAN;
-  document.getElementById("editInvoiceStaffId").value = hd.MANV;
-  document.getElementById("editInvoiceBookingId").value = hd.MALH;
+  document.getElementById("editInvoicePaymentMethod").value = hd.HINHTHUCTHANHTOAN;
   document.getElementById("editInvoiceStatus").value = hd.TRANGTHAI;
 }
 
 function suaHoaDon(event) {
   event.preventDefault(); // Ngăn chặn hành vi mặc định của form
   const maHD = document.getElementById("editInvoiceId").value;
-  const maKM = document.getElementById("editInvoicePromoId").value;
-  const tongTien = document.getElementById("editInvoiceTotal").value;
   const hinhThuc = document.getElementById("editInvoicePaymentMethod").value;
-  const maNV = document.getElementById("editInvoiceStaffId").value;
-  const maLH = document.getElementById("editInvoiceBookingId").value;
   const trangThai = document.getElementById("editInvoiceStatus").value;
-
-  if (!maHD.trim() || !tongTien.trim() || !maNV.trim()) {
-    alert("Vui lòng nhập đầy đủ thông tin bắt buộc!");
-    return;
-  }
-  if (!confirm("Bạn có chắc chắn muốn sửa hoá đơn này không?")) {
-    return;
-  }
 
 
   // Tìm index cần sửa
@@ -1423,19 +1494,20 @@ function suaHoaDon(event) {
     alert("Không tìm thấy hoá đơn!");
     return;
   }
-  const exitsLichHen = hoaDonLocal.some(hd => hd.MALICH === MALICH && hd.MAHD !== maHD);
-  if (exitsLichHen) {
-    alert("Lịch hẹn này đã nằm trong hoá đơn khác!");
+  const trangThaiCu = hoaDonLocal[index].TRANGTHAI;
+  if (trangThai === trangThaiCu) {
+    closeModal("editInvoiceModal");
+    return;
+  }
+  if (trangThaiCu === "Đã thanh toán" || trangThaiCu === "Đã huỷ") {
+    alert(`Hoá đơn đã "${trangThaiCu}", không thể thay đổi trạng thái nữa!`);
     return;
   }
 
+  if (!confirm(`Bạn có chắc chắn muốn chuyển từ "${trangThaiCu}" sang "${trangThai}" không?`)) return;
 
   try {
-    hoaDonLocal[index].MAKM = maKM;
-    hoaDonLocal[index].TONGTIEN = Number(tongTien);
-    hoaDonLocal[index].THANHTOAN = hinhThuc;
-    hoaDonLocal[index].MANV = maNV;
-    hoaDonLocal[index].MALH = maLH;
+    hoaDonLocal[index].HINHTHUCTHANHTOAN = hinhThuc;
     hoaDonLocal[index].TRANGTHAI = trangThai;
 
     localStorage.setItem("HoaDon", JSON.stringify(hoaDonLocal));
@@ -1452,17 +1524,17 @@ function suaHoaDon(event) {
 function xoaHoaDon(mahoadon) {
   if (!mahoadon) return;
   if (!confirm("Bạn có chắc chắn muốn xoá hoá đơn này không?")) return;
-  const isDaThanhToan = hoaDonLocal.some(hd => hd.MAHD === mahoadon && hd.TRANGTHAI === "Đã thanh toán")
+  const isDaThanhToan = hoaDonLocal.some(hd => hd.MAHD === mahoadon && hd.TRANGTHAI !== "Đã huỷ")
   if (isDaThanhToan) {
-    alert("Không thể xoá hoá đơn đã thanh toán!");
+    alert("Chỉ có thể xoá hoá đơn đã huỷ!");
     return;
   }
+  
   try {
     // Lọc bỏ cần xoá
     hoaDonLocal = hoaDonLocal.filter(h => h.MAHD !== mahoadon);
     localStorage.setItem("HoaDon", JSON.stringify(hoaDonLocal));
     renderInvoices();
-
     alert("Xoá hoá đơn thành công!");
   }
   catch (error) {
@@ -1672,10 +1744,6 @@ function suaLichHen(event) {
   const trangThaiCu = lichHenLocal[index].TRANGTHAI;
   if (trangThaiMoi === trangThaiCu) {
     closeModal("editBookingModal");
-    return;
-  }
-  if (trangThaiCu === "Hoàn thành" || trangThaiCu === "Đã huỷ") {
-    alert(`Lịch hẹn đã "${trangThaiCu}", không thể thay đổi trạng thái nữa!`);
     return;
   }
   //check thứ tự trạng thái 
