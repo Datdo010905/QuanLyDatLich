@@ -17,8 +17,8 @@ function togglePassword() {
 
 
 if (!localStorage.getItem("KhachHang") || !localStorage.getItem("TaiKhoan")) {
-    localStorage.setItem("KhachHang", JSON.stringify(KHACHHANG));
-    localStorage.setItem("TaiKhoan", JSON.stringify(TAIKHOAN));
+  localStorage.setItem("KhachHang", JSON.stringify(KHACHHANG));
+  localStorage.setItem("TaiKhoan", JSON.stringify(TAIKHOAN));
 }
 
 
@@ -109,6 +109,12 @@ function dangKyLocal(event) {
     alert('Mật khẩu phải có ít nhất 8 ký tự!');
     return false;
   }
+  const checksdt = /^(03|05|07|08|09)[0-9]{8}$/;
+
+  if (!checksdt.test(user)) {
+    alert("Số điện thoại không hợp lệ!");
+    return;
+  }
 
   // LẤY DANH SÁCH TÀI KHOẢN TỪ LOCALSTORAGE
   const dsTaiKhoan = JSON.parse(localStorage.getItem("TaiKhoan")) || [];
@@ -116,13 +122,12 @@ function dangKyLocal(event) {
   // Tìm tài khoản
   const taikhoan = dsTaiKhoan.find(
     acc =>
-      acc.MATK.toLowerCase() === user.toLowerCase() &&
-      acc.PASS === pass
+      acc.MATK.toLowerCase() === user.toLowerCase()
   );
 
   //tồn tại tài khoản
   if (taikhoan) {
-    alert("Tài khoản đã tồn tại. Vui lòng chọn tên đăng nhập khác.");
+    alert("Tài khoản đã tồn tại. Vui lòng chọn tài khoản khác.");
     return;
   }
 
@@ -138,7 +143,7 @@ function dangKyLocal(event) {
     const newKH = {
       MAKH: "KH" + Date.now(), // mã khách hàng theo timestamp
       HOTEN: fullname,
-      SDT: "",
+      SDT: user,
       MATK: user
     };
 
@@ -184,4 +189,30 @@ window.onclick = function (event) {
   if (event.target.classList.contains('modal')) {
     event.target.style.display = "none";
   }
+}
+
+
+function quenMatKhauLocal(event) {
+  event.preventDefault();
+
+  const sdt = document.getElementById("emailOrPhone").value;
+  let taiKhoanLocal = JSON.parse(localStorage.getItem("TaiKhoan"));
+  if (sdt === "") {
+    alert("Vui lòng số điện thoại!");
+    return;
+  }
+  const checksdt = /^(03|05|07|08|09)[0-9]{8}$/;
+
+  if (!checksdt.test(sdt)) {
+    alert("Số điện thoại không hợp lệ!");
+    return;
+  }
+  const trungSDTYeuCau = taiKhoanLocal.find(tk => tk.MATK === sdt);
+  if (trungSDTYeuCau) {
+    alert("Yêu cầu khôi phục mật khẩu đã được gửi!\nVui lòng kiểm tra email hoặc tin nhắn của bạn.");
+    alert(`Mật khẩu của bạn là: ${trungSDTYeuCau.PASS}`);
+  }
+
+  // 
+  // return true;
 }

@@ -27,7 +27,7 @@
 				<input id="fullname" type="text" placeholder="Nhập họ và tên" required>
 
 				<label for="username">Tài khoản <span>*</span></label>
-				<input id="username" type="text" placeholder="Tên đăng nhập hoặc Số điện thoại" required>
+				<input id="username" type="text" placeholder="Số điện thoại" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
 				<label for="password">Mật khẩu <span>*</span></label>
 				<div class="password-container">

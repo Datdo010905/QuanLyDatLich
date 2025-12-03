@@ -24,8 +24,8 @@
 		<div class="login-right">
 			<h1>QUÊN MẬT KHẨU</h1>
 			<form onsubmit="return quenMatKhauLocal(event)">
-				<label for="emailOrPhone">Email hoặc Số điện thoại <span>*</span></label>
-				<input id="emailOrPhone" type="text" placeholder="Nhập email hoặc số điện thoại của bạn" required>
+				<label for="emailOrPhone">Số điện thoại <span>*</span></label>
+				<input id="emailOrPhone" type="text" placeholder="Nhập số điện thoại của bạn" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
 
 				<button type="submit" id="btn-login">GỬI YÊU CẦU</button>
 
@@ -35,19 +35,6 @@
 			</form>
 		</div>
 	</div>
-
-	<script>
-		function quenMatKhauLocal(event) {
-			event.preventDefault();
-			const input = document.getElementById("emailOrPhone").value.trim();
-			if (input === "") {
-				alert("Vui lòng nhập email hoặc số điện thoại!");
-				return false;
-			}
-			alert("Yêu cầu khôi phục mật khẩu đã được gửi!\nVui lòng kiểm tra email hoặc tin nhắn của bạn.");
-			return true;
-		}
-	</script>
 </body>
 
 </html>

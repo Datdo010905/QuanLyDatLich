@@ -1,39 +1,34 @@
-function checkdangnhap() {
-    const loggedInUser = localStorage.getItem("loggedInUser");
-    const loginElement = document.getElementById("login-hello");
-    
-    if (!loggedInUser) {
-        window.location.href = "login.html";
-        return;
-    }
-    if (loginElement) {
-        loginElement.innerHTML = ` ${loggedInUser} 
-            <button onclick="dangXuat()" class="logout-btn">
-                <i class="fas fa-right-from-bracket"></i>
-            </button>`;
-    }
-}
-window.addEventListener("DOMContentLoaded", checkdangnhap);
-//LẤY THÔNG TIN KHÁCH HÀNG ĐĂNG NHẬP THEO SĐT HOẶC MÃ TÀI KHOẢN
-const mataikhoan = localStorage.getItem("loggedInUser");
-let khachHangLocal = JSON.parse(localStorage.getItem("KhachHang")) || [];
-const khachhang = khachHangLocal.find(kh => kh.MATK === mataikhoan || kh.SDT === mataikhoan);
+window.addEventListener("DOMContentLoaded", () => {
+    checkdangnhap();
+    renderBookingsForCustomer();
+});
 
-if (khachhang) {
-    console.log("Khách hàng đăng nhập:", khachhang);
-} else {
-    console.warn("Không tìm thấy thông tin khách hàng hoặc chưa đăng nhập.");
+// LẤY THÔNG TIN KHÁCH HÀNG ĐĂNG NHẬP
+const mataikhoan = localStorage.getItem("loggedInUser");
+const khachHangLocal = JSON.parse(localStorage.getItem("KhachHang")) || [];
+
+const khachhang = khachHangLocal.find(
+    kh => kh.MATK === mataikhoan || kh.SDT === mataikhoan
+);
+
+if (!khachhang) {
+    console.warn("Không tìm thấy khách hàng hoặc chưa đăng nhập.");
 }
+
 
 // LỊCH HẸN
 function renderBookingsForCustomer() {
     const tbody = document.querySelector(".lichsu-table tbody");
     let lichHenLocal = JSON.parse(localStorage.getItem('LichHen')) || [];
+    console.log(khachhang);
+    console.log(lichHenLocal);
+    
     const LICHHEN_KH = lichHenLocal.filter(lh => lh.MAKH === khachhang.MAKH);
+    console.log(LICHHEN_KH);
     if (!tbody) {
         return;
     }
-    const lichdangcho = LICHHEN_KH.find(lh => lh.TRANGTHAI === "Đang chờ")
+    const lichdangcho = LICHHEN_KH.find(lh => lh.TRANGTHAI === "Đang chờ");
     if(lichdangcho){
         alert("Lịch hẹn của bạn đã được duyệt, mau đến cắt tóc thôi nào!!");
     }
@@ -116,10 +111,8 @@ function xemChiTiet(malich) {
 
     document.getElementById('booking-details').style.display = 'block';
 }
-// Gọi hàm để hiển thị dữ liệu khi trang được tải
-document.addEventListener("DOMContentLoaded", () => {
-    renderBookingsForCustomer();
-}); 
+
+
 //HỦY LỊCH HẸN
 function HuyLich(malich) {
     let danhSach = JSON.parse(localStorage.getItem('LichHen')) || [];

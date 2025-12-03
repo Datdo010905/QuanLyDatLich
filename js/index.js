@@ -44,7 +44,6 @@ if (!localStorage.getItem("KhachHang") || !localStorage.getItem("TaiKhoan")) {
 
 
   
-
 function luusodienthoai() {
   const sdt = document.getElementById("input-sdt").value.trim();
   if (!sdt) {
@@ -53,50 +52,48 @@ function luusodienthoai() {
   }
   const checksdt = /^(03|05|07|08|09)[0-9]{8}$/;
 
-  if(!checksdt.test(sdt))
-  {
+  if (!checksdt.test(sdt)) {
     alert("Số điện thoại không hợp lệ!");
     return;
   }
 
   localStorage.setItem("sodienthoai-datlich", sdt);
 
-  // Lấy danh sách khách hàng
   let khList = JSON.parse(localStorage.getItem("KhachHang")) || [];
-
-  // Lấy thông tin người đang đăng nhập
-  const logged = localStorage.getItem("loggedInUser");
-
+  const logged = localStorage.getItem("loggedInUser"); // MATK đang đăng nhập
   let kh;
 
-  //NẾU ĐANG ĐĂNG NHẬP, tìm KH theo MATK
-  if (logged) {
-    kh = khList.find(k => k.MATK === logged);
+  // Nếu đang đăng nhập, kiểm tra xem MATK này có SDT trùng với số nhập hay không
+  let khDangNhap = khList.find(k => k.MATK === logged);
 
-    // Khách đang đăng nhập nhưng chưa lưu trong KH thì tạo vào danh sách
-    if (!kh) {
+  if (logged && khDangNhap && khDangNhap.SDT !== sdt) {
+    // ĐANG ĐĂNG NHẬP SỐ A nhưng NHẬP SỐ B
+    // => Chuyển sang tài khoản B
+    let khTheoSDT = khList.find(k => k.SDT === sdt);
+
+    if (khTheoSDT) {
+      kh = khTheoSDT; // Dùng KH đã có
+    } else {
+      // Tạo KH mới nếu số B chưa từng có
       kh = {
         MAKH: "KH" + Date.now(),
-        HOTEN: "Khách hàng",
+        HOTEN: "Khách hàng mới",
         SDT: sdt,
-        MATK: logged
+        MATK: sdt
       };
       khList.push(kh);
-    } else {
-      // Đã có KH nhưng chưa có SDT hoặc SDT khác, cập nhật
-      if (!kh.SDT || kh.SDT !== sdt) {
-        kh.SDT = sdt;
-      }
+      localStorage.setItem("KhachHang", JSON.stringify(khList));
     }
 
-    localStorage.setItem("KhachHang", JSON.stringify(khList));
+  } else if (logged) {
+    // ĐANG ĐĂNG NHẬP & số nhập trùng thì giữ nguyên
+    kh = khDangNhap;
 
   } else {
-    //KHÔNG ĐĂNG NHẬP, tìm KH theo SDT
+    // KHÔNG ĐĂNG NHẬP
     kh = khList.find(k => k.SDT === sdt);
 
     if (!kh) {
-      // KH mới hoàn toàn, tạo mới
       kh = {
         MAKH: "KH" + Date.now(),
         HOTEN: "Khách hàng mới",
@@ -108,7 +105,7 @@ function luusodienthoai() {
     }
   }
 
-  //TẠO TÀI KHOẢN NẾU CHƯA CÓ
+  // TẠO TÀI KHOẢN NẾU CHƯA CÓ
   let dsUser = JSON.parse(localStorage.getItem("TaiKhoan")) || [];
   let tk = dsUser.find(u => u.MATK === kh.MATK);
 
@@ -120,13 +117,15 @@ function luusodienthoai() {
       TRANGTHAI: "Hoạt động"
     });
     localStorage.setItem("TaiKhoan", JSON.stringify(dsUser));
-    alert("Tạo tài khoản tự động cho khách hàng mới. Vui lòng đăng nhập với số điện thoại làm tên đăng nhập và mật khẩu.");
+    alert("Tạo tài khoản tự động cho khách hàng mới. Vui lòng đăng nhập bằng số điện thoại và mật khẩu là chính số điện thoại.");
   }
 
-  //ĐĂNG NHẬP SAU KHI LƯU
+  // ĐĂNG NHẬP TÀI KHOẢN TƯƠNG ỨNG VỚI SỐ ĐANG NHẬP
   localStorage.setItem("loggedInUser", kh.MATK);
+
   window.location.href = "lichhen.html";
 }
+
 
 
 

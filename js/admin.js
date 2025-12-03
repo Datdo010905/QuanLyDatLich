@@ -1559,7 +1559,7 @@ function xoaLichHen(malich) {
     alert("Lịch hẹn không tồn tại!");
     return;
   }
-  if (lichHenCanXoa.TRANGTHAI !== "Huỷ") {
+  if (lichHenCanXoa.TRANGTHAI !== "Đã huỷ") {
     alert("Chỉ có thể xoá lịch hẹn có trạng thái huỷ! (Trạng thái hiện tại: " + lichHenCanXoa.TRANGTHAI + ")");
     return;
   }
