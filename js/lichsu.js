@@ -33,6 +33,10 @@ function renderBookingsForCustomer() {
     if (!tbody) {
         return;
     }
+    const lichdangcho = LICHHEN_KH.find(lh => lh.TRANGTHAI === "Đang chờ")
+    if(lichdangcho){
+        alert("Lịch hẹn của bạn đã được duyệt, mau đến cắt tóc thôi nào!!");
+    }
     if (LICHHEN_KH.length === 0) {
         // Xử lý khi không có lịch hẹn
         tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Bạn chưa có lịch hẹn nào. Hãy tiếp tục đặt lịch!</td></tr>';
@@ -118,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
 }); 
 //HỦY LỊCH HẸN
 function HuyLich(malich) {
-    let danhSach = JSON.parse(localStorage.getItem('danhSachLichHen')) || [];
+    let danhSach = JSON.parse(localStorage.getItem('LichHen')) || [];
     const lichHenCanHuy = danhSach.find(lh => lh.MALICH === malich);
     if (!lichHenCanHuy) {
         alert("Không tìm thấy lịch hẹn.");
@@ -131,7 +135,7 @@ function HuyLich(malich) {
     }
     else if (confirm(`Bạn có chắc chắn muốn hủy lịch hẹn ${malich} không?`)) {
         lichHenCanHuy.TRANGTHAI = "Đã huỷ";
-        localStorage.setItem('danhSachLichHen', JSON.stringify(danhSach));
+        localStorage.setItem('LichHen', JSON.stringify(danhSach));
         alert(`Lịch hẹn ${malich} đã được hủy.`);
         renderBookingsForCustomer();
     }

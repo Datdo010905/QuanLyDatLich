@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 	<link rel="stylesheet" type="text/css" href="css/lichhen.css" />
+	<link rel="stylesheet" type="text/css" href="css/admin.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 	<script src="js/jquery-3.7.1.min.js"></script>
 	<script src="js/data.js"></script>
@@ -170,6 +171,32 @@
 			</form>
 
 			<p style="text-align: center;">📅 Cắt xong trả tiền – Huỷ lịch không sao</p>
+		</div>
+	</div>
+	<div id="checkpass" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3>Nhập mật khẩu để tiếp tục</h3>
+				<span class="close-btn" onclick="closeModal('checkpass')">&times;</span>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="password">Mật khẩu:</label>
+						<div class="password-container">
+							<input id="password" type="password" placeholder="Mật khẩu" required>
+						</div>
+						<div class="form-actions">
+							<button type="button" class="btn secondary" onclick="closeModal('checkpass')">
+								Hủy
+							</button>
+							<button type="submit" class="btn primary" onclick="DatLich(event)">
+								Xác nhận
+							</button>
+						</div>
+
+				</form>
+			</div>
 		</div>
 	</div>
 

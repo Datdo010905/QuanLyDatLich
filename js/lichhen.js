@@ -2,7 +2,6 @@ window.onload = function () {
     const sdt = localStorage.getItem("sodienthoai-datlich"); // Lấy dữ liệu
 
 
-
     if (!localStorage.getItem("DichVu")) {
         localStorage.setItem("DichVu", JSON.stringify(DICHVU));
     }
@@ -141,20 +140,56 @@ function themlichhen(event) {
         alert("Lịch hẹn bị trùng! Vui lòng chọn ngày giờ khác.");
         return;
     }
+    const tam = {
+        hoten,
+        chinhanh,
+        dichvu,
+        nhanvien,
+        ngayhen,
+        giohen,
+        sdt,
+        makh: kh.MAKH
+    };
+    localStorage.setItem("TamLichHen", JSON.stringify(tam));
+    openModal('checkpass');
+}
 
-    // Tạo lịch hẹn
+function DatLich(event) {
+    event.preventDefault();
+    let taikhoanLocal = JSON.parse(localStorage.getItem("TaiKhoan")) || TAIKHOAN;
+    const matkhauCanCheck = document.getElementById('password').value;
+
+    const loggedInUser = localStorage.getItem("loggedInUser");
+
+    const taikhoandangnhap = taikhoanLocal.find(tk => tk.MATK === loggedInUser);
+    //console.log(taikhoandangnhap);
+    if (!taikhoandangnhap) {
+        alert("Không tìm thấy tài khoản đăng nhập!");
+        return;
+    }
+    if (matkhauCanCheck !== taikhoandangnhap.PASS) {
+        alert("Mật khẩu không đúng!");
+        return;
+    }
+    //alert("Xác nhận mật khẩu thành công!");
+
+    const t = JSON.parse(localStorage.getItem("TamLichHen"));
+    if (!t) {
+        alert("Không có dữ liệu lịch hẹn!");
+        return;
+    }
     const newLichHen = {
         MALICH: "LH" + Date.now(),
-        NGAYHEN: ngayhen,
-        GIOHEN: giohen,
+        NGAYHEN: t.ngayhen,
+        GIOHEN: t.giohen,
         TRANGTHAI: "Đã đặt",
-        MANV: nhanvien,
-        MAKH: kh.MAKH,
-        MACHINHANH: chinhanh,
+        MANV: t.nhanvien,
+        MAKH: t.makh,
+        MACHINHANH: t.chinhanh,
     };
     const newCTLichHen = {
         MALICH: "LH" + Date.now(),
-        MADV: dichvu,
+        MADV: t.dichvu,
         SOLUONG: 1,
         GHICHU: "Không"
     };
@@ -166,6 +201,9 @@ function themlichhen(event) {
     let chitietlichhen = JSON.parse(localStorage.getItem("ChiTietLichHen")) || [];
     chitietlichhen.push(newCTLichHen);
     localStorage.setItem("ChiTietLichHen", JSON.stringify(chitietlichhen));
+
+    // Xóa dữ liệu tạm
+    localStorage.removeItem("TamLichHen");
 
     alert("Đặt lịch hẹn thành công!");
     window.location.href = "lichsu.html";

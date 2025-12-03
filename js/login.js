@@ -160,3 +160,28 @@ function dangKyLocal(event) {
     return false;
   }
 }
+// Hàm mở Modal bất kỳ theo ID
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = "block";
+    // Reset form bên trong nếu có
+    const form = modal.querySelector("form");
+    if (form) form.reset();
+  }
+}
+
+// Hàm đóng Modal bất kỳ theo ID
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+// Đóng modal khi click ra ngoài vùng content (cho tất cả modal)
+window.onclick = function (event) {
+  if (event.target.classList.contains('modal')) {
+    event.target.style.display = "none";
+  }
+}
