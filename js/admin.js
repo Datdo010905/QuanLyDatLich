@@ -160,11 +160,17 @@ function loadDashboard() {
     if (new Date(lh.NGAYHEN).toDateString() === new Date().toDateString()) {
       document.getElementById("todayBookings").textContent = (parseInt(document.getElementById("todayBookings").textContent) || 0) + 1;
     }
+    document.getElementById("reportBookings").textContent = (parseInt(lichHenLocal.length) || 0);
+
+    const doneBooking = lichHenLocal.filter(lh => lh.TRANGTHAI === "Hoàn thành");
+    if (doneBooking) {
+      document.getElementById("reportBookingsDone").textContent = `Thành công: ` + doneBooking.length;
+    }
   });
 
   const hoadonDaThanhToan = hoaDonLocal.filter(hd => hd.TRANGTHAI === "Đã thanh toán")
   const tongDoanhThu = hoadonDaThanhToan.reduce((sum, hd) => sum + hd.TONGTIEN, 0);
-  document.getElementById("revenue").textContent = tongDoanhThu.toLocaleString("vi-VN") + "₫";
+  document.getElementById("reportRevenue").textContent = tongDoanhThu.toLocaleString("vi-VN") + "₫";
 
   // Thêm sự kiện mới nhất vào bảng hoạt động
   const recentTable = document.querySelector("#recentTable tbody");
@@ -1529,7 +1535,7 @@ function xoaHoaDon(mahoadon) {
     alert("Chỉ có thể xoá hoá đơn đã huỷ!");
     return;
   }
-  
+
   try {
     // Lọc bỏ cần xoá
     hoaDonLocal = hoaDonLocal.filter(h => h.MAHD !== mahoadon);
@@ -1780,7 +1786,7 @@ function suaLichHen(event) {
     }
   }
 
-  if (!confirm(`Bạn có chắc chắn muốn chuyển từ "${trangThaiCu}" sang "${trangThai}" không?`)) return;
+  if (!confirm(`Bạn có chắc chắn muốn chuyển từ "${trangThaiCu}" sang "${trangThaiMoi}" không?`)) return;
 
   try {
     lichHenLocal[index].TRANGTHAI = trangThaiMoi;

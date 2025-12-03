@@ -485,13 +485,6 @@ textarea {
     border: 1px solid #ddd;
 }
 
-/* Responsive cho biểu đồ khi xem trên mobile */
-@media (max-width: 768px) {
-    .charts-container {
-        grid-template-columns: 1fr !important; /* Chuyển thành 1 cột */
-    }
-}
-
 .status.đang-xử-lý {
   color: #c6ba0f;
 }
