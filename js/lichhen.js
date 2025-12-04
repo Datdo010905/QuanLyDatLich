@@ -14,6 +14,7 @@ window.onload = function () {
     let dichVuLocal = JSON.parse(localStorage.getItem("DichVu")) || DICHVU;
     let chamSocDaLocal = JSON.parse(localStorage.getItem("ChamSocDa")) || CHAMSOCDA;
     let nhanVienLocal = JSON.parse(localStorage.getItem("NhanVien")) || NHANVIEN;
+    let chiNhanhLocal = JSON.parse(localStorage.getItem("ChiNhanh")) || CHINHANH;
     if (sdt) {
         document.getElementById("sdt-dat").value = sdt;
     }
@@ -22,7 +23,7 @@ window.onload = function () {
     const dichvuSelect = document.getElementById("dichvu");
     const nhanvienSelect = document.getElementById("nhanvien");
     // --- Load chi nhánh ---
-    CHINHANH.forEach(cn => {
+    chiNhanhLocal.forEach(cn => {
         const opt = document.createElement("option");
         opt.value = cn.MACHINHANH;
         opt.textContent = cn.TENCHINHANH;
