@@ -7,8 +7,21 @@ const TAIKHOAN = [
   { MATK: "thungan", PASS: "1", PHANQUYEN: 4, TRANGTHAI: "Hoạt động" },
   { MATK: "0352512556", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
   { MATK: "0912345678", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Khoá" },
-  { MATK: "0987654321", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
+  { MATK: "0987654322", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
   { MATK: "0352512557", PASS: "1", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
+  { MATK: "thungan2", PASS: "1", PHANQUYEN: 4, TRANGTHAI: "Hoạt động" },
+  { MATK: "0352512558", PASS: "0352512558", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
+  { MATK: "testdangki", PASS: "12345678", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
+  { MATK: "0987654321", PASS: "12345678", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
+  { MATK: "0987654323", PASS: "12345678", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
+  { MATK: "0987654324", PASS: "12345678", PHANQUYEN: 0, TRANGTHAI: "Hoạt động" },
+  { MATK: "thungan3", PASS: "1", PHANQUYEN: 4, TRANGTHAI: "Hoạt động" },
+  { MATK: "thungan4", PASS: "1", PHANQUYEN: 4, TRANGTHAI: "Hoạt động" },
+  { MATK: "nhanvien3", PASS: "1", PHANQUYEN: 3, TRANGTHAI: "Hoạt động" },
+  { MATK: "letan", PASS: "1", PHANQUYEN: 5, TRANGTHAI: "Hoạt động" },
+  { MATK: "letan1", PASS: "1", PHANQUYEN: 5, TRANGTHAI: "Hoạt động" },
+  { MATK: "letan2", PASS: "1", PHANQUYEN: 5, TRANGTHAI: "Hoạt động" },
+  { MATK: "letan3", PASS: "1", PHANQUYEN: 5, TRANGTHAI: "Hoạt động" }
 ];
 // BẢNG CHI NHÁNH
 const CHINHANH = [
@@ -21,21 +34,31 @@ const CHINHANH = [
 // BẢNG KHÁCH HÀNG
 const KHACHHANG = [
   { MAKH: "KH001", HOTEN: "Nguyễn Văn An", SDT: "0912345678", MATK: "0912345678" },
-  { MAKH: "KH002", HOTEN: "Trần Thị Bình", SDT: "0987654321", MATK: "0987654321" },
   { MAKH: "KH003", HOTEN: "Lê Văn Cường", SDT: "0909123456", MATK: "0909123456" },
   { MAKH: "KH004", HOTEN: "Phạm Thị Dung", SDT: "0911987654", MATK: "0911987654" },
   { MAKH: "KH005", HOTEN: "Đỗ Hữu Phúc", SDT: "0978123456", MATK: "0978123456" },
-  { MAKH: "KH006", HOTEN: "Đỗ Tiến Đạt", SDT: "0352512556", MATK: "0352512556" },
+  { MAKH: "KH006", HOTEN: "Trần Tùng Anh", SDT: "0352512556", MATK: "0352512556" },
   { MAKH: "KH007", HOTEN: "Đỗ Tiến Đạt", SDT: "0352512557", MATK: "0352512557" },
+  { MAKH: "KH1763889818387", HOTEN: "Trần Tùng Anh", SDT: "0352512558", MATK: "0352512558" },
+  { MAKH: "KH1764776091284", HOTEN: "Test Nguyễn Văn", SDT: "0987654321", MATK: "0987654321" },
+  { MAKH: "KH1764777846389", HOTEN: "Test Nguyễn Văn 3", SDT: "0987654324", MATK: "0987654324" }
 ];
 
 const NHANVIEN = [
-  { MANV: "NV001", HOTEN: "Hoàng Quốc Việt", CHUCVU: "Quản lý", SDT: "0911111111", DIACHI: "Hà Nội", NGAYSINH: "1985-06-10", MATK: "quanly", MACHINHANH: "CN001" },
-  { MANV: "NV001", HOTEN: "Đỗ Tiến Đạt", CHUCVU: "Admin", SDT: "0352512556", DIACHI: "Hưng Yên", NGAYSINH: "2005-09-01", MATK: "admin", MACHINHANH: "CN001" },
-  { MANV: "NV002", HOTEN: "Lê Thị Mai", CHUCVU: "Lễ tân", SDT: "0911222333", DIACHI: "Hưng Yên", NGAYSINH: "1997-09-25", MATK: "letan", MACHINHANH: "CN001" },
-  { MANV: "NV003", HOTEN: "Nguyễn Văn Dũng", CHUCVU: "Stylist", SDT: "0912333444", DIACHI: "Hải Dương", NGAYSINH: "1995-01-15", MATK: "nhanvien1", MACHINHANH: "CN002" },
-  { MANV: "NV004", HOTEN: "Đỗ Thành Đạt", CHUCVU: "Stylist", SDT: "0913444555", DIACHI: "Hà Nam", NGAYSINH: "1996-08-30", MATK: "nhanvien2", MACHINHANH: "CN003" },
-  { MANV: "NV005", HOTEN: "Nguyễn Tiến Đạt", CHUCVU: "Thu ngân", SDT: "0914555666", DIACHI: "Hà Nội", NGAYSINH: "1998-04-12", MATK: "thungan", MACHINHANH: "CN004" },
+  { MANV: "NV007", HOTEN: "Đõ Hữu Quốc Ánh", CHUCVU: "Quản lý", SDT: "0911111111", DIACHI: "Hà Nội" },
+  { MANV: "NV001", HOTEN: "Đỗ Tiến Đạt", CHUCVU: "Admin", SDT: "0352512556", DIACHI: "Hưng Yên" },
+  { MANV: "NV002", HOTEN: "Lê Thị Mai", CHUCVU: "Lễ tân", SDT: "0911222333", DIACHI: "Hưng Yên" },
+  { MANV: "NV003", HOTEN: "Nguyễn Văn Dũng", CHUCVU: "Lễ tân", SDT: "0912333444", DIACHI: "Hải Dương" },
+  { MANV: "NV004", HOTEN: "Đỗ Thành Đạt", CHUCVU: "Stylist", SDT: "0913444555", DIACHI: "Hà Nam" },
+  { MANV: "NV005", HOTEN: "Nguyễn Tiến Đạt", CHUCVU: "Thu ngân", SDT: "0914555666", DIACHI: "Hà Nội" },
+  { MANV: "NV006", HOTEN: "Lê Quỳnh Anh", CHUCVU: "Thu ngân", SDT: "0352512256", DIACHI: "Thái Nguyên" },
+  { MANV: "NV008", HOTEN: "Trần Minh Tâm", CHUCVU: "Thu ngân", SDT: "0987656789", DIACHI: "Hưng Yên" },
+  { MANV: "NV009", HOTEN: "Lê Minh Anh", CHUCVU: "Thu ngân", SDT: "0987656788", DIACHI: "Hà Nội" },
+  { MANV: "NV010", HOTEN: "Lê Quỳnh Chi", CHUCVU: "Stylist", SDT: "0352512251", DIACHI: "Thái Bình" },
+  { MANV: "NV011", HOTEN: "Nguyễn Văn Đức", CHUCVU: "Stylist", SDT: "0352512252", DIACHI: "Thái Nguyên" },
+  { MANV: "NV012", HOTEN: "Hoàng Văn Phúc", CHUCVU: "Stylist", SDT: "0352512253", DIACHI: "Hoà Bình" },
+  { MANV: "NV013", HOTEN: "Hoàng Minh Tân", CHUCVU: "Lễ tân", SDT: "0352512254", DIACHI: "Cao Bằng" },
+  { MANV: "NV014", HOTEN: "Độ Mích Xi", CHUCVU: "Lễ tân", SDT: "0311111222", DIACHI: "Cao Bằng" }
 ];
 
 
@@ -84,74 +107,75 @@ const DICHVU = [
 ];
 // BẢNG DỊCH VỤ THƯ GIÃN VÀ CHĂM SÓC DA
 const CHAMSOCDA = [
-  { 
-    MADV: "CSD001", 
-    TENDV: "Chăm sóc da cơ bản", 
-    MOTA: "Gói chăm sóc da mặt tiêu chuẩn, Giúp làm sạch sâu, Cấp ẩm và thư giãn da mặt.", 
-    THOIGIAN: 50, 
-    GIADV: 250000, 
-    TRANGTHAI: "Đang cung cấp" , 
+  {
+    MADV: "CSD001",
+    TENDV: "Chăm sóc da cơ bản",
+    MOTA: "Gói chăm sóc da mặt tiêu chuẩn, Giúp làm sạch sâu, Cấp ẩm và thư giãn da mặt.",
+    THOIGIAN: 50,
+    GIADV: 250000,
+    TRANGTHAI: "Đang cung cấp",
     ANH: 'img/product/goi-thu-gian-3.png',
     QUYTRINH: "Tẩy trang-Rửa mặt-Tẩy tế bào chết-Xông hơi-Hút bã nhờn-Massage mặt-Đắp mặt nạ-Thoa kem dưỡng"
   },
-  { 
-    MADV: "CSD002", 
-    TENDV: "Lấy mụn chuyên sâu", 
-    MOTA: "Dịch vụ làm sạch mụn ẩn, Mụn viêm bằng dụng cụ vô trùng, Kết hợp mặt nạ làm dịu da, giảm sưng.", 
-    THOIGIAN: 70, 
-    GIADV: 350000, 
-    TRANGTHAI: "Đang cung cấp" , 
+  {
+    MADV: "CSD002",
+    TENDV: "Lấy mụn chuyên sâu",
+    MOTA: "Dịch vụ làm sạch mụn ẩn, Mụn viêm bằng dụng cụ vô trùng, Kết hợp mặt nạ làm dịu da, giảm sưng.",
+    THOIGIAN: 70,
+    GIADV: 350000,
+    TRANGTHAI: "Đang cung cấp",
     ANH: 'img/product/goi-thu-gian-2.png',
     QUYTRINH: "Tẩy trang-Rửa mặt-Xông hơi-Lấy mụn-Sát khuẩn-Điện tím-Đắp mặt nạ-Chiếu đèn sinh học-Thoa thuốc"
   },
-  { 
-    MADV: "CSD003", 
-    TENDV: "Massage body tinh dầu", 
-    MOTA: "Liệu pháp massage toàn thân với tinh dầu thiên nhiên, Giúp giảm căng cơ, Xả stress và cải thiện lưu thông máu.", 
-    THOIGIAN: 60, 
-    GIADV: 300000, 
-    TRANGTHAI: "Đang cung cấp" , 
+  {
+    MADV: "CSD003",
+    TENDV: "Massage body tinh dầu",
+    MOTA: "Liệu pháp massage toàn thân với tinh dầu thiên nhiên, Giúp giảm căng cơ, Xả stress và cải thiện lưu thông máu.",
+    THOIGIAN: 60,
+    GIADV: 300000,
+    TRANGTHAI: "Đang cung cấp",
     ANH: 'img/product/goi-thu-gian.png',
     QUYTRINH: "Khởi động-Ấn huyệt lưng-Massage chân-Massage tay-Massage lưng vai gáy-Massage đầu-Lau khăn nóng"
   },
-  { 
-    MADV: "CSD004", 
-    TENDV: "Gội đầu dưỡng sinh", 
-    MOTA: "Gội đầu kết hợp massage, Bấm huyệt vùng đầu - cổ - vai gáy giúp thư giãn, Giảm đau nhức và ngủ ngon.", 
-    THOIGIAN: 60, 
-    GIADV: 200000, 
-    TRANGTHAI: "Đang cung cấp" , 
-    ANH: 'img/product/goi-thu-gian-1.png', 
+  {
+    MADV: "CSD004",
+    TENDV: "Gội đầu dưỡng sinh",
+    MOTA: "Gội đầu kết hợp massage, Bấm huyệt vùng đầu - cổ - vai gáy giúp thư giãn, Giảm đau nhức và ngủ ngon.",
+    THOIGIAN: 60,
+    GIADV: 200000,
+    TRANGTHAI: "Đang cung cấp",
+    ANH: 'img/product/goi-thu-gian-1.png',
     QUYTRINH: "Rửa mặt-Massage mặt-Gội đầu lần 1-Bấm huyệt đầu-Massage cổ vai gáy-Gội đầu lần 2-Xả tóc-Sấy khô"
   }
 ];
 // BẢNG KHUYẾN MÃI
 const KHUYENMAI = [
-  { MAKM: "KM001", TENKM: "Giảm giá khai trương", MOTA: "Giảm 20% tất cả dịch vụ", NGAYBD: "2025-01-01", NGAYKT: "2025-02-01", GIATRI: 0.2, TRANGTHAI: "Hết hạn"},
-  { MAKM: "KM002", TENKM: "Thứ 4 vui vẻ", MOTA: "Giảm 15% dịch vụ cắt tóc", NGAYBD: "2025-03-01", NGAYKT: "2025-12-31", GIATRI: 0.15, TRANGTHAI: "Đang áp dụng"},
+  { MAKM: "KM001", TENKM: "Giảm giá khai trương", MOTA: "Giảm 20% tất cả dịch vụ", NGAYBD: "2025-01-01", NGAYKT: "2025-02-01", GIATRI: 0.2, TRANGTHAI: "Hết hạn" },
+  { MAKM: "KM002", TENKM: "Thứ 4 vui vẻ", MOTA: "Giảm 15% dịch vụ cắt tóc", NGAYBD: "2025-03-01", NGAYKT: "2025-12-31", GIATRI: 0.15, TRANGTHAI: "Đang áp dụng" },
   { MAKM: "KM003", TENKM: "Sinh nhật khách hàng", MOTA: "Giảm 30% cho khách", NGAYBD: "2025-01-01", NGAYKT: "2025-12-31", GIATRI: 0.3, TRANGTHAI: "Đang áp dụng" },
   { MAKM: "KM004", TENKM: "Mùa hè sôi động", MOTA: "Combo cắt + gội chỉ 150k", NGAYBD: "2025-05-01", NGAYKT: "2025-08-31", GIATRI: 0.25, TRANGTHAI: "Hết hạn" },
   { MAKM: "KM005", TENKM: "Khách hàng thân thiết", MOTA: "Giảm 10% tổng hóa đơn", NGAYBD: "2025-01-01", NGAYKT: "2025-12-31", GIATRI: 0.1, TRANGTHAI: "Đang áp dụng" },
 ];
 
 const LICHHEN = [
-  { MALICH: "LH001", NGAYHEN: "2025-10-05", GIOHEN:"09:00", TRANGTHAI: "Đã đặt", MANV: "NV003", MAKH: "KH001", MACHINHANH: "CN002" },
-  { MALICH: "LH002", NGAYHEN: "2025-10-06", GIOHEN:"14:00", TRANGTHAI: "Hoàn thành", MANV: "NV004", MAKH: "KH002", MACHINHANH: "CN003" },
-  { MALICH: "LH003", NGAYHEN: "2025-10-07", GIOHEN:"10:30", TRANGTHAI: "Đang thực hiện", MANV: "NV003", MAKH: "KH003", MACHINHANH: "CN002" },
-  { MALICH: "LH004", NGAYHEN: "2025-10-08", GIOHEN:"16:00", TRANGTHAI: "Hủy", MANV: "NV004", MAKH: "KH004", MACHINHANH: "CN003" },
-  { MALICH: "LH005", NGAYHEN: "2025-10-09", GIOHEN:"13:00", TRANGTHAI: "Đã đặt", MANV: "NV002", MAKH: "KH005", MACHINHANH: "CN001" },
-  { MALICH: "LH006", NGAYHEN: "2025-10-09", GIOHEN:"13:00", TRANGTHAI: "Đã đặt", MANV: "NV002", MAKH: "KH006", MACHINHANH: "CN001" },
-  { MALICH: "LH007", NGAYHEN: "2025-10-09", GIOHEN:"13:00", TRANGTHAI: "Đang chờ", MANV: "NV003", MAKH: "KH006", MACHINHANH: "CN002" },
-  { MALICH: "LH008", NGAYHEN: "2025-10-08", GIOHEN:"13:00", TRANGTHAI: "Đang thực hiện", MANV: "NV004", MAKH: "KH006", MACHINHANH: "CN003" },
-  { MALICH: "LH009", NGAYHEN: "2025-10-07", GIOHEN:"13:00", TRANGTHAI: "Hoàn thành", MANV: "NV005", MAKH: "KH006", MACHINHANH: "CN004" },
-  { MALICH: "LH010", NGAYHEN: "2025-10-06", GIOHEN:"13:00", TRANGTHAI: "Đã huỷ", MANV: "NV005", MAKH: "KH006", MACHINHANH: "CN004" },
+  { MALICH: "LH002", NGAYHEN: "2025-10-06", GIOHEN: "14:00", TRANGTHAI: "Hoàn thành", MANV: "NV004" },
+  { MALICH: "LH003", NGAYHEN: "2025-10-07", GIOHEN: "10:30", TRANGTHAI: "Hoàn thành", MANV: "NV003" },
+  { MALICH: "LH004", NGAYHEN: "2025-10-08", GIOHEN: "16:00", TRANGTHAI: "Đã huỷ", MANV: "NV004" },
+  { MALICH: "LH005", NGAYHEN: "2025-10-09", GIOHEN: "13:00", TRANGTHAI: "Hoàn thành", MANV: "NV002" },
+  { MALICH: "LH006", NGAYHEN: "2025-10-09", GIOHEN: "13:00", TRANGTHAI: "Hoàn thành", MANV: "NV002" },
+  { MALICH: "LH007", NGAYHEN: "2025-10-09", GIOHEN: "13:00", TRANGTHAI: "Hoàn thành", MANV: "NV003" },
+  { MALICH: "LH008", NGAYHEN: "2025-10-08", GIOHEN: "13:00", TRANGTHAI: "Hoàn thành", MANV: "NV004" },
+  { MALICH: "LH009", NGAYHEN: "2025-10-07", GIOHEN: "13:00", TRANGTHAI: "Hoàn thành", MANV: "NV005" },
+  { MALICH: "LH010", NGAYHEN: "2025-10-06", GIOHEN: "13:00", TRANGTHAI: "Đã huỷ", MANV: "NV005" },
+  { MALICH: "LH1764602810851", NGAYHEN: "2025-12-02", GIOHEN: "08:00", TRANGTHAI: "Hoàn thành" },
+  { MALICH: "LH1764777094223", NGAYHEN: "2025-12-04", GIOHEN: "08:00", TRANGTHAI: "Đã đặt", MANV: "NV005" },
+  { MALICH: "LH1764778285968", NGAYHEN: "2025-12-04", GIOHEN: "08:00", TRANGTHAI: "Đã đặt", MANV: "NV004" },
+  { MALICH: "LH1764778372188", NGAYHEN: "2025-12-04", GIOHEN: "08:00", TRANGTHAI: "Đã đặt", MANV: "NV001" }
 ];
 
 
 // BẢNG CHI TIẾT LỊCH HẸN
 const CHITIETLICHHEN = [
-  { MALICH: "LH001", MADV: "DV001", SOLUONG: 1, GHICHU: "Thích kiểu undercut" },
-  { MALICH: "LH001", MADV: "DV002", SOLUONG: 1, GHICHU: "Thêm massage đầu" },
   { MALICH: "LH002", MADV: "DV004", SOLUONG: 1, GHICHU: "Uốn nhẹ phần mái" },
   { MALICH: "LH003", MADV: "DV003", SOLUONG: 1, GHICHU: "Nhuộm highlight xanh" },
   { MALICH: "LH005", MADV: "DV001", SOLUONG: 1, GHICHU: "Tóc ngắn nam" },
@@ -159,13 +183,21 @@ const CHITIETLICHHEN = [
   { MALICH: "LH007", MADV: "DV002", SOLUONG: 4, GHICHU: "Không" },
   { MALICH: "LH008", MADV: "CSD003", SOLUONG: 3, GHICHU: "Không" },
   { MALICH: "LH009", MADV: "CSD004", SOLUONG: 1, GHICHU: "Không" },
+  { MALICH: "LH1764602810851", MADV: "DV002", SOLUONG: 1, GHICHU: "Không" },
+  { MALICH: "LH1764777094223", MADV: "CSD002", SOLUONG: 1, GHICHU: "Không" },
+  { MALICH: "LH1764778285968", MADV: "CSD002", SOLUONG: 1, GHICHU: "Không" },
+  { MALICH: "LH1764778372188", MADV: "CSD002", SOLUONG: 1, GHICHU: "Không" }
 ];
 
 // BẢNG HÓA ĐƠN
 const HOADON = [
-  { MAHD: "HD001", MAKM: "KM002", TONGTIEN: 170000, HINHTHUCTHANHTOAN: "Tiền mặt", MANV: "NV005", MALICH: "LH001", TRANGTHAI: "Đã thanh toán" },
-  { MAHD: "HD002", MAKM: "KM004", TONGTIEN: 350000, HINHTHUCTHANHTOAN: "Chuyển khoản", MANV: "NV005", MALICH: "LH002", TRANGTHAI: "Đã thanh toán" },
-  { MAHD: "HD003", MAKM: null, TONGTIEN: 300000, HINHTHUCTHANHTOAN: "Tiền mặt", MANV: "NV002", MALICH: "LH003", TRANGTHAI: "Đang xử lý" },
-  { MAHD: "HD004", MAKM: null, TONGTIEN: 0, HINHTHUCTHANHTOAN: "Không áp dụng", MANV: "NV002", MALICH: "LH004", TRANGTHAI: "Đã hủy" },
-  { MAHD: "HD005", MAKM: "KM005", TONGTIEN: 72000, HINHTHUCTHANHTOAN: "Momo", MANV: "NV005", MALICH: "LH005", TRANGTHAI: "Đã thanh toán" },
+  { MAHD: "HD001", MAKM: "KM002", TONGTIEN: 170000, HINHTHUCTHANHTOAN: "Tiền mặt", MANV: "NV005" },
+  { MAHD: "HD002", MAKM: "KM004", TONGTIEN: 350000, HINHTHUCTHANHTOAN: "Chuyển khoản/Online" },
+  { MAHD: "HD005", MAKM: "KM005", TONGTIEN: 72000, HINHTHUCTHANHTOAN: "Chuyển khoản/Online" },
+  { MAHD: "HD0011", MAKM: "KM002", TONGTIEN: 170000, HINHTHUCTHANHTOAN: "Thẻ", MANV: "NV005" },
+  { MAHD: "HD00111", MAKM: "KM003", TONGTIEN: 139300, HINHTHUCTHANHTOAN: "Chuyển khoản/Online" },
+  { MAHD: "HD003", MAKM: "KM005", TONGTIEN: 269100, HINHTHUCTHANHTOAN: "Chuyển khoản/Online" },
+  { MAHD: "HD004", MAKM: "KM002", TONGTIEN: 207400, HINHTHUCTHANHTOAN: "Tiền mặt", MANV: "NV006" },
+  { MAHD: "HD006", MAKM: "KM005", TONGTIEN: 716400, HINHTHUCTHANHTOAN: "Tiền mặt", MANV: "NV006" },
+  { MAHD: "HD007", MAKM: "KM005", TONGTIEN: 810000, HINHTHUCTHANHTOAN: "Chuyển khoản/Online" }
 ];
