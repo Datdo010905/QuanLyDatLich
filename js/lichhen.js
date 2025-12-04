@@ -53,9 +53,10 @@ window.onload = function () {
             nhanvienSelect.appendChild(opt);
         });
     });
-    loadHours();
+    
     document.getElementById("nhanvien").addEventListener("change", loadHours);
     document.getElementById("ngayhen").addEventListener("change", loadHours);
+    loadHours();
 };
 
 
