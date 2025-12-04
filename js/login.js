@@ -22,7 +22,6 @@ if (!localStorage.getItem("KhachHang") || !localStorage.getItem("TaiKhoan")) {
 }
 
 
-
 function dangNhapLocal(event) {
   event.preventDefault();
 
@@ -54,7 +53,7 @@ function dangNhapLocal(event) {
   localStorage.setItem("loggedInUser", account.MATK);
   localStorage.setItem("phanQuyen", account.PHANQUYEN);
 
-  if (account.PHANQUYEN === 1 || account.PHANQUYEN === 2) {
+  if (account.PHANQUYEN === 1 || account.PHANQUYEN === 2 || account.PHANQUYEN === 3 || account.PHANQUYEN === 4 || account.PHANQUYEN === 5) {
     alert("Đăng nhập thành công!");
     window.location.href = "admin.html";
   } else {
@@ -63,7 +62,15 @@ function dangNhapLocal(event) {
   }
   localStorage.removeItem("sodienthoai-datlich");
   localStorage.removeItem("danhSachLichHen");
-  return false;
+
+  const hoatDongMoi = {
+      thoigian: new Date().toLocaleString(),
+      noidung: `Đăng nhập hệ thống`,
+      taikhoan: account.MATK
+    };  
+    let hoatDongLocal = JSON.parse(localStorage.getItem("HoatDong")) || [];
+    hoatDongLocal.push(hoatDongMoi);
+    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
 }
 
 function checkdangnhap() {
@@ -158,6 +165,14 @@ function dangKyLocal(event) {
 
     alert("Đăng ký thành công! Vui lòng đăng nhập.");
     window.location.href = "login.html";
+    const hoatDongMoi = {
+      thoigian: new Date().toLocaleString(),
+      noidung: `Đăng ký tài khoản`,
+      taikhoan: user
+    };  
+    let hoatDongLocal = JSON.parse(localStorage.getItem("HoatDong")) || [];
+    hoatDongLocal.push(hoatDongMoi);
+    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
   }
   catch (e) {
     console.error('Lỗi đăng ký:', e);
@@ -211,8 +226,15 @@ function quenMatKhauLocal(event) {
   if (trungSDTYeuCau) {
     alert("Yêu cầu khôi phục mật khẩu đã được gửi!\nVui lòng kiểm tra email hoặc tin nhắn của bạn.");
     alert(`Mật khẩu của bạn là: ${trungSDTYeuCau.PASS}`);
+    const hoatDongMoi = {
+      thoigian: new Date().toLocaleString(),
+      noidung: `Lấy lại mật khẩu`,
+      taikhoan: sdt
+    };  
+    let hoatDongLocal = JSON.parse(localStorage.getItem("HoatDong")) || [];
+    hoatDongLocal.push(hoatDongMoi);
+    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
+  }else{
+    alert("Không thể lấy lại mật khẩu do không tồn tại tài khoản!");
   }
-
-  // 
-  // return true;
 }

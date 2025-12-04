@@ -56,27 +56,63 @@ document.addEventListener("DOMContentLoaded", function () {
 window.onload = function () {
   const loggedInUser = localStorage.getItem("loggedInUser");
 
-  const taiKhoan = TAIKHOAN.find(tk => tk.MATK === loggedInUser);
+  const taiKhoan = taiKhoanLocal.find(tk => tk.MATK === loggedInUser);
   if (!taiKhoan) {
     //alert("Tài khoản không tồn tại!");
     window.location.href = "login.html";
     return;
   }
-  if (taiKhoan.PHANQUYEN !== 2 && taiKhoan.PHANQUYEN !== 1) {
+
+  const nhanVien = nhanVienLocal.find(nv => nv.MATK === loggedInUser)
+  //console.log(nhanVien);
+  const loginElement = document.getElementById("login-helloADMIN");
+  const loginElement2 = document.getElementById("login-helloADMIN-span");
+  loginElement.innerHTML = `${nhanVien.HOTEN}`;
+  loginElement2.innerHTML = `${nhanVien.MATK}: `;
+
+  if (taiKhoan.PHANQUYEN !== 5 && taiKhoan.PHANQUYEN !== 4 && taiKhoan.PHANQUYEN !== 3 && taiKhoan.PHANQUYEN !== 2 && taiKhoan.PHANQUYEN !== 1) {
     alert("Bạn không có quyền truy cập trang này!");
     window.location.href = "login.html";
     return;
   }
-  //check nếu là nhân viên thì ẩn mục quản lý tài khoản, khuyến mãi, hoá đơn
+  //check quản lý
   if (taiKhoan.PHANQUYEN === 2) {
+    document.querySelector("a[data-section='accounts']").style.display = "none";
+    document.querySelector("a[data-section='promotions']").style.display = "none";
+    document.querySelector("a[data-section='reports']").style.display = "none";
+  }
+  //check lễ tân
+  if (taiKhoan.PHANQUYEN === 5) {
     document.querySelector("a[data-section='dashboard']").style.display = "none";
     document.querySelector("a[data-section='accounts']").style.display = "none";
     document.querySelector("a[data-section='promotions']").style.display = "none";
+    document.querySelector("a[data-section='services']").style.display = "none";
+    document.querySelector("a[data-section='customers']").style.display = "none";
+    document.querySelector("a[data-section='staff']").style.display = "none";
     document.querySelector("a[data-section='invoices']").style.display = "none";
     document.querySelector("a[data-section='reports']").style.display = "none";
   }
-
-  document.getElementById("login-hello").textContent = loggedInUser;
+  //check stylist
+  if (taiKhoan.PHANQUYEN === 3) {
+    document.querySelector("a[data-section='accounts']").style.display = "none";
+    document.querySelector("a[data-section='promotions']").style.display = "none";
+    document.querySelector("a[data-section='services']").style.display = "none";
+    document.querySelector("a[data-section='customers']").style.display = "none";
+    document.querySelector("a[data-section='staff']").style.display = "none";
+    document.querySelector("a[data-section='invoices']").style.display = "none";
+    document.querySelector("a[data-section='reports']").style.display = "none";
+  }
+  //check thu ngân
+  if (taiKhoan.PHANQUYEN === 4) {
+    document.querySelector("a[data-section='dashboard']").style.display = "none";
+    document.querySelector("a[data-section='accounts']").style.display = "none";
+    document.querySelector("a[data-section='promotions']").style.display = "none";
+    document.querySelector("a[data-section='services']").style.display = "none";
+    document.querySelector("a[data-section='customers']").style.display = "none";
+    document.querySelector("a[data-section='staff']").style.display = "none";
+    document.querySelector("a[data-section='bookings']").style.display = "none";
+    document.querySelector("a[data-section='reports']").style.display = "none";
+  }
 
   loadDashboard();
   renderAllTables();
@@ -152,6 +188,7 @@ let khuyenMaiLocal = JSON.parse(localStorage.getItem("KhuyenMai")) || KHUYENMAI;
 let lichHenLocal = JSON.parse(localStorage.getItem("LichHen")) || LICHHEN;
 let chiTietLichHenLocal = JSON.parse(localStorage.getItem("ChiTietLichHen")) || CHITIETLICHHEN;
 let hoaDonLocal = JSON.parse(localStorage.getItem("HoaDon")) || HOADON;
+let hoatDongLocal = JSON.parse(localStorage.getItem("HoatDong")) || [];
 
 // ================== DASHBOARD ==================
 function loadDashboard() {
@@ -172,17 +209,15 @@ function loadDashboard() {
   const tongDoanhThu = hoadonDaThanhToan.reduce((sum, hd) => sum + hd.TONGTIEN, 0);
   document.getElementById("reportRevenue").textContent = tongDoanhThu.toLocaleString("vi-VN") + "₫";
 
-  // Thêm sự kiện mới nhất vào bảng hoạt động
   const recentTable = document.querySelector("#recentTable tbody");
-  if (!recentTable) return;
   if (recentTable) {
-    recentTable.innerHTML = `
+    recentTable.innerHTML = hoatDongLocal.map(hd => `
       <tr>
-        <td>${new Date().toLocaleString()}</td>
-        <td>Đăng nhập hệ thống</td>
-        <td>${loggedInUser}</td>
+        <td>${hd.thoigian}</td>
+        <td>${hd.noidung}</td>
+        <td>${hd.taikhoan}</td>
       </tr>
-    `;
+    `).join("");
   }
 
 
@@ -459,6 +494,7 @@ function renderBookings() {
     //Lấy Tên Khách Hàng
     const khObj = khachHangLocal.find(kh => kh.MAKH === lh.MAKH);
     const tenKH = khObj ? khObj.HOTEN : lh.MAKH;
+    const sdtKH = khObj ? khObj.SDT : lh.MAKH;
 
     //Lấy Tên Chi Nhánh
     const cnObj = chiNhanhLocal.find(cn => cn.MACHINHANH === lh.MACHINHANH);
@@ -476,7 +512,7 @@ function renderBookings() {
         <td><span class="status ${trangThaiClass}">${lh.TRANGTHAI}</span></td>
         
         <td>${tenNV}</td>
-        <td>${lh.MAKH} - ${tenKH}</td>
+        <td>${tenKH} - ${sdtKH}</td>
         <td>${tenCN}</td>
         
         <td class="actions">
@@ -1572,6 +1608,14 @@ function themHoaDon(event) {
     renderInvoices();
     alert("Thêm hoá đơn thành công!");
     closeModal('addInvoiceModal');
+    const hoatDongMoi = {
+      thoigian: new Date().toLocaleString(),
+      noidung: `Thêm hoá đơn: ${maHD}`,
+      taikhoan: loggedInUser
+    };
+
+    hoatDongLocal.push(hoatDongMoi);
+    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
   }
   catch (error) {
     alert("Đã có lỗi xảy ra khi thêm hoá đơn: " + error.message);
@@ -1627,6 +1671,14 @@ function suaHoaDon(event) {
 
     alert("Cập nhật hoá đơn thành công!");
     closeModal('editInvoiceModal');
+    const hoatDongMoi = {
+      thoigian: new Date().toLocaleString(),
+      noidung: `Sửa hoá đơn: ${maHD}`,
+      taikhoan: loggedInUser
+    };
+
+    hoatDongLocal.push(hoatDongMoi);
+    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
   }
   catch (error) {
     alert("Đã có lỗi xảy ra khi sửa hoá đơn: " + error.message);
@@ -1636,6 +1688,12 @@ function suaHoaDon(event) {
 function xoaHoaDon(mahoadon) {
   if (!mahoadon) return;
   if (!confirm("Bạn có chắc chắn muốn xoá hoá đơn này không?")) return;
+  const loggedInUser = localStorage.getItem("loggedInUser");
+  const thungan = taiKhoanLocal.find(tk => tk.MATK === loggedInUser && tk.PHANQUYEN === 4);
+  if (thungan) {
+    alert("Bạn không có quyền xoá!");
+    return;
+  }
   const isDaThanhToan = hoaDonLocal.some(hd => hd.MAHD === mahoadon && hd.TRANGTHAI !== "Đã huỷ")
   if (isDaThanhToan) {
     alert("Chỉ có thể xoá hoá đơn đã huỷ!");
@@ -1648,6 +1706,14 @@ function xoaHoaDon(mahoadon) {
     localStorage.setItem("HoaDon", JSON.stringify(hoaDonLocal));
     renderInvoices();
     alert("Xoá hoá đơn thành công!");
+    const hoatDongMoi = {
+      thoigian: new Date().toLocaleString(),
+      noidung: `Xoá hoá đơn: ${mahoadon}`,
+      taikhoan: loggedInUser
+    };
+
+    hoatDongLocal.push(hoatDongMoi);
+    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
   }
   catch (error) {
     alert("Đã có lỗi xảy ra khi xoá hoá đơn: " + error.message);
@@ -1660,6 +1726,13 @@ function xoaLichHen(malich) {
   if (!malich) return;
   if (!confirm("Bạn có chắc chắn muốn xoá lịch hẹn này không?")) return;
   const lichHenCanXoa = lichHenLocal.find(lh => lh.MALICH === malich);
+
+  const loggedInUser = localStorage.getItem("loggedInUser");
+  const letan = taiKhoanLocal.find(tk => tk.MATK === loggedInUser && tk.PHANQUYEN === 5);
+  if (letan) {
+    alert("Bạn không có quyền xoá!");
+    return;
+  }
 
   if (!lichHenCanXoa) {
     alert("Lịch hẹn không tồn tại!");
@@ -1680,6 +1753,15 @@ function xoaLichHen(malich) {
     renderBookings();
 
     alert("Xoá lịch hẹn thành công!");
+    const hoatDongMoi = {
+      thoigian: new Date().toLocaleString(),
+      noidung: `Xoá lịch hẹn: ${malich}`,
+      taikhoan: loggedInUser
+    };
+
+    hoatDongLocal.push(hoatDongMoi);
+    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
+
   }
   catch (error) {
     alert("Đã có lỗi xảy ra khi xoá lịch hẹn: " + error.message);
@@ -1703,7 +1785,7 @@ function loadBookingOptions() {
     staffSelect.innerHTML = '<option value="">-- Chọn nhân viên --</option>';
     if (!machinhanh) return;
     //Lọc nhân viên thuộc chi nhánh đó
-    const nvTheoChiNhanh = nhanVienLocal.filter(nv => nv.MACHINHANH === machinhanh);
+    const nvTheoChiNhanh = nhanVienLocal.filter(nv => nv.MACHINHANH === machinhanh && nv.CHUCVU === "Stylist");
     staffSelect.innerHTML += nvTheoChiNhanh.map(nv =>
       `<option value="${nv.MANV}">${nv.HOTEN} (${nv.MANV})</option>`
     ).join("");
@@ -1827,6 +1909,14 @@ function themLichHen(event) {
 
   alert("Thêm lịch hẹn thành công!");
   closeModal("addBookingModal");
+  const hoatDongMoi = {
+      thoigian: new Date().toLocaleString(),
+      noidung: `Thêm lịch hẹn: ${bookingId}`,
+      taikhoan: loggedInUser
+    };
+
+    hoatDongLocal.push(hoatDongMoi);
+    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
 }
 //cập nhật trạng thái lịch hẹn
 function chuanBiSuaLichHen(malich) {
@@ -1901,7 +1991,14 @@ function suaLichHen(event) {
     renderBookings();
     alert("Cập nhật lịch hẹn thành công!");
     closeModal("editBookingModal");
+    const hoatDongMoi = {
+      thoigian: new Date().toLocaleString(),
+      noidung: `Sửa lịch hẹn: ${maLich}`,
+      taikhoan: loggedInUser
+    };
 
+    hoatDongLocal.push(hoatDongMoi);
+    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
   } catch (error) {
     alert("Có lỗi xảy ra: " + error.message);
   }

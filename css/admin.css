@@ -311,17 +311,6 @@
     width: 90%;
     margin-left: 12px;
 }
-
-
-.accounts .row span {
-    font-size: 15px;
-    color: #ffffff;
-}
-
-.accounts .row strong {
-    float: right;
-}
-
 .table .actions {
   white-space: nowrap;
 }

@@ -25,7 +25,7 @@
 			<h1>QUÊN MẬT KHẨU</h1>
 			<form onsubmit="return quenMatKhauLocal(event)">
 				<label for="emailOrPhone">Số điện thoại <span>*</span></label>
-				<input id="emailOrPhone" type="text" placeholder="Nhập số điện thoại của bạn" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+				<input id="emailOrPhone" type="text" maxlength = "10"placeholder="Nhập số điện thoại của bạn" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
 
 				<button type="submit" id="btn-login">GỬI YÊU CẦU</button>
 

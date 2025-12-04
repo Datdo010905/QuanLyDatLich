@@ -1,5 +1,6 @@
 window.onload = function () {
     const sdt = localStorage.getItem("sodienthoai-datlich"); // Lấy dữ liệu
+    const logged = localStorage.getItem("loggedInUser"); 
 
 
     if (!localStorage.getItem("DichVu")) {
@@ -17,6 +18,8 @@ window.onload = function () {
     let chiNhanhLocal = JSON.parse(localStorage.getItem("ChiNhanh")) || CHINHANH;
     if (sdt) {
         document.getElementById("sdt-dat").value = sdt;
+    }else{
+        document.getElementById("sdt-dat").value = logged;
     }
 
     const chinhanhSelect = document.getElementById("chinhanh");
@@ -186,8 +189,9 @@ function DatLich(event) {
         alert("Không có dữ liệu lịch hẹn!");
         return;
     }
+    const malich = "LH" + Date.now();
     const newLichHen = {
-        MALICH: "LH" + Date.now(),
+        MALICH: malich,
         NGAYHEN: t.ngayhen,
         GIOHEN: t.giohen,
         TRANGTHAI: "Đã đặt",
@@ -196,7 +200,7 @@ function DatLich(event) {
         MACHINHANH: t.chinhanh,
     };
     const newCTLichHen = {
-        MALICH: "LH" + Date.now(),
+        MALICH: malich,
         MADV: t.dichvu,
         SOLUONG: 1,
         GHICHU: "Không"
@@ -215,4 +219,12 @@ function DatLich(event) {
 
     alert("Đặt lịch hẹn thành công!");
     window.location.href = "lichsu.html";
+    const hoatDongMoi = {
+      thoigian: new Date().toLocaleString(),
+      noidung: `Đặt lịch hẹn: ${malich}`,
+      taikhoan: loggedInUser
+    };  
+    let hoatDongLocal = JSON.parse(localStorage.getItem("HoatDong")) || [];
+    hoatDongLocal.push(hoatDongMoi);
+    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
 }
