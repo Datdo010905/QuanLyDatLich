@@ -9,7 +9,7 @@ window.onload = function () {
         localStorage.setItem("ChamSocDa", JSON.stringify(CHAMSOCDA));
     }
     if (!localStorage.getItem("NhanVien")) {
-        localStorage.setItem("NhanVien", JSON.stringify(DICHVU));
+        localStorage.setItem("NhanVien", JSON.stringify(NHANVIEN));
     }
     let dichVuLocal = JSON.parse(localStorage.getItem("DichVu")) || DICHVU;
     let chamSocDaLocal = JSON.parse(localStorage.getItem("ChamSocDa")) || CHAMSOCDA;
