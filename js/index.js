@@ -1,4 +1,4 @@
-var n=8;
+var n=9;
 var i=1;
 
 
@@ -12,7 +12,7 @@ function next(){
 }
 
 function autoplay(){
-  setInterval(next, 3000)
+  setInterval(next, 2567)
 }
 
 

@@ -354,7 +354,7 @@ html {
 }
 
 #slideshow {
-    width: 80%;
+    width: 100%;
     margin: auto;
     margin-top: 20px;
     text-align: center;
@@ -870,6 +870,7 @@ html {
         width: 100% !important;
         margin-bottom: 20px;
     }
+    
 }
 
 /* Cho tablet */
