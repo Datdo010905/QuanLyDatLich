@@ -39,14 +39,14 @@ window.onload = function () {
         opt.value = dv.MADV;
         opt.textContent = `${dv.TENDV} - ${dv.THOIGIAN.toLocaleString()} phút - ${dv.GIADV.toLocaleString()} VNĐ`;
         dichvuSelect.appendChild(opt);
-        
+
         if (dichvuXem) {
             dichvuSelect.value = dichvuXem;
         }
     });
 
 
-    // --- Khi chọn chi nhánh, load thợ (nhân viên) theo chi nhánh ---
+    // --- Khi chọn chi nhánh, load thợ theo chi nhánh ---
     chinhanhSelect.addEventListener("change", function () {
         const machinhanh = this.value;
         nhanvienSelect.innerHTML = "<option value=''>-- Chọn thợ --</option>";
