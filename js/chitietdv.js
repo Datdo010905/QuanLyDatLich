@@ -211,5 +211,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
 function datlich()
 {
+    const loggedIn = localStorage.getItem("loggedInUser")
+    if(!loggedIn){
+        alert("Hãy đăng nhập trước khi đặt lịch hẹn!")
+        return;
+    }
+
     window.location.href = "lichhen.html";
 }

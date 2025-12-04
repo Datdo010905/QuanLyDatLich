@@ -31,16 +31,19 @@ window.onload = function() {
       link.classList.add("active");
       link.parentElement.classList.add("active"); // tô luôn <li>
     }
-  })
-};
+  });
+  
+  if (!localStorage.getItem("KhachHang") || !localStorage.getItem("TaiKhoan")) {
+    localStorage.setItem("KhachHang", JSON.stringify(KHACHHANG));
+    localStorage.setItem("TaiKhoan", JSON.stringify(TAIKHOAN));
+  };
+  
+}
   
 
 
 
-if (!localStorage.getItem("KhachHang") || !localStorage.getItem("TaiKhoan")) {
-    localStorage.setItem("KhachHang", JSON.stringify(KHACHHANG));
-    localStorage.setItem("TaiKhoan", JSON.stringify(TAIKHOAN));
-}
+
 
 
   

@@ -184,6 +184,97 @@ function loadDashboard() {
       </tr>
     `;
   }
+
+
+  //báo cáo thống kê
+  //lấy nhân viên xuất hiện nhiều nhất trong các lịch hẹn
+  let count = {};
+  lichHenLocal.forEach(lh => {
+    count[lh.MANV] = (count[lh.MANV] || 0) + 1;//tìm nv nếu chưa có thì = 0, có thì + 1
+  });
+
+
+  let max = 0;
+
+  for (const manv in count) {
+    if (count[manv] > max) {
+      max = count[manv];
+    }
+  }
+  // ORDER BY DESC
+  const sorted = Object.entries(count).sort((a, b) => b[1] - a[1]);
+  const top5 = sorted.slice(0, 10);
+  // Giữ thứ tự và lấy thông tin NV
+  const topNhanVien = top5.map(item => {
+    const manv = item[0];
+    const soLich = item[1];
+    const nv = nhanVienLocal.find(n => n.MANV === manv);
+    return {
+      ...nv,//ghép obj
+      soLich: soLich
+    };
+  });
+  console.log(topNhanVien);
+
+
+  const tbodyTopStaff = document.querySelector("#staffTop tbody");
+  if (!tbodyTopStaff) return;
+  tbodyTopStaff.innerHTML = topNhanVien.map(nv => `
+    <tr>
+      <td>${nv.MANV}</td>
+      <td>${nv.HOTEN}</td>
+      <td>${nv.CHUCVU}</td>
+      <td>${nv.SDT}</td>
+      <td>${nv.NGAYSINH}</td>
+      <td>${nv.MACHINHANH}</td>
+      <td>${nv.soLich}</td>
+    </tr>
+  `).join("");
+
+  //lấy dịch vụ xuất hiện nhiều nhất trong chi tiết lịch hẹn
+  let countDV = {};
+  chiTietLichHenLocal.forEach(ct => {
+    countDV[ct.MADV] = (countDV[ct.MADV] || 0) + 1;//tìm dv nếu chưa có thì = 0, có thì + 1
+  });
+
+
+  let maxDV = 0;
+
+  for (const madv in countDV) {
+    if (countDV[madv] > maxDV) {
+      maxDV = countDV[madv];
+    }
+  }
+  // ORDER BY DESC
+  const sortedDV = Object.entries(countDV).sort((a, b) => b[1] - a[1]);
+  const top5DV = sortedDV.slice(0, 10);
+  // Giữ thứ tự và lấy thông tin
+  const allServices = [...dichVuLocal, ...chamSocDaLocal];
+  const topDichVu = top5DV.map(item => {
+    const madv = item[0];
+    const soLan = item[1];
+    const dv = allServices.find(dv => dv.MADV === madv);
+    return {
+      ...dv,//ghép obj
+      solan: soLan
+    };
+  });
+  console.log(topDichVu);
+
+
+  const tbodyTopDV = document.querySelector("#ServicesTop tbody");
+  if (!tbodyTopDV) return;
+  tbodyTopDV.innerHTML = topDichVu.map(dv => `
+    <tr>
+      <td>${dv.MADV}</td>
+      <td><img src="${dv.ANH}" alt="${dv.TENDV}" height="60" width="70"></td>
+      <td>${dv.TENDV}</td>
+      <td>${dv.THOIGIAN} phút</td>
+      <td>${dv.GIADV.toLocaleString("vi-VN")}₫</td>
+      <td>${dv.solan}</td>
+    </tr>
+  `).join("");
+
 }
 
 // ================== HIỂN THỊ DỮ LIỆU ==================
@@ -264,18 +355,18 @@ function renderServices() {
   if (!tbody) return;
   tbody.innerHTML = dichVuLocal.map(dv => `
     <tr>
+    <td class="actions">
+      <button class="btn small edit" data-id="${dv.MADV}" onclick="chuanBiSuaDichVu('${dv.MADV}')"><i class="fas fa-edit"></i></button>
+      <button class="btn small delete" data-id="${dv.MADV}" onclick="xoaDichVu('${dv.MADV}')"><i class="fas fa-trash"></i></button>
+    </td>
       <td>${dv.MADV}</td>
+      <td><img src="${dv.ANH}" alt="${dv.TENDV}" height="60" width="70"></td>
       <td>${dv.TENDV}</td>
-      <td>${dv.MOTA}</td>
       <td>${dv.THOIGIAN} phút</td>
       <td>${dv.GIADV.toLocaleString("vi-VN")}₫</td>
       <td>${dv.TRANGTHAI}</td>
-      <td><img src="${dv.ANH}" alt="${dv.TENDV}" width="60"></td>
+      <td>${dv.MOTA}</td>
       <td>${dv.QUYTRINH}</td>
-      <td class="actions">
-        <button class="btn small edit" data-id="${dv.MADV}" onclick="chuanBiSuaDichVu('${dv.MADV}')"><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${dv.MADV}" onclick="xoaDichVu('${dv.MADV}')"><i class="fas fa-trash"></i></button>
-      </td>
     </tr>
   `).join("");
 }
@@ -286,18 +377,18 @@ function renderSkincare() {
   if (!tbody) return;
   tbody.innerHTML = chamSocDaLocal.map(cs => `
     <tr>
+    <td class="actions">
+      <button class="btn small edit" data-id="${cs.MADV}" onclick="chuanBiSuaDichVu('${cs.MADV}')"><i class="fas fa-edit"></i></button>
+      <button class="btn small delete" data-id="${cs.MADV}" onclick="xoaDichVu('${cs.MADV}')"><i class="fas fa-trash"></i></button>
+    </td>
       <td>${cs.MADV}</td>
+      <td><img src="${cs.ANH}" alt="${cs.TENDV}" height="60" width="70"></td>
       <td>${cs.TENDV}</td>
-      <td>${cs.MOTA}</td>
       <td>${cs.THOIGIAN} phút</td>
       <td>${cs.GIADV.toLocaleString("vi-VN")}₫</td>
       <td>${cs.TRANGTHAI}</td>
-      <td><img src="${cs.ANH}" alt="${cs.TENDV}" width="60"></td>
+      <td>${cs.MOTA}</td>
       <td>${cs.QUYTRINH}</td>
-      <td class="actions">
-        <button class="btn small edit" data-id="${cs.MADV}" onclick="chuanBiSuaDichVu('${cs.MADV}')"><i class="fas fa-edit"></i></button>
-        <button class="btn small delete" data-id="${cs.MADV}" onclick="xoaDichVu('${cs.MADV}')"><i class="fas fa-trash"></i></button>
-      </td>
     </tr>
   `).join("");
 }
@@ -491,6 +582,9 @@ function renderInvoices() {
 function openAccountModal() {
   const modal = document.getElementById("addAccountModal");
   modal.style.display = "block";
+  // reset form
+  const form = document.getElementById("addAccountForm");
+  if (form) form.reset();
 }
 
 // Đóng modal
@@ -1367,10 +1461,23 @@ function loadLichHenHoanThanh() {
     LichHenHoanThanh.map(lhht => `<option value="${lhht.MALICH}">${lhht.MALICH} | ${lhht.NGAYHEN} | ${lhht.GIOHEN} | ${lhht.MAKH}</option>`).join("");
 
   const NVSelect = document.getElementById("invoiceStaffId");
-  const thungan = nhanVienLocal.filter(nv => nv.CHUCVU === "Thu ngân");
+  //Khi chọn lịch hẹn có chi nhánh đi kèm thì load thu ngân tại chi nhánh đó
+  lichHenSelect.addEventListener("change", function () {
+    const malich = this.value;
+    NVSelect.innerHTML = "<option value=''>-- Chọn thu ngân--</option>";
+    // tìm lịch hẹn theo MALICH
+    const lich = LichHenHoanThanh.find(lh => lh.MALICH === malich);
+    if (!lich) return;
+    const machinhanh = lich.MACHINHANH;
 
-  NVSelect.innerHTML = '<option value="">-- Chọn nhân viên --</option>' +
-    thungan.map(nv => `<option value="${nv.MANV}">${nv.MANV} - ${nv.HOTEN}</option>`).join("");
+    const nvthunganTheoChiNhanh = nhanVienLocal.filter(nv => nv.MACHINHANH === machinhanh && nv.CHUCVU === "Thu ngân");
+    nvthunganTheoChiNhanh.forEach(nv => {
+      const opt = document.createElement("option");
+      opt.value = nv.MANV;
+      opt.textContent = `${nv.MANV} - ${nv.HOTEN}`;
+      NVSelect.appendChild(opt);
+    });
+  });
 
 
   const KMSelect = document.getElementById("invoicePromoId");
@@ -1379,7 +1486,6 @@ function loadLichHenHoanThanh() {
   KMSelect.innerHTML = '<option value="">-- Chọn khuyến mại --</option>' +
     khuyenMaiConHan.map(km => `<option value="${km.MAKM}">${km.MAKM} - ${km.MOTA}</option>`).join("");
 }
-// Hàm này để tính toán và hiển thị tiền lên form (không lưu, chỉ hiển thị)
 function tudongtinhtien() {
   const maLH = document.getElementById("invoiceBookingId").value;
   const maKM = document.getElementById("invoicePromoId").value;

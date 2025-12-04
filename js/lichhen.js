@@ -32,20 +32,26 @@ window.onload = function () {
 
     const allServicesOption = [...dichVuLocal, ...chamSocDaLocal];
 
+    const dichvuXem = this.localStorage.getItem("madichvuCanXem");
     // --- Load dịch vụ ---
     allServicesOption.filter(dv => dv.TRANGTHAI === "Đang cung cấp").forEach(dv => {
         const opt = document.createElement("option");
         opt.value = dv.MADV;
         opt.textContent = `${dv.TENDV} - ${dv.THOIGIAN.toLocaleString()} phút - ${dv.GIADV.toLocaleString()} VNĐ`;
         dichvuSelect.appendChild(opt);
+        
+        if (dichvuXem) {
+            dichvuSelect.value = dichvuXem;
+        }
     });
+
 
     // --- Khi chọn chi nhánh, load thợ (nhân viên) theo chi nhánh ---
     chinhanhSelect.addEventListener("change", function () {
         const machinhanh = this.value;
         nhanvienSelect.innerHTML = "<option value=''>-- Chọn thợ --</option>";
 
-        const nvTheoChiNhanh = nhanVienLocal.filter(nv => nv.MACHINHANH === machinhanh);
+        const nvTheoChiNhanh = nhanVienLocal.filter(nv => nv.MACHINHANH === machinhanh && nv.CHUCVU === "Stylist");
         nvTheoChiNhanh.forEach(nv => {
             const opt = document.createElement("option");
             opt.value = nv.MANV;
@@ -53,7 +59,7 @@ window.onload = function () {
             nhanvienSelect.appendChild(opt);
         });
     });
-    
+
     document.getElementById("nhanvien").addEventListener("change", loadHours);
     document.getElementById("ngayhen").addEventListener("change", loadHours);
     loadHours();

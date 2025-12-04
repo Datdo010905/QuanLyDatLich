@@ -131,8 +131,10 @@
                                     <label for="accRole">Quyền hạn:</label>
                                     <select id="accRole">
                                         <option value="0">Khách hàng</option>
-                                        <option value="2">Nhân viên</option>
-                                        <option value="1">Quản lý</option>
+                                        <option value="2">Quản lý</option>
+                                        <option value="3">Stylist</option>
+                                        <option value="4">Thu ngân</option>
+                                        <option value="5">Lễ tân</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -172,8 +174,10 @@
                                     <label for="editRole">Quyền hạn:</label>
                                     <select id="editRole">
                                         <option value="0">Khách hàng</option>
-                                        <option value="2">Nhân viên</option>
-                                        <option value="1">Quản lý</option>
+                                        <option value="2">Quản lý</option>
+                                        <option value="3">Stylist</option>
+                                        <option value="4">Thu ngân</option>
+                                        <option value="5">Lễ tân</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -318,15 +322,15 @@
                             <table class="table" id="hairServicesTable">
                                 <thead>
                                     <tr>
+                                        <th>Hành Động</th>
                                         <th>ID</th>
+                                        <th>Ảnh</th>
                                         <th>Tên Dịch Vụ</th>
-                                        <th>Mô Tả</th>
                                         <th>Thời Gian (phút)</th>
                                         <th>Giá (VND)</th>
                                         <th>Trạng Thái</th>
-                                        <th>Ảnh</th>
+                                        <th>Mô Tả</th>
                                         <th>Quy Trình</th>
-                                        <th>Hành Động</th>
                                     </tr>
                                 </thead>
                                 <tbody id="hairServicesTbody"></tbody>
@@ -340,15 +344,15 @@
                             <table class="table" id="skinCareServicesTable">
                                 <thead>
                                     <tr>
+                                        <th>Hành Động</th>
                                         <th>ID</th>
+                                        <th>Ảnh</th>
                                         <th>Tên Dịch Vụ</th>
-                                        <th>Mô Tả</th>
                                         <th>Thời Gian (phút)</th>
                                         <th>Giá (VND)</th>
                                         <th>Trạng Thái</th>
-                                        <th>Ảnh</th>
+                                        <th>Mô Tả</th>
                                         <th>Quy Trình</th>
-                                        <th>Hành Động</th>
                                     </tr>
                                 </thead>
                                 <tbody id="skinCareServicesTbody"></tbody>
@@ -797,9 +801,9 @@
                                         <option value="">-- Chọn nhân viên --</option>
                                     </select>
                                 </div>
-                                
-                                
-                                
+
+
+
                                 <div class="form-group">
                                     <label>Tổng tiền:</label>
                                     <input type="number" id="invoiceTotal" readonly>
@@ -1022,14 +1026,48 @@
                         <div class="card">
                             <h3>Tổng Lịch Hẹn</h3>
                             <p id="reportBookings">342</p>
-                            <small id = "reportBookingsDone">Thành công: 310</small>
+                            <small id="reportBookingsDone">Thành công: 310</small>
                         </div>
                     </div>
 
                     <div class="panel" style="margin-top: 20px;">
-                        <h3>Top Nhân Viên Xuất Sắc (Tháng)</h3>
-                        <canvas id="staffChart" height="80"></canvas>
+                        <h3>Top Dịch Vụ hay dùng</h3>
+                        <div class="panel">
+                            <div class="table-wrapper">
+                                <table class="table" id="ServicesTop">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Ảnh</th>
+                                            <th>Tên Dịch Vụ</th>
+                                            <th>Thời Gian (phút)</th>
+                                            <th>Giá (VND)</th>
+                                            <th>Số lần</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
+                    <div class="panel" style="margin-top: 20px;">
+                        <h3>Top Nhân Viên Xuất Sắc</h3>
+                        <table class="table" id="staffTop">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ Tên</th>
+                                    <th>Chức Vụ</th>
+                                    <th>Ngày Sinh</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Chi nhánh</th>
+                                    <th>Số lịch hẹn</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
                 </div>
 
             </section>
