@@ -12,7 +12,7 @@ const khachhang = khachHangLocal.find(
 );
 
 if (!khachhang) {
-    console.warn("Không tìm thấy khách hàng hoặc chưa đăng nhập.");
+    window.location.href="login.html";
 }
 
 

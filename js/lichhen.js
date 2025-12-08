@@ -228,3 +228,78 @@ function DatLich(event) {
     hoatDongLocal.push(hoatDongMoi);
     localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
 }
+
+//TÌM KIẾM DỊCH VỤ
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("indexSearch");
+    const resultsBox = document.getElementById("searchResults");
+
+    let allServices = [];
+    
+    if (localStorage.getItem("DichVu")) {
+        allServices = JSON.parse(localStorage.getItem("DichVu"));
+    } else if (typeof DICHVU !== 'undefined') {
+        allServices = DICHVU;
+    } 
+    //gộp cả Dịch vụ Tóc và Chăm sóc da
+    if (localStorage.getItem("ChamSocDa")) {
+        const skinCare = JSON.parse(localStorage.getItem("ChamSocDa"));
+        allServices = allServices.concat(skinCare);
+    }
+
+    // 2. Sự kiện khi gõ vào ô tìm kiếm
+    if (searchInput && resultsBox) {
+        searchInput.addEventListener("input", function (e) {
+            const keyword = e.target.value.toLowerCase().trim();
+            resultsBox.innerHTML = ""; // Xóa kết quả cũ
+
+            if (keyword.length === 0) {
+                resultsBox.style.display = "none";
+                return;
+            }
+
+            // Lọc dịch vụ theo tên
+            const filteredServices = allServices.filter(dv => 
+                dv.TENDV.toLowerCase().includes(keyword)
+            );
+
+            if (filteredServices.length > 0) {
+                resultsBox.style.display = "block";
+                
+                filteredServices.forEach(dv => {
+                    const li = document.createElement("li");
+                    
+                    // Format giá tiền
+                    const gia = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(dv.GIADV);
+                    li.innerHTML = `
+                        <img src="${dv.ANH || 'img/logo.png'}" alt="img">
+                        <div>
+                            <b>${dv.TENDV}</b><br>
+                            <i style="line-height: 22px; margin-right: 20px">${gia}</i>
+                            <span style="color: #0a2a78">${dv.THOIGIAN} phút</span>
+                        </div>
+                    `;
+
+                    //click vào kết quả
+                    li.addEventListener("click", function () {
+                        searchInput.value = dv.TENDV;
+                        resultsBox.style.display = "none";
+                        localStorage.setItem('madichvuCanXem', dv.MADV);
+                        window.location.href = "chitietdichvu.html"; 
+                    });
+                    //thêm lên 
+                    resultsBox.appendChild(li);
+                });
+            } else {
+                resultsBox.style.display = "none";
+            }
+        });
+
+        //Ẩn dropdown khi click ra ngoài
+        document.addEventListener("click", function (e) {
+            if (!searchInput.contains(e.target) && !resultsBox.contains(e.target)) {
+                resultsBox.style.display = "none";
+            }
+        });
+    }
+});
