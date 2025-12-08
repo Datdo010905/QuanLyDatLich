@@ -1609,3 +1609,46 @@ html {
     font-weight: bold;
     float: left
 }
+
+
+.search-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50;
+    width: 80%;
+    background-color: white;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.search-dropdown li {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 2px solid #eee;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.search-dropdown li img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+    border-radius: 4px;
+}
+
+.search-dropdown li:hover {
+    background-color: #f1f1f1;
+    color: #000;
+}
+
+.search-dropdown li:last-child {
+    border-bottom: none;
+}

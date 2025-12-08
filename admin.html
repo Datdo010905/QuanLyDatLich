@@ -47,7 +47,7 @@
             <header class="topbar">
                 <button id="toggleSidebar" class="icon-btn"><i class="fas fa-bars"></i></button>
                 <div class="topbar-right">
-                    <input id="adminSearch" placeholder="Tìm kiếm..." />
+                    <input id="adminSearch" placeholder="Tìm: nhập ID cần tìm" aria-label="Tìm kiếm" />
                     <button class="icon-btn"><i class="fas fa-search"></i></button>
                 </div>
             </header>
@@ -1006,11 +1006,6 @@
                     <div class="panel header-actions">
                         <h2>Báo cáo thống kê</h2>
                         <div class="report-filter">
-                            <select id="reportTime" onchange="updateCharts()">
-                                <option value="week">7 ngày qua</option>
-                                <option value="month">Tháng này</option>
-                                <option value="year">Năm nay</option>
-                            </select>
                             <button class="btn primary"><i class="fas fa-download"></i> Xuất Excel</button>
                         </div>
                     </div>
@@ -1019,7 +1014,6 @@
                         <div class="card">
                             <h3>Tổng Doanh Thu</h3>
                             <p id="reportRevenue" style="color: #2ecc71;">999.999.999₫</p>
-                            <small>+12% so với tháng trước</small>
                         </div>
                         <div class="card">
                             <h3>Tổng Lịch Hẹn</h3>

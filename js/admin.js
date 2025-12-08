@@ -327,10 +327,10 @@ function renderAllTables() {
 
 
 // TÀI KHOẢN
-function renderAccounts() {
+function renderAccounts(data = taiKhoanLocal) {
   const tbody = document.querySelector("#accountsTable tbody");
   if (!tbody) return;
-  tbody.innerHTML = taiKhoanLocal.map(tk => `
+  tbody.innerHTML = data.map(tk => `
     <tr>
       <td>${tk.MATK}</td>
       <td>${tk.PASS}</td>
@@ -345,10 +345,10 @@ function renderAccounts() {
 }
 
 // KHÁCH HÀNG
-function renderCustomers() {
+function renderCustomers(data = khachHangLocal) {
   const tbody = document.querySelector("#customersTable tbody");
   if (!tbody) return;
-  tbody.innerHTML = khachHangLocal.map(kh => `
+  tbody.innerHTML = data.map(kh => `
     <tr>
       <td>${kh.MAKH}</td>
       <td>${kh.HOTEN}</td>
@@ -363,10 +363,10 @@ function renderCustomers() {
 }
 
 // NHÂN VIÊN
-function renderStaff() {
+function renderStaff(data = nhanVienLocal) {
   const tbody = document.querySelector("#staffTable tbody");
   if (!tbody) return;
-  tbody.innerHTML = nhanVienLocal.map(nv => `
+  tbody.innerHTML = data.map(nv => `
     <tr>
       <td>${nv.MANV}</td>
       <td>${nv.HOTEN}</td>
@@ -385,10 +385,10 @@ function renderStaff() {
 }
 
 //DỊCH VỤ TÓC
-function renderServices() {
+function renderServices(data = dichVuLocal) {
   const tbody = document.querySelector("#hairServicesTable tbody");
   if (!tbody) return;
-  tbody.innerHTML = dichVuLocal.map(dv => `
+  tbody.innerHTML = data.map(dv => `
     <tr>
     <td class="actions">
       <button class="btn small edit" data-id="${dv.MADV}" onclick="chuanBiSuaDichVu('${dv.MADV}')"><i class="fas fa-edit"></i></button>
@@ -407,10 +407,10 @@ function renderServices() {
 }
 
 // DỊCH VỤ CHĂM SÓC DA
-function renderSkincare() {
+function renderSkincare(data = chamSocDaLocal) {
   const tbody = document.querySelector("#skinCareServicesTable tbody");
   if (!tbody) return;
-  tbody.innerHTML = chamSocDaLocal.map(cs => `
+  tbody.innerHTML = data.map(cs => `
     <tr>
     <td class="actions">
       <button class="btn small edit" data-id="${cs.MADV}" onclick="chuanBiSuaDichVu('${cs.MADV}')"><i class="fas fa-edit"></i></button>
@@ -429,10 +429,14 @@ function renderSkincare() {
 }
 
 // KHUYẾN MÃI
-function renderPromotions() {
+function renderPromotions(data = khuyenMaiLocal) {
   const tbody = document.querySelector("#promotionsTable tbody");
   if (!tbody) return;
-  tbody.innerHTML = khuyenMaiLocal.map(km => `
+
+  tbody.innerHTML = data.map(km => {
+    const trangThaiClass = (km.TRANGTHAI || "").toLowerCase()
+      .replace(/ /g, '-') // thay ' ' bằng '-'
+    return `
     <tr>
       <td>${km.MAKM}</td>
       <td>${km.TENKM}</td>
@@ -440,14 +444,15 @@ function renderPromotions() {
       <td>${km.NGAYBD}</td>
       <td>${km.NGAYKT}</td>
       <td>${(km.GIATRI * 100).toFixed(0)}%</td>
-      <td>${km.TRANGTHAI}</td>
+      <td class = "status ${trangThaiClass}">${km.TRANGTHAI}</td>
       <td class="actions">
         <button class="btn small edit" data-id="${km.MAKM}" onclick="chuanBiSuaKhuyenMai('${km.MAKM}')"><i class="fas fa-edit"></i></button>
         <button class="btn small delete" data-id="${km.MAKM}" onclick = "xoaKhuyenMai('${km.MAKM}')"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
-  `).join("");
+  `}).join("");
 }
+
 
 // LỊCH HẸN
 function getStatusPriority(status) {
@@ -465,12 +470,12 @@ function getStatusPriority(status) {
       return 99; // Trạng thái không xác định
   }
 }
-function renderBookings() {
+function renderBookings(data = lichHenLocal) {
   const tbody = document.querySelector("#bookingsTable tbody");
 
   if (!tbody) return;
 
-  const sortedBookings = [...lichHenLocal].sort((a, b) => {
+  const sortedBookings = [...data].sort((a, b) => {
     const priorityA = getStatusPriority(a.TRANGTHAI);
     const priorityB = getStatusPriority(b.TRANGTHAI);
 
@@ -577,11 +582,11 @@ function formatCurrency(amount) {
 }
 
 // HÓA ĐƠN
-function renderInvoices() {
+function renderInvoices(data = hoaDonLocal) {
   const tbody = document.querySelector("#invoicesTable tbody");
   if (!tbody) return;
 
-  const sortedHoaDon = [...hoaDonLocal].sort((a, b) => {
+  const sortedHoaDon = [...data].sort((a, b) => {
     const priorityA = getStatusPriority(a.TRANGTHAI);
     const priorityB = getStatusPriority(b.TRANGTHAI);
 
@@ -1910,13 +1915,13 @@ function themLichHen(event) {
   alert("Thêm lịch hẹn thành công!");
   closeModal("addBookingModal");
   const hoatDongMoi = {
-      thoigian: new Date().toLocaleString(),
-      noidung: `Thêm lịch hẹn: ${bookingId}`,
-      taikhoan: loggedInUser
-    };
+    thoigian: new Date().toLocaleString(),
+    noidung: `Thêm lịch hẹn: ${bookingId}`,
+    taikhoan: loggedInUser
+  };
 
-    hoatDongLocal.push(hoatDongMoi);
-    localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
+  hoatDongLocal.push(hoatDongMoi);
+  localStorage.setItem("HoatDong", JSON.stringify(hoatDongLocal));
 }
 //cập nhật trạng thái lịch hẹn
 function chuanBiSuaLichHen(malich) {
@@ -2003,3 +2008,100 @@ function suaLichHen(event) {
     alert("Có lỗi xảy ra: " + error.message);
   }
 }
+
+
+//tìm kiếm
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById("adminSearch");
+  if (searchInput) {
+    searchInput.addEventListener("input", function (e) {
+      const keyword = e.target.value.toLowerCase().trim();
+
+      // Xác định đang ở Section nào
+      const activeSection = document.querySelector(".section.active-section");
+
+      if (!activeSection) return;
+      const sectionId = activeSection.id;
+
+      //lọc data
+      switch (sectionId) {
+        case "accounts":
+          const filteredAcc = taiKhoanLocal.filter(tk =>
+            tk.MATK.toLowerCase().includes(keyword)
+          );
+          renderAccounts(filteredAcc);
+          break;
+
+        case "customers":
+          const filteredCust = khachHangLocal.filter(kh =>
+            kh.HOTEN.toLowerCase().includes(keyword) ||
+            kh.SDT.includes(keyword) ||
+            kh.MAKH.toLowerCase().includes(keyword)
+          );
+          renderCustomers(filteredCust);
+          break;
+
+        case "staff":
+          const filteredStaff = nhanVienLocal.filter(nv =>
+            nv.HOTEN.toLowerCase().includes(keyword) ||
+            nv.MANV.toLowerCase().includes(keyword) ||
+            nv.SDT.includes(keyword)
+          );
+          renderStaff(filteredStaff);
+          break;
+
+        case "services":
+          const filteredHair = dichVuLocal.filter(dv =>
+            dv.TENDV.toLowerCase().includes(keyword) ||
+            dv.MADV.toLowerCase().includes(keyword)
+          );
+          const filteredSkin = chamSocDaLocal.filter(cs =>
+            cs.TENDV.toLowerCase().includes(keyword) ||
+            cs.MADV.toLowerCase().includes(keyword)
+          );
+          renderServices(filteredHair);
+          renderSkincare(filteredSkin);
+          break;
+
+        case "promotions":
+          const filteredPromo = khuyenMaiLocal.filter(km =>
+            km.TENKM.toLowerCase().includes(keyword) ||
+            km.MAKM.toLowerCase().includes(keyword)
+          );
+          renderPromotions(filteredPromo);
+          break;
+
+        case "invoices":
+          const filteredInv = hoaDonLocal.filter(hd =>
+            hd.MAHD.toLowerCase().includes(keyword) ||
+            hd.MALICH.toLowerCase().includes(keyword)
+          );
+          renderInvoices(filteredInv);
+          break;
+
+        case "bookings":
+          const filteredBook = lichHenLocal.filter(lh =>
+            lh.MALICH.toLowerCase().includes(keyword) ||
+            lh.MAKH.toLowerCase().includes(keyword) ||
+            lh.MANV.toLowerCase().includes(keyword)
+          );
+          renderBookings(filteredBook);
+          break;
+
+        default:
+          alert("Chưa hỗ trợ tìm kiếm cho trang: " + sectionId);
+      }
+    });
+
+    // Reset ô tìm kiếm khi chuyển tab
+    document.querySelectorAll(".sidebar nav a").forEach(link => {
+      link.addEventListener("click", () => {
+        const searchInput = document.getElementById("adminSearch");
+        if (searchInput) {
+          searchInput.value = "";
+          renderAllTables();
+        }
+      });
+    });
+  }
+})

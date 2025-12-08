@@ -486,3 +486,15 @@ textarea {
 .status.đã-huỷ {
   color: #fb0019;
 }
+
+.status.đang-áp-dụng {
+  color: #148a30;
+}
+
+.status.hết-hạn{
+  color: #fb0019;
+}
+
+.status.chưa-áp-dụng {
+  color: #c6ba0f;
+}

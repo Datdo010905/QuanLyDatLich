@@ -69,13 +69,15 @@
 					<a href="index.html"><img src="img/logo.png" /></a>
 				</div>
 				<div id="top-mid">
-					<div>
-						<form>
-							<input type="text" placeholder="Tìm kiếm...">
+					<div style="position: relative">
+						<form autocomplete="off">
+							<input type="text" id="indexSearch" placeholder="Tìm kiếm tên dịch vụ">
 							<button type="button">
 								<img src="img/find.jpg" alt="Tìm kiếm">
 							</button>
 						</form>
+						<ul id="searchResults" class="search-dropdown">
+						</ul>
 					</div>
 				</div>
 				<div id="top-right">
