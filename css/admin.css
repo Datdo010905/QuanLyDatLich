@@ -498,3 +498,14 @@ textarea {
 .status.chưa-áp-dụng {
   color: #c6ba0f;
 }
+
+.previewImg {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 6px;
+    background: #f2f2f2;
+}
+

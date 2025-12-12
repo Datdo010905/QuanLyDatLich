@@ -126,6 +126,7 @@ window.onload = function () {
   document.getElementById("invoiceBookingId").addEventListener('change', tudongtinhtien);
   document.getElementById("invoicePromoId").addEventListener('change', tudongtinhtien);
   document.getElementById("invoicePromoId").addEventListener('input', tudongtinhtien);
+
 };
 
 // Đăng xuất
@@ -962,13 +963,11 @@ function themDichVu(event) {
   const thoigian = parseInt(document.getElementById("serviceTime").value);
   const giadv = parseFloat(document.getElementById("servicePrice").value);
   const trangthai = document.getElementById("serviceStatus").value;
-  const anh = document.getElementById("serviceImg").value;
   const quytrinh = document.getElementById("serviceProcedure").value;
   const loaidichvu = document.getElementById("serviceType").value;
 
 
-
-  if (madichvu.trim() === "" || tendichvu.trim() === "" || isNaN(thoigian) || isNaN(giadv) || mota.trim() === "" || anh.trim() === "" || quytrinh.trim() === "") {
+  if (madichvu.trim() === "" || tendichvu.trim() === "" || isNaN(thoigian) || isNaN(giadv) || mota.trim() === "" || quytrinh.trim() === "") {
     alert("Vui lòng điền đầy đủ thông tin!");
     return;
   }
@@ -990,10 +989,19 @@ function themDichVu(event) {
     alert("Thời gian dịch vụ phải lớn hơn 0");
     return;
   }
-  // Regex ảnh
-  const imgPattern = /\.(png|jpg|jpeg|gif|webp)$/i;
-  if (!imgPattern.test(anh)) {
-    alert("Ảnh phải kết thúc bằng .png, .jpg, .jpeg, .gif, .webp!");
+  // // Regex ảnh
+  // const imgPattern = /\.(png|jpg|jpeg|gif|webp)$/i;
+  // if (!imgPattern.test(anh)) {
+  //   alert("Ảnh phải kết thúc bằng .png, .jpg, .jpeg, .gif, .webp!");
+  //   return;
+  // }
+  const fileInput = document.getElementById("serviceImg");
+  let anh = "";
+
+  if (fileInput.files && fileInput.files[0]) {
+    anh = URL.createObjectURL(fileInput.files[0]);
+  } else {
+    alert("Vui lòng chọn ảnh!");
     return;
   }
 
@@ -1050,10 +1058,24 @@ function chuanBiSuaDichVu(maDVu) {
   document.getElementById("editServiceTime").value = kmCanSua.THOIGIAN;
   document.getElementById("editServicePrice").value = kmCanSua.GIADV;
   document.getElementById("editServiceStatus").value = kmCanSua.TRANGTHAI;
-  document.getElementById("editServiceImg").value = kmCanSua.ANH;
   document.getElementById("editServiceProcedure").value = kmCanSua.QUYTRINH;
 
+  document.getElementById("editServicePreview").src = kmCanSua.ANH;
+
 }
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("editServiceImg").addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    document.getElementById("editServicePreview").src = URL.createObjectURL(file);
+  });
+  document.getElementById("serviceImg").addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    document.getElementById("ServicePreview").src = URL.createObjectURL(file);
+  });
+});
+
 function suaDichVu(event) {
   event.preventDefault(); // Ngăn chặn hành vi mặc định của form
   const madichvu = document.getElementById("editServiceId").value;
@@ -1062,15 +1084,15 @@ function suaDichVu(event) {
   const thoigian = parseInt(document.getElementById("editServiceTime").value);
   const giadv = parseFloat(document.getElementById("editServicePrice").value);
   const trangthai = document.getElementById("editServiceStatus").value;
-  const anh = document.getElementById("editServiceImg").value;
   const quytrinh = document.getElementById("editServiceProcedure").value;
+  const anhInput = document.getElementById("editServiceImg");
 
   if (!confirm("Bạn có chắc chắn muốn sửa dịch vụ này không?")) {
     return;
   }
 
 
-  if (tendichvu.trim() === "" || isNaN(thoigian) || isNaN(giadv) || mota.trim() === "" || anh.trim() === "" || quytrinh.trim() === "") {
+  if (tendichvu.trim() === "" || isNaN(thoigian) || isNaN(giadv) || mota.trim() === "" || quytrinh.trim() === "") {
     alert("Vui lòng điền đầy đủ thông tin!");
     return;
   }
@@ -1082,12 +1104,12 @@ function suaDichVu(event) {
     alert("Thời gian dịch vụ phải lớn hơn 0");
     return;
   }
-  // Regex ảnh
-  const imgPattern = /\.(png|jpg|jpeg|gif|webp)$/i;
-  if (!imgPattern.test(anh)) {
-    alert("Ảnh phải kết thúc bằng .png, .jpg, .jpeg, .gif, .webp!");
-    return;
-  }
+  // // Regex ảnh
+  // const imgPattern = /\.(png|jpg|jpeg|gif|webp)$/i;
+  // if (!imgPattern.test(anh)) {
+  //   alert("Ảnh phải kết thúc bằng .png, .jpg, .jpeg, .gif, .webp!");
+  //   return;
+  // }
 
   // Kiểm tra dịch vụ thuộc bảng nào
   let index = dichVuLocal.findIndex(dv => dv.MADV === madichvu);
@@ -1108,28 +1130,50 @@ function suaDichVu(event) {
     alert("Không tìm thấy dịch vụ!");
     return;
   }
+
   try {
-    // Cập nhật
-    targetList[targetIndex] = {
-      ...targetList[targetIndex],
-      TENDV: tendichvu,
-      MOTA: mota,
-      THOIGIAN: thoigian,
-      GIADV: giadv,
-      TRANGTHAI: trangthai,
-      ANH: anh,
-      QUYTRINH: quytrinh
+    if (anhInput.files.length === 0) {
+      targetList[targetIndex].TENDV = tendichvu;
+      targetList[targetIndex].MOTA = mota;
+      targetList[targetIndex].THOIGIAN = thoigian;
+      targetList[targetIndex].GIADV = giadv;
+      targetList[targetIndex].TRANGTHAI = trangthai;
+      targetList[targetIndex].QUYTRINH = quytrinh;
+
+      localStorage.setItem("DichVu", JSON.stringify(dichVuLocal));
+      localStorage.setItem("ChamSocDa", JSON.stringify(chamSocDaLocal));
+
+      renderServices();
+      renderSkincare();
+      alert("Sửa dịch vụ thành công!");
+      closeModal('editServiceModal');
+      return;
+    }
+
+    const file = anhInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      const base64 = reader.result; // ảnh base64
+
+      targetList[targetIndex].TENDV = tendichvu;
+      targetList[targetIndex].MOTA = mota;
+      targetList[targetIndex].THOIGIAN = thoigian;
+      targetList[targetIndex].GIADV = giadv;
+      targetList[targetIndex].TRANGTHAI = trangthai;
+      targetList[targetIndex].ANH = base64;
+      targetList[targetIndex].QUYTRINH = quytrinh;
+
+      localStorage.setItem("DichVu", JSON.stringify(dichVuLocal));
+      localStorage.setItem("ChamSocDa", JSON.stringify(chamSocDaLocal));
+
+      renderServices();
+      renderSkincare();
+      alert("Sửa dịch vụ thành công!");
+      closeModal('editServiceModal');
     };
 
-    // Lưu đúng bảng
-    localStorage.setItem("DichVu", JSON.stringify(dichVuLocal));
-    localStorage.setItem("ChamSocDa", JSON.stringify(chamSocDaLocal));
-
-    renderServices();
-    renderSkincare();
-
-    alert("Sửa dịch vụ thành công!");
-    closeModal('editServiceModal');
+    reader.readAsDataURL(file);
   }
   catch (error) {
     alert("Đã có lỗi xảy ra khi sửa dịch vụ: " + error.message);
