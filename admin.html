@@ -13,6 +13,7 @@
     <link rel="icon" href="img/logo.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -1005,9 +1006,6 @@
                 <div id="reports" class="section">
                     <div class="panel header-actions">
                         <h2>Báo cáo thống kê</h2>
-                        <div class="report-filter">
-                            <button class="btn primary"><i class="fas fa-download"></i> Xuất Excel</button>
-                        </div>
                     </div>
 
                     <div class="cards">
@@ -1023,7 +1021,12 @@
                     </div>
 
                     <div class="panel" style="margin-top: 20px;">
-                        <h3>Top Dịch Vụ hay dùng</h3>
+                        <div class="report-filter">
+                            <h3>Top Dịch Vụ hay dùng</h3>
+                            <button class="btn primary"
+                                onclick="exportTableToExcel('ServicesTop', 'BaoCao_TopDichVu')"><i
+                                    class="fas fa-download"></i> Xuất Excel</button>
+                        </div>
                         <div class="panel">
                             <div class="table-wrapper">
                                 <table class="table" id="ServicesTop">
@@ -1043,15 +1046,20 @@
                         </div>
                     </div>
                     <div class="panel" style="margin-top: 20px;">
-                        <h3>Top Nhân Viên Xuất Sắc</h3>
+                        <div class="report-filter">
+                            <h3>Top Nhân Viên Xuất Sắc</h3>
+                            <button class="btn primary"
+                                onclick="exportTableToExcel('staffTop', 'BaoCao_TopNhanVien')"><i
+                                    class="fas fa-download"></i> Xuất Excel</button>
+                        </div>
                         <table class="table" id="staffTop">
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Họ Tên</th>
                                     <th>Chức Vụ</th>
-                                    <th>Ngày Sinh</th>
                                     <th>Số điện thoại</th>
+                                    <th>Ngày Sinh</th>
                                     <th>Chi nhánh</th>
                                     <th>Số lịch hẹn</th>
                                 </tr>

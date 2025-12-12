@@ -465,8 +465,7 @@ textarea {
 /* Layout cho phần báo cáo */
 .report-filter {
     display: flex;
-    gap: 10px;
-    align-items: center;
+    gap: 50px;
 }
 
 .report-filter select {

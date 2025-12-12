@@ -2149,3 +2149,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 })
+
+
+//báo cáo
+function exportTableToExcel(tableId, fileName) {
+    const table = document.getElementById(tableId);
+    if (!table) {
+        alert("Không tìm thấy bảng cần xuất!");
+        return;
+    }
+    if(!confirm("Bạn có muốn xuất báo cáo cho bảng này không?")) return;
+
+    const workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+    XLSX.writeFile(workbook, fileName + ".xlsx");
+}
