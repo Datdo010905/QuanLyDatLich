@@ -23,6 +23,7 @@ window.onload = function () {
     }
 
     const chinhanhSelect = document.getElementById("chinhanh");
+    chinhanhSelect.innerHTML = "<option value=''>-- Chọn chi nhánh --</option>";
     const dichvuSelect = document.getElementById("dichvu");
     const nhanvienSelect = document.getElementById("nhanvien");
     // --- Load chi nhánh ---
