@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
         allServices = allServices.concat(skinCare);
     }
 
-    // 2. Sự kiện khi gõ vào ô tìm kiếm
+    //Sự kiện khi gõ vào ô tìm kiếm
     if (searchInput && resultsBox) {
         searchInput.addEventListener("input", function (e) {
             const keyword = e.target.value.toLowerCase().trim();
@@ -160,9 +160,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            // Lọc dịch vụ theo tên
+            // Lọc dịch vụ theo tên, giá, thời gian
             const filteredServices = allServices.filter(dv => 
-                dv.TENDV.toLowerCase().includes(keyword)
+                dv.TENDV.toLowerCase().includes(keyword) ||
+                dv.THOIGIAN.toString().includes(keyword) ||
+                dv.GIADV <= parseFloat(keyword)
             );
 
             if (filteredServices.length > 0) {

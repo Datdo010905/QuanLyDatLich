@@ -1007,6 +1007,24 @@
                     <div class="panel header-actions">
                         <h2>Báo cáo thống kê</h2>
                     </div>
+                    <div class="panel">
+                        <div class="reportDate-form">
+                            <div class="form-group reportDate">
+                                <label>Từ ngày:</label>
+                                <input type="date" id="reportDateStart">
+                            </div>
+                            <div class="form-group reportDate">
+                                <label>Đến ngày:</label>
+                                <input type="date" id="reportDateEnd">
+                            </div>
+                            <button class="btn primary" onclick="locBaoCaoTheoNgay()">
+                                <i class="fas fa-filter"></i> Xem thống kê
+                            </button>
+                            <button class="btn secondary" onclick="resetBaoCao()">
+                                <i class="fas fa-sync"></i> Làm mới
+                            </button>
+                        </div>
+                    </div>
 
                     <div class="cards">
                         <div class="card">

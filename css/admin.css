@@ -3,8 +3,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-    /* content+padding+border */
-    font-family: 'Poppins', sans-serif;
+  /* content+padding+border */
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Bố cục tổng thể */
@@ -207,25 +207,27 @@
   overflow: hidden;
   overflow-x: auto;
 }
+
 .panel::-webkit-scrollbar {
-    height: 10px;
+  height: 10px;
 }
 
 .panel::-webkit-scrollbar-thumb::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.04);
-    border-radius: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
 }
 
 .panel::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #6b8cff, #3558d6);
-    border-radius: 12px;
-    border: 2px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 3px 8px rgba(53, 88, 214, 0.22);
+  background: linear-gradient(180deg, #6b8cff, #3558d6);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 3px 8px rgba(53, 88, 214, 0.22);
 }
 
 .panel::-webkit-scrollbar-thumb:hover {
-    box-shadow: 0 6px 14px rgba(53, 88, 214, 0.32);
+  box-shadow: 0 6px 14px rgba(53, 88, 214, 0.32);
 }
+
 .header-actions {
   display: flex;
   justify-content: space-between;
@@ -278,7 +280,7 @@
 
 .btn.primary:hover {
   background: #014b13c0;
-} 
+}
 
 
 /* ========== RESPONSIVE ========== */
@@ -305,12 +307,13 @@
 }
 
 .accounts {
-    border-radius: 11px;
-    background-color: #0950ea9e;
-    padding: 10px;
-    width: 90%;
-    margin-left: 12px;
+  border-radius: 11px;
+  background-color: #0950ea9e;
+  padding: 10px;
+  width: 90%;
+  margin-left: 12px;
 }
+
 .table .actions {
   white-space: nowrap;
 }
@@ -339,139 +342,152 @@
 
 /* Nền modal */
 .modal {
-    display: none; /* ẩn mặc định */
-    position: fixed;
-    z-index: 9000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.5); /* nền mờ */
+  display: none;
+  /* ẩn mặc định */
+  position: fixed;
+  z-index: 9000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* nền mờ */
 }
 
 /* Nội dung modal */
 .modal-content {
-    background-color: #fff;
-    margin: 80px auto; /* căn giữa theo chiều dọc */
-    padding: 0;
-    border-radius: 8px;
-    width: 400px;
-    max-width: 90%;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    animation: slideDown 0.3s ease-out;
+  background-color: #fff;
+  margin: 80px auto;
+  /* căn giữa theo chiều dọc */
+  padding: 0;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  animation: slideDown 0.3s ease-out;
 }
 
 /* Header modal */
 .modal-header {
-    padding: 16px 24px;
-    background-color: #007bff;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+  padding: 16px 24px;
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .modal-header h3 {
-    margin: 0;
-    font-size: 18px;
+  margin: 0;
+  font-size: 18px;
 }
 
 .close-btn {
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 /* Body modal */
 .modal-body {
-    padding: 20px 24px;
+  padding: 20px 24px;
 }
 
 /* Form nhóm */
 .form-group {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
 }
 
 .form-group input,
 .form-group select {
-    width: 100%;
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
 }
 
 /* Hành động button */
 .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .btn {
-    padding: 8px 16px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
 }
 
 .btn.primary {
-    background-color: #007bff;
-    color: white;
+  background-color: #007bff;
+  color: white;
 }
 
 .btn.primary:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 .btn.secondary {
-    background-color: #ccc;
-    color: #333;
+  background-color: #ccc;
+  color: #333;
 }
 
 .btn.secondary:hover {
-    background-color: #999;
+  background-color: #999;
 }
 
 /* Animation */
 @keyframes slideDown {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Responsive */
 @media (max-width: 480px) {
-    .modal-content {
-        width: 95%;
-        margin: 50px auto;
-    }
+  .modal-content {
+    width: 95%;
+    margin: 50px auto;
+  }
 }
+
 textarea {
-    resize: none; /* Không cho kéo */
-    width: 100%;
-    padding: 10px;
+  resize: none;
+  /* Không cho kéo */
+  width: 100%;
+  padding: 10px;
 }
+
 /* Layout cho phần báo cáo */
 .report-filter {
-    display: flex;
-    gap: 50px;
+  display: flex;
+  gap: 50px;
 }
 
 .report-filter select {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
 }
 
 .status.đang-xử-lý {
@@ -490,7 +506,7 @@ textarea {
   color: #148a30;
 }
 
-.status.hết-hạn{
+.status.hết-hạn {
   color: #fb0019;
 }
 
@@ -499,12 +515,30 @@ textarea {
 }
 
 .previewImg {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-top: 6px;
-    background: #f2f2f2;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 6px;
+  background: #f2f2f2;
 }
 
+.reportDate-form {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.reportDate {
+  margin-bottom: 0;
+  width: auto;
+}
+
+.reportDate label {
+  font-weight: bold;
+}
+
+.reportDate input {
+  padding: 8px
+}

@@ -239,9 +239,9 @@ function loadDashboard() {
   }
   // ORDER BY DESC
   const sorted = Object.entries(count).sort((a, b) => b[1] - a[1]);
-  const top5 = sorted.slice(0, 10);
+  const top = sorted.slice(0, 10);
   // Giữ thứ tự và lấy thông tin NV
-  const topNhanVien = top5.map(item => {
+  const topNhanVien = top.map(item => {
     const manv = item[0];
     const soLich = item[1];
     const nv = nhanVienLocal.find(n => n.MANV === manv);
@@ -312,6 +312,54 @@ function loadDashboard() {
   `).join("");
 
 }
+
+function resetBaoCao() {
+    document.getElementById("reportDateStart").value = "";
+    document.getElementById("reportDateEnd").value = "";
+    
+    loadDashboard(); 
+}
+
+function locBaoCaoTheoNgay() {
+    const batDau = document.getElementById("reportDateStart").value;
+    const ketThuc = document.getElementById("reportDateEnd").value;
+
+    if (!batDau || !ketThuc) {
+        alert("Vui lòng chọn đầy đủ 'Từ ngày' và 'Đến ngày'!");
+        return;
+    }
+    
+    if (new Date(batDau) > new Date(ketThuc)) {
+        alert("Ngày bắt đầu không được lớn hơn ngày kết thúc!");
+        return;
+    }
+
+    //lọc lịch hẹn theo ngày
+    const lichHenFiltered = lichHenLocal.filter(lh => {
+        return lh.NGAYHEN >= batDau && lh.NGAYHEN <= ketThuc;
+    });
+
+    // Lấy danh sách mã lịch hẹn đã lọc
+    const maLichHenFiltered = lichHenFiltered.map(lh => lh.MALICH);
+ 
+    const tongLich = lichHenFiltered.length;
+    document.getElementById("reportBookings").textContent = tongLich;
+
+    // Tổng lịch hẹn thành công
+    const doneBooking = lichHenFiltered.filter(lh => lh.TRANGTHAI === "Hoàn thành");
+    document.getElementById("reportBookingsDone").textContent = `Thành công: ` + doneBooking.length;
+
+    //lấy hoá đơn đã thanh toán từ các lịch hẹn đã lọc
+    const hoadonFiltered = hoaDonLocal.filter(hd => 
+        maLichHenFiltered.includes(hd.MALICH) && hd.TRANGTHAI === "Đã thanh toán"
+    );
+    
+    const tongDoanhThu = hoadonFiltered.reduce((sum, hd) => sum + hd.TONGTIEN, 0);
+    document.getElementById("reportRevenue").textContent = tongDoanhThu.toLocaleString("vi-VN") + "₫";
+}
+
+
+
 
 // ================== HIỂN THỊ DỮ LIỆU ==================
 function renderAllTables() {
@@ -1539,7 +1587,10 @@ function xoaNhanVien(manhanvien) {
 
 function loadLichHenHoanThanh() {
   //lấy lịch hẹn đã hoàn thành để chọn thêm hoá đơn
-  const LichHenHoanThanh = lichHenLocal.filter(lh => lh.TRANGTHAI === "Hoàn thành");
+  //lấy lịch hẹn chưa có trong hoá đơn
+  const lichHenLocalChuaCoHD = lichHenLocal.filter(lh => !hoaDonLocal.some(hd => hd.MALICH === lh.MALICH));
+  const LichHenHoanThanh = lichHenLocalChuaCoHD.filter(lh => lh.TRANGTHAI === "Hoàn thành");
+  console.log(LichHenHoanThanh);
   const lichHenSelect = document.getElementById("invoiceBookingId");
 
   lichHenSelect.innerHTML = '<option value="">-- Chọn lịch hẹn --</option>' +
@@ -2097,10 +2148,12 @@ document.addEventListener("DOMContentLoaded", function () {
         case "services":
           const filteredHair = dichVuLocal.filter(dv =>
             dv.TENDV.toLowerCase().includes(keyword) ||
+            dv.TRANGTHAI.toLowerCase().includes(keyword) ||
             dv.MADV.toLowerCase().includes(keyword)
           );
           const filteredSkin = chamSocDaLocal.filter(cs =>
             cs.TENDV.toLowerCase().includes(keyword) ||
+            cs.TRANGTHAI.toLowerCase().includes(keyword) ||
             cs.MADV.toLowerCase().includes(keyword)
           );
           renderServices(filteredHair);
@@ -2110,6 +2163,7 @@ document.addEventListener("DOMContentLoaded", function () {
         case "promotions":
           const filteredPromo = khuyenMaiLocal.filter(km =>
             km.TENKM.toLowerCase().includes(keyword) ||
+            km.TRANGTHAI.toLowerCase().includes(keyword) ||
             km.MAKM.toLowerCase().includes(keyword)
           );
           renderPromotions(filteredPromo);
@@ -2118,6 +2172,7 @@ document.addEventListener("DOMContentLoaded", function () {
         case "invoices":
           const filteredInv = hoaDonLocal.filter(hd =>
             hd.MAHD.toLowerCase().includes(keyword) ||
+            hd.TRANGTHAI.toLowerCase().includes(keyword) ||
             hd.MALICH.toLowerCase().includes(keyword)
           );
           renderInvoices(filteredInv);
@@ -2127,6 +2182,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const filteredBook = lichHenLocal.filter(lh =>
             lh.MALICH.toLowerCase().includes(keyword) ||
             lh.MAKH.toLowerCase().includes(keyword) ||
+            lh.NGAYHEN.toLowerCase().includes(keyword) ||
             lh.MANV.toLowerCase().includes(keyword)
           );
           renderBookings(filteredBook);
