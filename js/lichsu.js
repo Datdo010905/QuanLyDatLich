@@ -6,30 +6,32 @@ window.addEventListener("DOMContentLoaded", () => {
 // LẤY THÔNG TIN KHÁCH HÀNG ĐĂNG NHẬP
 const mataikhoan = localStorage.getItem("loggedInUser");
 const khachHangLocal = JSON.parse(localStorage.getItem("KhachHang")) || [];
+const lichHenLocal = JSON.parse(localStorage.getItem('LichHen')) || [];
+const chitietLichHenLocal = JSON.parse(localStorage.getItem('ChiTietLichHen')) || [];
 
 const khachhang = khachHangLocal.find(
     kh => kh.MATK === mataikhoan || kh.SDT === mataikhoan
 );
 
 if (!khachhang) {
-    window.location.href="login.html";
+    window.location.href = "login.html";
 }
 
 
 // LỊCH HẸN
 function renderBookingsForCustomer() {
     const tbody = document.querySelector(".lichsu-table tbody");
-    let lichHenLocal = JSON.parse(localStorage.getItem('LichHen')) || [];
-    console.log(khachhang);
-    console.log(lichHenLocal);
-    
+
+    //console.log(khachhang);
+    //console.log(lichHenLocal);
+
     const LICHHEN_KH = lichHenLocal.filter(lh => lh.MAKH === khachhang.MAKH);
-    console.log(LICHHEN_KH);
+    //console.log(LICHHEN_KH);
     if (!tbody) {
         return;
     }
     const lichdangcho = LICHHEN_KH.find(lh => lh.TRANGTHAI === "Đang chờ");
-    if(lichdangcho){
+    if (lichdangcho) {
         alert("Lịch hẹn của bạn đã được duyệt, mau đến cắt tóc thôi nào!!");
     }
     if (LICHHEN_KH.length === 0) {
@@ -42,7 +44,7 @@ function renderBookingsForCustomer() {
         const TENNV = NHANVIEN.find(nv => nv.MANV === lh.MANV)?.HOTEN || "Chưa rõ";
         const trangThaiClass = (lh.TRANGTHAI || "").toLowerCase()
             .replace(/ /g, '-') // thay ' ' bằng '-'
-            //console.log("Trạng thái lớp:", trangThaiClass);
+        //console.log("Trạng thái lớp:", trangThaiClass);
         return `
       <tr>
         <td>${lh.MALICH}</td>
@@ -70,14 +72,14 @@ function closeviewCT() {
 
 // Format tiền tệ
 function formatCurrency(amount) {
-  return new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND'
-  }).format(amount);
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    }).format(amount);
 }
 // CHI TIẾT LỊCH HẸN
 function xemChiTiet(malich) {
-    const chitiet = CHITIETLICHHEN.filter(ct => ct.MALICH === malich);
+    const chitiet = chitietLichHenLocal.filter(ct => ct.MALICH === malich);
     if (!chitiet || chitiet.length === 0) {
         alert("Không tìm thấy chi tiết lịch hẹn.");
         return;
@@ -93,7 +95,7 @@ function xemChiTiet(malich) {
 
     chitiet.forEach(ct => {
         const allServices = [...DICHVU, ...CHAMSOCDA];
-        const TENDV= allServices.find(dv => dv.MADV === ct.MADV)?.TENDV || "Chưa rõ";
+        const TENDV = allServices.find(dv => dv.MADV === ct.MADV)?.TENDV || "Chưa rõ";
         const dongia = allServices.find(dv => dv.MADV === ct.MADV)?.GIADV || 0;
         const thanhtien = dongia * ct.SOLUONG;
         const row = `
@@ -115,20 +117,20 @@ function xemChiTiet(malich) {
 
 //HỦY LỊCH HẸN
 function HuyLich(malich) {
-    let danhSach = JSON.parse(localStorage.getItem('LichHen')) || [];
-    const lichHenCanHuy = danhSach.find(lh => lh.MALICH === malich);
+    const lichHenCanHuy = lichHenLocal.find(lh => lh.MALICH === malich);
     if (!lichHenCanHuy) {
         alert("Không tìm thấy lịch hẹn.");
         return;
     }
-    //check trạng thái khi đang chờ rồi thì không được huỷ
-    if (lichHenCanHuy.TRANGTHAI !== "Đang chờ" && lichHenCanHuy.TRANGTHAI !== "Đã đặt") {
+    //check trạng thái khác đã đặt rồi thì không được huỷ
+    if (lichHenCanHuy.TRANGTHAI !== "Đã đặt") {
         alert(`Không thể hủy lịch hẹn ở trạng thái "${lichHenCanHuy.TRANGTHAI}".`);
         return;
     }
     else if (confirm(`Bạn có chắc chắn muốn hủy lịch hẹn ${malich} không?`)) {
         lichHenCanHuy.TRANGTHAI = "Đã huỷ";
-        localStorage.setItem('LichHen', JSON.stringify(danhSach));
+
+        localStorage.setItem('LichHen', JSON.stringify(lichHenLocal));
         alert(`Lịch hẹn ${malich} đã được hủy.`);
         renderBookingsForCustomer();
     }
