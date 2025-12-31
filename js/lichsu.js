@@ -8,6 +8,8 @@ const mataikhoan = localStorage.getItem("loggedInUser");
 const khachHangLocal = JSON.parse(localStorage.getItem("KhachHang")) || [];
 const lichHenLocal = JSON.parse(localStorage.getItem('LichHen')) || [];
 const chitietLichHenLocal = JSON.parse(localStorage.getItem('ChiTietLichHen')) || [];
+const dichVuLocal = JSON.parse(localStorage.getItem("DichVu")) || DICHVU;
+const chamSocDaLocal = JSON.parse(localStorage.getItem("ChamSocDa")) || CHAMSOCDA;
 
 const khachhang = khachHangLocal.find(
     kh => kh.MATK === mataikhoan || kh.SDT === mataikhoan
@@ -26,7 +28,7 @@ function renderBookingsForCustomer() {
     //console.log(lichHenLocal);
 
     const LICHHEN_KH = lichHenLocal.filter(lh => lh.MAKH === khachhang.MAKH);
-    //console.log(LICHHEN_KH);
+    console.log(LICHHEN_KH);
     if (!tbody) {
         return;
     }
@@ -84,6 +86,7 @@ function xemChiTiet(malich) {
         alert("Không tìm thấy chi tiết lịch hẹn.");
         return;
     }
+    console.log(chitiet);
     const h3 = document.getElementById("tieudechitiet");
     h3.innerHTML = `Chi tiết lịch hẹn ${malich}
                     <button class="btn small delete" onclick="closeviewCT()">
@@ -94,7 +97,7 @@ function xemChiTiet(malich) {
     tableBody.innerHTML = "";
 
     chitiet.forEach(ct => {
-        const allServices = [...DICHVU, ...CHAMSOCDA];
+        const allServices = [...dichVuLocal, ...chamSocDaLocal];
         const TENDV = allServices.find(dv => dv.MADV === ct.MADV)?.TENDV || "Chưa rõ";
         const dongia = allServices.find(dv => dv.MADV === ct.MADV)?.GIADV || 0;
         const thanhtien = dongia * ct.SOLUONG;
