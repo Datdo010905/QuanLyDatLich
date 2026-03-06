@@ -44,7 +44,19 @@ namespace DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Lỗi khi tìm tài khoản: " + ex.Message);
+                throw new Exception("Lỗi khi kiểm tra trùng tài khoản: " + ex.Message);
+            }
+        }
+        public DataTable CheckSDT(string manv, string sdt)
+        {
+            try
+            {
+                DataTable dt = db.GetDataTable("SELECT * FROM NHANVIEN WHERE SDT = '" + sdt + "' AND MANV != '" + manv + "'");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi kiểm tra trùng số điện thoại: " + ex.Message);
             }
         }
         public DataTable Create(Models.NhanVien model)

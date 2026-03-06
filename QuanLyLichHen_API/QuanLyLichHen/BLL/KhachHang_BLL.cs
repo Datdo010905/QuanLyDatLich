@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL
 {
-    public class NhanVien_BLL
+    public class KhachHang_BLL
     {
-        NhanVien_DAL _DAL = new NhanVien_DAL();
-
+        KhachHang_DAL _DAL = new KhachHang_DAL();
         public DataTable GetAll()
         {
             return _DAL.GetAll();
@@ -20,23 +19,19 @@ namespace BLL
         {
             return _DAL.GetById(ma);
         }
-        public DataTable CheckAcc(string ma, string matk)
-        {
-            return _DAL.CheckAcc(ma, matk);
-        }
         public DataTable CheckSDT(string ma, string sdt)
         {
             return _DAL.CheckSDT(ma, sdt);
         }
-        public DataTable Create(Models.NhanVien model)
+        public DataTable Create(Models.KhachHang model)
         {
             return _DAL.Create(model);
         }
-        public DataTable Update(Models.NhanVien model)
+        public DataTable Update(Models.KhachHang model)
         {
             return _DAL.Update(model);
         }
-        public DataTable Delete(Models.NhanVien model)
+        public DataTable Delete(Models.KhachHang model)
         {
             return _DAL.Delete(model);
         }

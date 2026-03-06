@@ -77,12 +77,17 @@ namespace API_QuanLy.Controllers
             {
                 DataTable dt = _BLL.GetByID(model.MaNV.Trim());
                 DataTable dtcheck = _BLL.CheckAcc(model.MaNV.Trim(), model.MaTK.Trim());
+                DataTable dtchecksdt = _BLL.CheckSDT(model.MaNV.Trim(), model.SDT.Trim());
 
                 if (dt.Rows.Count == 0)
                 {
                     if (dtcheck.Rows.Count != 0)//tồn tại
                     {
                         return Ok(new { message = "Đã tồn tại nhân viên có dùng tài khoản: '" + model.MaTK.Trim() + "'" });
+                    }
+                    if (dtchecksdt.Rows.Count != 0)//tồn tại
+                    {
+                        return Ok(new { message = "Đã tồn tại nhân viên có dùng số điện thoại: '" + model.SDT.Trim() + "'" });
                     }
                     else
                     {
@@ -110,11 +115,17 @@ namespace API_QuanLy.Controllers
             {
                 DataTable dt = _BLL.GetByID(model.MaNV.Trim());
                 DataTable dtcheck = _BLL.CheckAcc(model.MaNV.Trim(), model.MaTK.Trim());
+                DataTable dtchecksdt = _BLL.CheckSDT(model.MaNV.Trim(), model.SDT.Trim());
+
                 if (dt.Rows.Count == 1)
                 {
                     if (dtcheck.Rows.Count != 0)//tồn tại
                     {
                         return Ok(new { message = "Đã tồn tại nhân viên có dùng tài khoản: '" + model.MaTK.Trim() + "'" });
+                    }
+                    if (dtchecksdt.Rows.Count != 0)//tồn tại
+                    {
+                        return Ok(new { message = "Đã tồn tại nhân viên có dùng số điện thoại: '" + model.SDT.Trim() + "'" });
                     }
                     else
                     {
