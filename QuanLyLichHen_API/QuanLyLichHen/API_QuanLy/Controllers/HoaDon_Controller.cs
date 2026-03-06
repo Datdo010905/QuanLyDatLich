@@ -111,5 +111,27 @@ namespace API_ThuNgan.Controllers
                 return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
             }
         }
+        [Route("delete-hoadon")]
+        [HttpDelete]
+        public IActionResult Delete([FromBody] Models.HoaDon model)
+        {
+            try
+            {
+                DataTable dt = _BLL.GetByID(model.MaHD.Trim());
+                if (dt.Rows.Count == 1)
+                {
+                    DataTable data = _BLL.Delete(model);
+                    return Ok(new { success = true, message = "Xoá thông tin hoá đơn thành công:", data = ConvertToList(dt) });
+                }
+                else
+                {
+                    return Ok(new { message = "Không tồn tại hoá đơn có mã: '" + model.MaHD.Trim() + "' để xoá" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
     }
 }

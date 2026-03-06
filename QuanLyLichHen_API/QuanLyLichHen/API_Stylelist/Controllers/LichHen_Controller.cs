@@ -31,20 +31,6 @@ namespace API_Stylist.Controllers
             }
             return list;
         }
-        [Route("get-all-lichhen")]
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            try
-            {
-                DataTable dt = _BLL.GetAll();
-                return Ok(new { success = true, message = "Lấy danh sách lịch hẹn thành công:", data = ConvertToList(dt) });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
         [Route("get-allbyIdNV-lichhen")]
         [HttpGet]
         public IActionResult GetAllByIdNV(string manv)
@@ -73,117 +59,6 @@ namespace API_Stylist.Controllers
                 else
                 {
                     return Ok(new { message = "Không tìm thấy lịch hẹn: '" + ma + "'" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
-        [Route("insert-lichhen")]
-        [HttpPost]
-        public IActionResult Create([FromBody] Models.LichHen model)
-        {
-            try
-            {
-                DataTable dt = _BLL.GetByID(model.MaLich.Trim());
-                if (dt.Rows.Count == 0)
-                {
-                    DataTable data = _BLL.Create(model);
-                    return Ok(new { success = true, message = "Thêm thông tin lịch hẹn thành công:", data = ConvertToList(dt) });
-                }
-                else
-                {
-                    return Ok(new { message = "Đã tồn tại lịch hẹn có mã: '" + model.MaLich.Trim() + "'" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
-        [Route("insert-CTlichhen")]
-        [HttpPost]
-        public IActionResult CreateCTLH([FromBody] Models.ChiTietLichHen model)
-        {
-            try
-            {
-                DataTable dt = CTLH_BLL.GetById(model.MaLich.Trim());
-                if (dt.Rows.Count == 0)
-                {
-                    DataTable data = CTLH_BLL.Create(model);
-                    return Ok(new { success = true, message = "Thêm thông tin chi tiết lịch hẹn thành công:", data = ConvertToList(dt) });
-                }
-                else
-                {
-                    return Ok(new { message = "Đã tồn tại chi tiết lịch hẹn có mã: '" + model.MaLich.Trim() + "'" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
-
-        [Route("update-lichhen")]
-        [HttpPut]
-        public IActionResult Update([FromBody] Models.LichHen model)
-        {
-            try
-            {
-                DataTable dt = _BLL.GetByID(model.MaLich.Trim());
-                if (dt.Rows.Count == 1)
-                {
-                    DataTable data = _BLL.Update(model);
-                    return Ok(new { success = true, message = "Thay đổi trạng thái lịch hẹn thành công:", data = ConvertToList(dt) });
-                }
-                else
-                {
-                    return Ok(new { message = "Không tồn tại lịch hẹn có mã: '" + model.MaLich.Trim() + "' để thay đổi" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
-        [Route("delete-lichhen")]
-        [HttpDelete]
-        public IActionResult Delete([FromBody] Models.LichHen model)
-        {
-            try
-            {
-                DataTable dt = _BLL.GetByID(model.MaLich.Trim());
-                if (dt.Rows.Count == 1)
-                {
-                    DataTable data = _BLL.Delete(model);
-                    return Ok(new { success = true, message = "Xoá thông tin lịch hẹn thành công:", data = ConvertToList(dt) });
-                }
-                else
-                {
-                    return Ok(new { message = "Không tồn tại lịch hẹn có mã: '" + model.MaLich.Trim() + "' để xoá" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
-        [Route("delete-CTlichhen")]
-        [HttpDelete]
-        public IActionResult DeleteCT([FromBody] Models.ChiTietLichHen model)
-        {
-            try
-            {
-                DataTable dt = CTLH_BLL.GetById(model.MaLich.Trim());
-                if (dt.Rows.Count == 1)
-                {
-                    DataTable data = CTLH_BLL.Delete(model);
-                    return Ok(new { success = true, message = "Xoá thông tin chi tiết lịch hẹn thành công:", data = ConvertToList(dt) });
-                }
-                else
-                {
-                    return Ok(new { message = "Không tồn tại chi tiết lịch hẹn có mã: '" + model.MaLich.Trim() + "' để xoá" });
                 }
             }
             catch (Exception ex)

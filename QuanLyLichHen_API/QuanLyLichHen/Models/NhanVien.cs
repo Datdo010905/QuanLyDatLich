@@ -14,7 +14,7 @@ namespace Models
         public string SDT { get; set; }
         public string DiaChi { get; set; }
         public string MaChiNhanh { get; set; }
-        public DateTime? NgaySinh { get; set; }
+        public DateTime NgaySinh { get; set; }
         public string MaTK { get; set; }
     }
 }

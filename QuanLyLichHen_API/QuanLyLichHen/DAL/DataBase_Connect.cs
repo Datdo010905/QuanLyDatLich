@@ -17,7 +17,7 @@ namespace DAL
 
         SqlDataAdapter sqlAdap;
         DataTable dt;
-        SqlCommand cmd;
+        //SqlCommand cmd;
 
         //phi kết nối       
         public DataTable GetDataTable(string strSelect)
