@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../css/style.css";
-const Header1 = () => {
+const TopBar = () => {
     return(
         <div id="header1">
 		<div id="top1">
@@ -53,4 +52,4 @@ const Header1 = () => {
     );
 }
 
-export default Header1;
+export default TopBar;

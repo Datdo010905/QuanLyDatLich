@@ -4,7 +4,7 @@
   font-family: "Poppins", sans-serif;
 }
 
-body {
+.login-page {
   background: linear-gradient(135deg, #f8f8f8, #ececec);
   height: 100vh;
   display: flex;
@@ -62,18 +62,18 @@ body {
   text-align: center;
 }
 
-label {
+.login-page label {
   display: block;
   margin-bottom: 8px;
   color: #444;
   font-weight: 600;
 }
 
-label span {
+.login-page label span {
   color: red;
 }
 
-input {
+.login-page input {
   width: 100%;
   padding: 10px 15px;
   margin-bottom: 20px;
@@ -84,7 +84,7 @@ input {
   transition: 0.3s;
 }
 
-input:focus {
+.login-pageinput:focus {
   border-color: #222;
 }
 
@@ -100,7 +100,7 @@ input:focus {
   color: #777;
 }
 
-button {
+.login-page button {
   width: 100%;
   padding: 12px;
   background: linear-gradient(to right, #3a498a, #173691);
@@ -112,7 +112,7 @@ button {
   transition: 0.3s;
 }
 
-button:hover {
+.login-page button:hover {
   background: linear-gradient(to right, #3a498a, #03113e);
 }
 
@@ -164,12 +164,12 @@ button:hover {
     font-size: 24px;
   }
 
-  input {
+  .login-pageinput {
     font-size: 14px;
     padding: 8px 12px;
   }
 
-  button {
+  .login-page button {
     padding: 10px;
     font-size: 15px;
   }
@@ -206,8 +206,8 @@ button:hover {
     margin-bottom: 20px;
   }
 
-  input,
-  button {
+  .login-pageinput,
+  .login-page button {
     font-size: 14px;
   }
 

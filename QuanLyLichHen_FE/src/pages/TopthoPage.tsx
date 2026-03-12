@@ -1,5 +1,4 @@
 import React from "react";
-import "../css/style.css";
 class Toptho extends React.Component<any, any> {
     render(): React.ReactNode {
         return (

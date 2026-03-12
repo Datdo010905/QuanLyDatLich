@@ -1,5 +1,4 @@
 import React from "react";
-import "../css/style.css";
 const Datlich = () => {
     return (
         <div className="datlich-container">

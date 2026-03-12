@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import "../assets/css/login.css";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -11,6 +11,7 @@ const Login = () => {
   };
 
   return (
+    <div className="login-page">
     <div className="login-container">
       <div className="login-left">
         <Link to="/">
@@ -62,6 +63,7 @@ const Login = () => {
         </form>
       </div>
     </div>
+  </div>
   );
 };
 
