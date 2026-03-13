@@ -32,8 +32,8 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
 
-        ValidIssuer = "TicketQA",
-        ValidAudience = "TicketQA",
+        ValidIssuer = "DatDoTien",
+        ValidAudience = "DatDoTien",
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });

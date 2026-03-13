@@ -1,20 +1,17 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// -------------------------
-// 1?? Add services to the container
-// -------------------------
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// -------------------------
-// 2?? C?u h�nh JWT Authentication
-// -------------------------
-var key = Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Secret"]);
+// Cấu hình xác thực JWT
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -23,43 +20,22 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = false; // t?t khi dev local
+    options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-
-        ValidIssuer = "TicketQA",
-        ValidAudience = "TicketQA",
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
 
-builder.Services.AddAuthorization();
-
-// -------------------------
-// 3?? C?u h�nh CORS
-// -------------------------
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-        policy
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
-});
-
-// -------------------------
-// 4?? Build App
-// -------------------------
 var app = builder.Build();
 
-// -------------------------
-// 5?? Configure the HTTP request pipeline
-// -------------------------
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -68,11 +44,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// ?? CORS ph?i b?t tr??c Authentication
-app.UseCors("AllowAll");
-
-// ?? Authentication tr??c Authorization
-app.UseAuthentication();
+// Thêm hai middleware quan trọng này
+app.UseAuthentication();  // <--- Phải có trước UseAuthorization()
 app.UseAuthorization();
 
 app.MapControllers();

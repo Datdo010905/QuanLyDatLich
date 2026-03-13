@@ -1,10 +1,12 @@
 ﻿using BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
 namespace API_Stylist.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LichHen_Controller : ControllerBase
