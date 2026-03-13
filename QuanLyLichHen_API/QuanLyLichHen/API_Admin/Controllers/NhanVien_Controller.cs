@@ -11,7 +11,12 @@ namespace API_QuanLy.Controllers
     [ApiController]
     public class NhanVien_Controller : ControllerBase
     {
-        NhanVien_BLL _BLL = new NhanVien_BLL();
+        private readonly NhanVien_BLL _BLL;
+
+        public NhanVien_Controller(IConfiguration configuration)
+        {
+            _BLL = new NhanVien_BLL(configuration);
+        }
         private List<object> ConvertToList(DataTable dt)
         {
             //tạo list chứa đối tượng

@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,12 @@ namespace BLL
 {
     public class KhachHang_BLL
     {
-        KhachHang_DAL _DAL = new KhachHang_DAL();
+        private readonly KhachHang_DAL _DAL;
+
+        public KhachHang_BLL(IConfiguration configuration)
+        {
+            _DAL = new KhachHang_DAL(configuration);
+        }
         public DataTable GetAll()
         {
             return _DAL.GetAll();

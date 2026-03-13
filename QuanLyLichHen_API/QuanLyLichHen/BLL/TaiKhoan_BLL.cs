@@ -1,17 +1,23 @@
-﻿using System;
+﻿using DAL;
+using Microsoft.Extensions.Configuration;
+using Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL;
-using Models;
 
 namespace BLL
 {
     public class TaiKhoan_BLL
     {
-        TaiKhoan_DAL _DAL = new TaiKhoan_DAL();
+        private readonly TaiKhoan_DAL _DAL;
+
+        public TaiKhoan_BLL(IConfiguration configuration)
+        {
+            _DAL = new TaiKhoan_DAL(configuration);
+        }
 
         public DataTable GetAll()
         {

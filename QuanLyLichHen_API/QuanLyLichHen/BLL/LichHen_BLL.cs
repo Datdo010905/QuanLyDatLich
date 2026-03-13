@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,12 @@ namespace BLL
 {
     public class LichHen_BLL
     {
-        LichHen_DAL _DAL = new DAL.LichHen_DAL();
+        private readonly LichHen_DAL _DAL;
+
+        public LichHen_BLL(IConfiguration configuration)
+        {
+            _DAL = new LichHen_DAL(configuration);
+        }
         public DataTable GetAll()
         {
             return _DAL.GetAll();

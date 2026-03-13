@@ -11,7 +11,12 @@ namespace DAL
 {
     public class TaiKhoan_DAL
     {
-        DataBase_Connect db = new DataBase_Connect();
+        private readonly DataBase_Connect db;
+
+        public TaiKhoan_DAL(Microsoft.Extensions.Configuration.IConfiguration configuration)
+        {
+            db = new DataBase_Connect(configuration);
+        }
 
         public DataTable GetAll()
         {

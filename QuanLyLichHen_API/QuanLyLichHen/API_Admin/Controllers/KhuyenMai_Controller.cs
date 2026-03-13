@@ -9,7 +9,12 @@ namespace API_Admin.Controllers
     [ApiController]
     public class KhuyenMai_Controller : ControllerBase
     {
-        KhuyenMai_BLL _BLL = new KhuyenMai_BLL();
+        private readonly KhuyenMai_BLL _BLL;
+
+        public KhuyenMai_Controller(IConfiguration configuration)
+        {
+            _BLL = new KhuyenMai_BLL(configuration);
+        }
         private List<object> ConvertToList(DataTable dt)
         {
             //tạo list chứa đối tượng

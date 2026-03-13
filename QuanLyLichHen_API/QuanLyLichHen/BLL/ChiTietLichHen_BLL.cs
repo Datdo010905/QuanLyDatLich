@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,12 @@ namespace BLL
 {
     public class ChiTietLichHen_BLL
     {
-        ChiTietLichHen_DAL _DAL = new DAL.ChiTietLichHen_DAL();
+        private readonly ChiTietLichHen_DAL _DAL;
+
+        public ChiTietLichHen_BLL(IConfiguration configuration)
+        {
+            _DAL = new ChiTietLichHen_DAL(configuration);
+        }
         public DataTable GetById(string ma)
         {
             return _DAL.GetById(ma);

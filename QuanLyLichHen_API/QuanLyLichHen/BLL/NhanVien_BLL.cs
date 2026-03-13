@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,12 @@ namespace BLL
 {
     public class NhanVien_BLL
     {
-        NhanVien_DAL _DAL = new NhanVien_DAL();
+        private readonly NhanVien_DAL _DAL;
+
+        public NhanVien_BLL(IConfiguration configuration)
+        {
+            _DAL = new NhanVien_DAL(configuration);
+        }
 
         public DataTable GetAll()
         {

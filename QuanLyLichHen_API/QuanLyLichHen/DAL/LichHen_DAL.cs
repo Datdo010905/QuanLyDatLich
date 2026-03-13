@@ -9,7 +9,12 @@ namespace DAL
 {
     public class LichHen_DAL
     {
-        DataBase_Connect db = new DataBase_Connect();
+        private readonly DataBase_Connect db;
+
+        public LichHen_DAL(Microsoft.Extensions.Configuration.IConfiguration configuration)
+        {
+            db = new DataBase_Connect(configuration);
+        }
         public DataTable GetAll()
         {
             try

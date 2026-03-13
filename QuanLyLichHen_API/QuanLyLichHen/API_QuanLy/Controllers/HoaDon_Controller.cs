@@ -9,7 +9,12 @@ namespace API_ThuNgan.Controllers
     [ApiController]
     public class HoaDon_Controller : ControllerBase
     {
-        HoaDon_BLL _BLL = new HoaDon_BLL();
+        private readonly HoaDon_BLL _BLL;
+
+        public HoaDon_Controller(IConfiguration configuration)
+        {
+            _BLL = new HoaDon_BLL(configuration);
+        }
         private List<object> ConvertToList(DataTable dt)
         {
             //tạo list chứa đối tượng

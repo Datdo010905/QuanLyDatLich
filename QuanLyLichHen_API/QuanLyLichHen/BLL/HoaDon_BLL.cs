@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,8 +11,13 @@ namespace BLL
 {
     public class HoaDon_BLL
     {
-        HoaDon_DAL _DAL = new HoaDon_DAL();
+        //HoaDon_DAL _DAL = new HoaDon_DAL();
+        private readonly HoaDon_DAL _DAL;
 
+        public HoaDon_BLL(IConfiguration configuration)
+        {
+            _DAL = new HoaDon_DAL(configuration);
+        }
         public DataTable GetAll()
         {
             return _DAL.GetAll();

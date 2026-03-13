@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -9,7 +10,13 @@ namespace DAL
 {
     public class KhuyenMai_DAL
     {
-        DataBase_Connect db = new DataBase_Connect();
+        //DataBase_Connect db = new DataBase_Connect();
+        private readonly DataBase_Connect db;
+
+        public KhuyenMai_DAL(IConfiguration configuration)
+        {
+            db = new DataBase_Connect(configuration);
+        }
         public DataTable GetAll()
         {
             try

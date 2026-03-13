@@ -10,11 +10,16 @@ namespace QuanLyDatLich.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class Login_Controller : ControllerBase
+    public class TaiKhoan_Controller : ControllerBase
     {
-        TaiKhoan_BLL _BLL = new TaiKhoan_BLL();
-       
-        [Route("login-taikhoan")]
+        private readonly TaiKhoan_BLL _BLL;
+
+        public TaiKhoan_Controller(IConfiguration configuration)
+        {
+            _BLL = new TaiKhoan_BLL(configuration);
+        }
+
+        [Route("TaiKhoan-taikhoan")]
         [HttpGet]
         public IActionResult DangNhap(string username, string pass)
         {

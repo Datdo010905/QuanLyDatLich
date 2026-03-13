@@ -9,7 +9,12 @@ namespace API_Admin.Controllers
     [ApiController]
     public class TaiKhoan_Controller : ControllerBase
     {
-        TaiKhoan_BLL _BLL = new TaiKhoan_BLL();
+        private readonly TaiKhoan_BLL _BLL;
+
+        public TaiKhoan_Controller(IConfiguration configuration)
+        {
+            _BLL = new TaiKhoan_BLL(configuration);
+        }
 
         //chuyển DataTable -> List<object>(các hàm phải để private, do swagger lấy public method)
         private List<object> ConvertToList(DataTable dt)

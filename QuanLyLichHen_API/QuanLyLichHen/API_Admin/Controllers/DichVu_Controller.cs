@@ -9,7 +9,12 @@ namespace API_QuanLy.Controllers
     [ApiController]
     public class DichVu_Controller : ControllerBase
     {
-        DichVu_BLL _BLL = new DichVu_BLL();
+        private readonly DichVu_BLL _BLL;
+
+        public DichVu_Controller(IConfiguration configuration)
+        {
+            _BLL = new DichVu_BLL(configuration);
+        }
         private List<object> ConvertToList(DataTable dt)
         {
             //tạo list chứa đối tượng

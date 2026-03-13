@@ -9,7 +9,12 @@ namespace API_QuanLy.Controllers
     [ApiController]
     public class KhachHang_Controller : ControllerBase
     {
-        KhachHang_BLL _BLL = new KhachHang_BLL();
+        private readonly KhachHang_BLL _BLL;
+
+        public KhachHang_Controller(IConfiguration configuration)
+        {
+            _BLL = new KhachHang_BLL(configuration);
+        }
         private List<object> ConvertToList(DataTable dt)
         {
             //tạo list chứa đối tượng

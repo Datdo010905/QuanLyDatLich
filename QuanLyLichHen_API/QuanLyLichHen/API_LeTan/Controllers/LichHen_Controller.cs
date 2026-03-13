@@ -9,8 +9,15 @@ namespace API_Stylist.Controllers
     [ApiController]
     public class LichHen_Controller : ControllerBase
     {
-        LichHen_BLL _BLL = new LichHen_BLL();
-        ChiTietLichHen_BLL CTLH_BLL = new ChiTietLichHen_BLL();
+        private readonly LichHen_BLL _BLL;
+        private readonly ChiTietLichHen_BLL CTLH_BLL;
+
+
+        public LichHen_Controller(IConfiguration configuration)
+        {
+            _BLL = new LichHen_BLL(configuration);
+            CTLH_BLL = new ChiTietLichHen_BLL(configuration);
+        }
         private List<object> ConvertToList(DataTable dt)
         {
             //tạo list chứa đối tượng

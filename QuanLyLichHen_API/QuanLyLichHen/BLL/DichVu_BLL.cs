@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,12 @@ namespace BLL
 {
     public class DichVu_BLL
     {
-        DichVu_DAL _DAL = new DichVu_DAL();
+        private readonly DichVu_DAL _DAL;
+
+        public DichVu_BLL(IConfiguration configuration)
+        {
+            _DAL = new DichVu_DAL(configuration);
+        }
         public DataTable GetAll()
         {
             return _DAL.GetAll();
