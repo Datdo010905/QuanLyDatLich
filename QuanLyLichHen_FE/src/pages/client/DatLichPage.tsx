@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../assets/css/lichhen.css";
+import "../../assets/css/lichhen.css";
 const DatLichPage = () => {
 
 	const [phone, setPhone] = useState("");

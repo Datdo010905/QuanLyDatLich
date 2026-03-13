@@ -1,7 +1,8 @@
 import React from 'react';
-import { Route, Routes, Outlet } from 'react-router-dom';
+import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
 //import css
 import './assets/css/style.css';
+import './assets/css/admin.css';
 
 //import layout
 import TopBar from './components/layout/TopBar';
@@ -11,17 +12,30 @@ import Footer from './components/layout/Footer';
 import Chatbot1 from './components/ui/Chatbot1';
 import Chatbot2 from './components/ui/Chatbot2';
 
-//import pages
+//import pages client
 
-import HomePage from './pages/HomePage';
-import About from './pages/AboutPage';
-import Toptho from './pages/TopthoPage';
-import Login from './pages/LoginPage';
-import Forgot from './pages/ForgotPage';
-import Signup from './pages/SignupPage';
-import DatLichPage from './pages/DatLichPage';
-import LichSuPage from './pages/LichSuPage';
-import DichVuDetailsPage from './pages/DichVuDetailsPage';
+import HomePage from './pages/client/HomePage';
+import About from './pages/client/AboutPage';
+import Toptho from './pages/client/TopthoPage';
+import Login from './pages/client/LoginPage';
+import Forgot from './pages/client/ForgotPage';
+import Signup from './pages/client/SignupPage';
+import DatLichPage from './pages/client/DatLichPage';
+import LichSuPage from './pages/client/LichSuPage';
+import DichVuDetailsPage from './pages/client/DichVuDetailsPage';
+
+//import layout admin
+import AdminLayout from './components/layout/AdminLayout';
+//import pages admin
+import DashboardPage from './pages/admin/DashBoardPage';
+import AccountsPage from './pages/admin/AccountPage';
+import KhuyenMaiPage from './pages/admin/KhuyenMaiPage';
+import DichVuPage from './pages/admin/DichVuPage';
+import CustomerPage from './pages/admin/CustomerPage';
+import StaffPage from './pages/admin/StaffPage';
+import BookingPage from './pages/admin/BookingPage';
+import HoaDonPage from './pages/admin/HoaDonPage';
+import ReportPage from './pages/admin/ReportPage';
 
 const MainLayout = ({ menus }: { menus: any[] }) => {
   return (
@@ -35,6 +49,7 @@ const MainLayout = ({ menus }: { menus: any[] }) => {
       <Footer />
       <Chatbot1 />
       <Chatbot2 />
+      
     </>
   );
 };
@@ -55,6 +70,22 @@ class App extends React.Component<any, any> {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/signup" element={<Signup />} />
+
+
+       {/* === ROUTE CHO KHU VỰC ADMIN === */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="accounts" element={<AccountsPage />} />
+          <Route path="promotions" element={<KhuyenMaiPage />} />
+          <Route path="services" element={<DichVuPage />} />
+          <Route path="customers" element={<CustomerPage />} />
+          <Route path="staff" element={<StaffPage />} />
+          <Route path="bookings" element={<BookingPage />} />
+          <Route path="invoices" element={<HoaDonPage />} />
+          <Route path="reports" element={<ReportPage />} />
+        </Route>
+        
+        {/* === ROUTE CHO KHU VỰC CLIENT === */}
         <Route element={<MainLayout menus={this.menus} />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
@@ -64,7 +95,7 @@ class App extends React.Component<any, any> {
           <Route path="/lichsu" element={<LichSuPage />} />
           <Route path="/dichvuchitiet" element={<DichVuDetailsPage />} />
         </Route>
-
+      
       </Routes>
     );
   };

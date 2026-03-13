@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../assets/css/lichsu.css";
+import "../../assets/css/lichsu.css";
 const LichSuPage = () => {
 
     return (

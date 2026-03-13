@@ -144,7 +144,6 @@
 
 /* Phân vùng nội dung */
 .section {
-  display: none;
   animation: fadeIn 0.3s ease;
 }
 
