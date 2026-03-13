@@ -72,27 +72,7 @@ namespace API_Admin.Controllers
             }
         }
 
-        [Route("login-taikhoan")]
-        [HttpGet]
-        public IActionResult DangNhap(string username, string pass)
-        {
-            try
-            {
-                DataTable dt = _BLL.DangNhap(username, pass);
-                if (dt.Rows.Count == 1)
-                {
-                    return Ok(new { success = true, message = "Đăng nhập thành công!" });
-                }
-                else
-                {
-                    return Ok(new { message = "Sai thông tin đăng nhập!" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
+        
 
         [Route("insert-taikhoan")]
         [HttpPost]

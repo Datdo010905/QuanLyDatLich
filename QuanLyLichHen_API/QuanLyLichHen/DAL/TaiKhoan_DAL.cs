@@ -42,12 +42,31 @@ namespace DAL
                 throw new Exception("Lỗi khi tìm tài khoản: " + ex.Message);
             }
         }
-        public DataTable DangNhap(string username, string pass)
+        // Đăng nhập
+        // Trả về 0 hoặc 1 bản ghi phù hợp với username/password
+        public List<TaiKhoan> Login(string username, string password)
         {
             try
             {
-                DataTable dt = db.GetDataTable("SELECT * FROM TAIKHOAN WHERE MATK = '" + username.Trim() + "' AND PASS = '"+ pass.Trim() + "'");
-                return dt;
+                var list = new List<TaiKhoan>();
+                string sql = @"
+                    SELECT TOP 1 MATK, PASS, PHANQUYEN, TRANGTHAI
+                    FROM TAIKHOAN
+                    WHERE MATK = '" + username+ "' AND PASS = '"+password+"'";
+
+                DataTable dt = db.GetDataTable(sql);
+                foreach (DataRow row in dt.Rows)
+                {
+                    list.Add(new TaiKhoan
+                    {
+                        MaTK = row["MATK"].ToString().Trim(),
+                        Pass = row["PASS"].ToString().Trim(),
+                        PhanQuyen = row["PHANQUYEN"] == DBNull.Value ? 0 : Convert.ToInt32(row["PHANQUYEN"]),
+                        TrangThai = row["TRANGTHAI"].ToString().Trim(),
+                    });
+                }
+
+                return list;
             }
             catch (Exception ex)
             {

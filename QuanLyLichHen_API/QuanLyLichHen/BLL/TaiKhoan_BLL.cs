@@ -28,9 +28,9 @@ namespace BLL
             return _DAL.GetById(ma);
         }
         
-        public DataTable DangNhap(string username, string pass)
+        public List<TaiKhoan> Login(string username, string pass)
         {
-            return _DAL.DangNhap(username, pass);
+            return _DAL.Login(username, pass);
         }
         public DataTable Create(Models.TaiKhoan model)
         {
