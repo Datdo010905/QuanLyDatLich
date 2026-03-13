@@ -19,6 +19,9 @@ import Toptho from './pages/TopthoPage';
 import Login from './pages/LoginPage';
 import Forgot from './pages/ForgotPage';
 import Signup from './pages/SignupPage';
+import DatLichPage from './pages/DatLichPage';
+import LichSuPage from './pages/LichSuPage';
+import DichVuDetailsPage from './pages/DichVuDetailsPage';
 
 const MainLayout = ({ menus }: { menus: any[] }) => {
   return (
@@ -52,12 +55,14 @@ class App extends React.Component<any, any> {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/signup" element={<Signup />} />
-        
         <Route element={<MainLayout menus={this.menus} />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/toptho" element={<Toptho />} />
           <Route path="/about" element={<About />} />
+          <Route path="/datlich" element={<DatLichPage />} />
+          <Route path="/lichsu" element={<LichSuPage />} />
+          <Route path="/dichvuchitiet" element={<DichVuDetailsPage />} />
         </Route>
 
       </Routes>

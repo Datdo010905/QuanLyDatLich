@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 const Product = () => {
   return (
     <>
@@ -10,7 +11,7 @@ const Product = () => {
               <br />
               <img className="pic_item" title="cat-goi-combo-1-1" src="img/product/cat-goi-combo-1-1.jpg" />
               <br /><br />
-              <a className="product-name" href="chitietdichvu.html">Cắt gội Combo 1</a><br /><br />
+              <Link className="product-name" to="/dichvuchitiet">Cắt gội Combo 1</Link><br /><br />
               <span className="giamgia">45 phút</span>
               <br />
               <div className="gia"><span className="product-price">122.000 VNĐ</span></div>

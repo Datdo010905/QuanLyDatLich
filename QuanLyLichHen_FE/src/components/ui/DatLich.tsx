@@ -1,5 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
+import { Link } from "react-router";
 const Datlich = () => {
+  const [sdt, setSDT] = useState("");
+  const LuuSDT = (e: React.FormEvent) => {
+    window.localStorage.setItem("sdt-kh", sdt);
+  }
+
     return (
         <div className="datlich-container">
           <div className="datlich">
@@ -18,8 +24,8 @@ const Datlich = () => {
                 required
               />
 
-              <button id="btn-datlich">
-                ĐẶT LỊCH NGAY
+              <button id="btn-datlich" onClick={LuuSDT}>  
+                <Link to="/datlich">ĐẶT LỊCH NGAY</Link>
               </button>
 
 
