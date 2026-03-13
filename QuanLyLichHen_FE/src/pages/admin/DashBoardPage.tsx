@@ -1,18 +1,27 @@
 import React from "react";
+import StatCard from "../../components/ui/StatCard";
+// Import mảng dữ liệu
+import { KHACHHANG, LICHHEN } from '../../data/static_content';
 
-const DashboardPage = () => {
+const DashboardPage: React.FC = () => {
+
+    const totalCustomers = KHACHHANG.length;
+    const today = "2025-10-09";
+    const bookingsToday = LICHHEN.filter(lich => lich.NGAYHEN === today);
+    const totalBookingsToday = bookingsToday.length;
     return (
         <>
             <div id="dashboard" className="section active-section">
                 <div className="cards">
-                    <div className="card">
-                        <h3>Tổng khách</h3>
-                        <p id="totalUsers">0</p>
-                    </div>
-                    <div className="card">
-                        <h3>Đặt lịch hôm nay</h3>
-                        <p id="todayBookings">0</p>
-                    </div>
+                    <StatCard
+                        title="Tổng khách"
+                        value={totalCustomers}
+                    />
+                    <StatCard
+                        title="Đặt lịch hôm nay"
+                        value={totalBookingsToday}
+                        subText={`Cập nhật ngày: ${today}`}
+                    />
                 </div>
                 <div className="panel">
                     <h2>Hoạt động gần đây</h2>

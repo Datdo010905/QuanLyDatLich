@@ -1,4 +1,5 @@
 import React from "react";
+import StatCard from "../../components/ui/StatCard";
 
 const ReportPage = () => {
     return (
