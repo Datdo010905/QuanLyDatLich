@@ -9,13 +9,13 @@ const SlideShow = () => {
     slideImg.src = `img/SLIDE/slideshow_${nextIndex}.jpg`;
   };
 
-  const autoSlide = () => {
-    setInterval(nextSlide, 2567);
-  };
+  // const autoSlide = () => {
+  //   setInterval(nextSlide, 2567);
+  // };
 
-  useEffect(() => {
-    autoSlide();
-  }, []);
+  // useEffect(() => {
+  //   autoSlide();
+  // }, []);
 
   return (
     <div className="product">

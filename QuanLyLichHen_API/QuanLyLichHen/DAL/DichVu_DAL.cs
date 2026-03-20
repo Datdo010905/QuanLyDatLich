@@ -15,11 +15,23 @@ namespace DAL
         {
             db = new DataBase_Connect(configuration);
         }
-        public DataTable GetAll()
+        public DataTable GetAllToc()
         {
             try
             {
-                DataTable dt = db.GetDataTable("SELECT * FROM DICHVU");
+                DataTable dt = db.GetDataTable("SELECT * FROM DICHVU WHERE LOAI = 'CT'");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy danh sách dịch vụ: " + ex.Message);
+            }
+        }
+        public DataTable GetAllCSD()
+        {
+            try
+            {
+                DataTable dt = db.GetDataTable("SELECT * FROM DICHVU WHERE LOAI = 'CSD'");
                 return dt;
             }
             catch (Exception ex)
@@ -45,6 +57,7 @@ namespace DAL
             try
             {
                 DataTable dt = db.GetDataTable("INSERT INTO DICHVU VALUES ('" + model.MaDV.Trim() + "'," +
+                                                                            "N'" + model.Loai.Trim() + "'," +
                                                                             "N'" + model.TenDV.Trim() + "'," +
                                                                             "N'" + model.MoTa.Trim() + "'," +
                                                                            "'" + model.ThoiGian + "'" +
@@ -66,11 +79,12 @@ namespace DAL
             try
             {
                 DataTable dt = db.GetDataTable("UPDATE DICHVU SET TENDV = N'" + model.TenDV.Trim() + "' " +
+                                                                     ", LOAI = N'" + model.Loai.Trim() + "' " +
                                                                      ", MOTA = N'" + model.MoTa.Trim() + "' " +
                                                                      ", THOIGIAN = '" + model.ThoiGian + "' " +
                                                                      ", GIADV = '" + model.GiaDV+ "' " +
                                                                      ", TRANGTHAI = N'" + model.TrangThai.Trim() + "' " +
-                                                                     ", ANH = N'" + model.HinhAnh.Trim() + "' " +
+                                                                     ", HINH = N'" + model.HinhAnh.Trim() + "' " +
                                                                      ", QUYTRINH = N'" + model.QuyTrinh.Trim() + "' " +
                                                                   "WHERE MADV = '" + model.MaDV.Trim() + "'");
                 return dt;

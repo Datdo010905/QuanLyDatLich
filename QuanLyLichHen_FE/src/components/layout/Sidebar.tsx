@@ -1,7 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from '../../context/AuthContext'; // Lấy hook ra để sử dụng trong component
 const Sidebar = () => {
+    const navigate = useNavigate();
+    const { user, logout } = useAuth(); // Lấy biến user và hàm logout từ context
+
+    const handleLogout = () => {
+        const isConfirm = window.confirm("Bạn có chắc chắn muốn đăng xuất không?");
+        if (isConfirm) {
+            logout(); // Xóa sạch dữ liệu trong vùng nhớ chung
+            navigate('/login', { replace: true });
+        }
+    }
+
     return (
         <>
             <aside className="sidebar" id="sidebar">
@@ -21,12 +32,14 @@ const Sidebar = () => {
                 </nav>
 
                 <div className="accounts">
-                    <span id="login-helloADMIN-span">Admin </span>
-                    <strong id="login-helloADMIN"> Do Dat</strong>
+                    {user ? (<span id="login-helloADMIN-span">User: </span>) :
+                            (<span id="login-helloADMIN-span">Chưa đăng nhập</span>)}
+                    
+                    <strong style={{ marginLeft: '50px' }} id="login-helloADMIN"> {user ? user.username : ''}</strong>
                 </div>
 
                 <div className="sidebar-footer">
-                    <button id="logoutBtn" onClick={() => { }}><i className="fas fa-sign-out-alt"></i> Đăng xuất</button>
+                    <button id="logoutBtn" onClick={() => { handleLogout() }}><i className="fas fa-sign-out-alt"></i> Đăng xuất</button>
                 </div>
             </aside>
         </>

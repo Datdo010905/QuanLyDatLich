@@ -4,17 +4,25 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// -------------------------
-// 1️⃣ Add services to the container
-// -------------------------
+//DỊCH VỤ CƠ BẢN
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// -------------------------
-// 2️⃣ Cấu hình JWT Authentication
-// -------------------------
-var key = Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Secret"]);
+//CẤU HÌNH CORS (Cho phép React truy cập)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials());
+});
+
+//CẤU HÌNH JWT AUTHENTICATION
+// Gom toàn bộ cấu hình vào section "Jwt" để quản lý tập trung
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]); // Đọc Secret Key từ cấu hình
 
 builder.Services.AddAuthentication(options =>
 {
@@ -23,43 +31,28 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = false; // tắt khi dev local
+    options.RequireHttpsMetadata = false; // Tắt khi dev local
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
 
-        ValidIssuer = "DatDoTien",
-        ValidAudience = "DatDoTien",
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        ValidateIssuer = true,
+        ValidIssuer = jwtSettings["Issuer"],
+
+        ValidateAudience = true,
+        ValidAudience = jwtSettings["Audience"],
+
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
     };
 });
 
 builder.Services.AddAuthorization();
 
-// -------------------------
-// 3️⃣ Cấu hình CORS
-// -------------------------
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-        policy
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
-});
-
-// -------------------------
-// 4️⃣ Build App
-// -------------------------
 var app = builder.Build();
 
-// -------------------------
-// 5️⃣ Configure the HTTP request pipeline
-// -------------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -68,10 +61,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// ⚠️ CORS phải bật trước Authentication
-app.UseCors("AllowAll");
-
-// ⚠️ Authentication trước Authorization
+app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
 

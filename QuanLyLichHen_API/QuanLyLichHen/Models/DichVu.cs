@@ -9,6 +9,7 @@ namespace Models
     public class DichVu
     {
         public string MaDV { get; set; }
+        public string Loai { get; set; }
         public string TenDV { get; set; }
         public string MoTa { get; set; }
         public int ThoiGian { get; set; } // phút

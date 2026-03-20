@@ -67,39 +67,7 @@ const AccountPage: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {/* 3. DÙNG .MAP() DUYỆT QUA MẢNG DỮ LIỆU THẬT */}
-                            {accounts.map((acc, index) => (
-                                <tr key={acc.MATK}>
-                                    <td>{acc.MATK}</td>
-                                    <td>{acc.PASS}</td>
-                                    <td>
-                                        {/* Hàm getRoleName giúp hiển thị tên quyền dễ hiểu hơn */}
-                                        <span className={`badge ${acc.PHANQUYEN === 1 || acc.PHANQUYEN === 2 ? 'admin' : ''}`}>
-                                            {getRoleName(acc.PHANQUYEN)}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        {/* Đổi màu chữ xanh/đỏ tùy theo trạng thái */}
-                                        <span style={{ color: acc.TRANGTHAI === 'Hoạt động' ? 'green' : 'red', fontWeight: 'bold' }}>
-                                            {acc.TRANGTHAI}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button className="btn small edit" onClick={() => setIsEditModalOpen(true)}><i className="fas fa-edit"></i>
-                                    </button>
-                                    
-                                    <button className="btn small delete" onClick={() => setIsDeleteModalOpen(true)}><i className="fas fa-trash"></i>
-                                    </button>
-                                    </td>
-                                </tr>
-                            ))}
-
-                            {/* Nếu không có dữ liệu */}
-                            {accounts.length === 0 && (
-                                <tr>
-                                    <td colSpan={5} style={{ textAlign: 'center' }}>Không có dữ liệu</td>
-                                </tr>
-                            )}
+                            
                         </tbody>
                     </table>
                 </div>
@@ -131,7 +99,6 @@ const AccountPage: React.FC = () => {
                                 <option value="Đã khóa">Đã khóa</option>
                             </select>
                         </div>
-                        <button type="button" className="btn secondary" onClick={() => setIsAddModalOpen(false)}>Hủy</button>
                         <button type="submit" className="btn primary">Lưu tài khoản</button>
                     </form>
                 </Modal>
@@ -164,14 +131,13 @@ const AccountPage: React.FC = () => {
                                 <option value="Đã khóa">Đã khóa</option>
                             </select>
                         </div>
-                        <button type="button" className="btn secondary" onClick={() => setIsEditModalOpen(false)}>Hủy</button>
                         <button type="submit" className="btn primary">Lưu tài khoản</button>
                     </form>
                 </Modal>
 
                 {/* Modal xóa tài khoản */}
                 <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} title="Xóa tài khoản">
-                    <p>Bạn có chắc chắn muốn xóa tài khoản này không?</p><br />
+                    <p>Bạn có chắc chắn muốn xóa không?</p><br />
                     <button className="btn small delete" onClick={handleDeleteAccount}><i className="fas fa-trash"></i></button>
                 </Modal>
             </div>

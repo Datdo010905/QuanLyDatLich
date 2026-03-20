@@ -28,25 +28,40 @@ namespace API_QuanLy.Controllers
                 list.Add(new
                 {
                     MADV = row["MADV"].ToString().Trim(),
+                    LOAI = row["LOAI"].ToString().Trim(),
                     TENDV = row["TENDV"].ToString().Trim(),
                     MOTA = row["MOTA"].ToString().Trim(),
                     THOIGIAN = row["THOIGIAN"].ToString().Trim(),
                     GIADV = row["GIADV"].ToString().Trim(),
                     TRANGTHAI = row["TRANGTHAI"].ToString().Trim(),
-                    ANH = row["ANH"].ToString().Trim(),
+                    HINH = row["HINH"].ToString().Trim(),
                     QUYTRINH = row["QUYTRINH"].ToString().Trim(),
 
                 });
             }
             return list;
         }
-        [Route("get-all-DichVu")]
+        [Route("get-all-DichVuToc")]
         [HttpGet]
         public IActionResult GetAll()
         {
             try
             {
-                DataTable dt = _BLL.GetAll();
+                DataTable dt = _BLL.GetAllToc();
+                return Ok(new { success = true, message = "Lấy danh sách dịch vụ thành công:", data = ConvertToList(dt) });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
+        [Route("get-all-DichVuCSD")]
+        [HttpGet]
+        public IActionResult GetAllCSD()
+        {
+            try
+            {
+                DataTable dt = _BLL.GetAllCSD();
                 return Ok(new { success = true, message = "Lấy danh sách dịch vụ thành công:", data = ConvertToList(dt) });
             }
             catch (Exception ex)

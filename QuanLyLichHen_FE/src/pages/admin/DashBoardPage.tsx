@@ -1,8 +1,9 @@
-import React from "react";
+
 import StatCard from "../../components/ui/StatCard";
 // Import mảng dữ liệu
 import { KHACHHANG, LICHHEN } from '../../data/static_content';
-
+import React, { useState } from "react";
+import Modal from "../../components/ui/Modal";
 const DashboardPage: React.FC = () => {
 
     const totalCustomers = KHACHHANG.length;

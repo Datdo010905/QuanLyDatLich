@@ -49,10 +49,10 @@ const DatLichPage = () => {
 						<select id="giohen" className="input-field" required></select>
 						<br /><br />
 
-
+						
 						<input id="btn-datlichpage" type="submit" value="ĐẶT LỊCH NGAY" />
 					</form>
-
+					<br />
 					<p style={{ "textAlign": "center" }}>📅 Cắt xong trả tiền – Huỷ lịch không sao</p>
 				</div>
 			</div>

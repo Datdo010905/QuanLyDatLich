@@ -49,7 +49,7 @@ const Product = () => {
           </div>
         </div>
 
-
+        
         <div className="clear"></div>
         <h2 id="2" className="product-title"><i className="fa-solid fa-spa"></i> THƯ GIÃN VÀ CHĂM SÓC DA</h2>
         <div className="row" id="ds-chamsoc">

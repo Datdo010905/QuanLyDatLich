@@ -37,6 +37,10 @@ import BookingPage from './pages/admin/BookingPage';
 import HoaDonPage from './pages/admin/HoaDonPage';
 import ReportPage from './pages/admin/ReportPage';
 
+//check auth
+import PrivateRoute from './components/ui/PrivateRoute';
+
+
 const MainLayout = ({ menus }: { menus: any[] }) => {
   return (
     <>
@@ -49,14 +53,14 @@ const MainLayout = ({ menus }: { menus: any[] }) => {
       <Footer />
       <Chatbot1 />
       <Chatbot2 />
-      
+
     </>
   );
 };
 
 class App extends React.Component<any, any> {
   menus = [
-    { url: "/home", name: "Trang chủ"},
+    { url: "/home", name: "Trang chủ" },
     { url: "/toptho", name: "Top thợ" },
     { url: "/about", name: "Về 30Shine" },
     { url: "#timmap", name: "30Shine gần nhất", href: "#timmap" },
@@ -72,19 +76,20 @@ class App extends React.Component<any, any> {
         <Route path="/signup" element={<Signup />} />
 
 
-       {/* === ROUTE CHO KHU VỰC ADMIN === */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="accounts" element={<AccountsPage />} />
-          <Route path="promotions" element={<KhuyenMaiPage />} />
-          <Route path="services" element={<DichVuPage />} />
-          <Route path="customers" element={<CustomerPage />} />
-          <Route path="staff" element={<StaffPage />} />
-          <Route path="bookings" element={<BookingPage />} />
-          <Route path="invoices" element={<HoaDonPage />} />
-          <Route path="reports" element={<ReportPage />} />
+        {/* === ROUTE CHO KHU VỰC ADMIN === */}
+        <Route element={<PrivateRoute allowedRoles={[1, 2, 3, 4, 5]} />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="accounts" element={<AccountsPage />} />
+            <Route path="promotions" element={<KhuyenMaiPage />} />
+            <Route path="services" element={<DichVuPage />} />
+            <Route path="customers" element={<CustomerPage />} />
+            <Route path="staff" element={<StaffPage />} />
+            <Route path="bookings" element={<BookingPage />} />
+            <Route path="invoices" element={<HoaDonPage />} />
+            <Route path="reports" element={<ReportPage />} />
+          </Route>
         </Route>
-        
         {/* === ROUTE CHO KHU VỰC CLIENT === */}
         <Route element={<MainLayout menus={this.menus} />}>
           <Route path="/" element={<HomePage />} />
@@ -95,7 +100,7 @@ class App extends React.Component<any, any> {
           <Route path="/lichsu" element={<LichSuPage />} />
           <Route path="/dichvuchitiet" element={<DichVuDetailsPage />} />
         </Route>
-      
+
       </Routes>
     );
   };

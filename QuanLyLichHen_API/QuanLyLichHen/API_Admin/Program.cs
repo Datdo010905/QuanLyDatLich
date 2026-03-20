@@ -4,14 +4,25 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//DỊCH VỤ CƠ BẢN
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Cấu hình xác thực JWT
+//CẤU HÌNH CORS (Cho phép React truy cập)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+        policy.WithOrigins("http://localhost:3000") 
+              .AllowAnyMethod()                    
+              .AllowAnyHeader()                    
+              .AllowCredentials());              
+});
+
+//CẤU HÌNH JWT AUTHENTICATION
+// Gom toàn bộ cấu hình vào section "Jwt" để quản lý tập trung
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]); // Đọc Secret Key từ cấu hình
 
 builder.Services.AddAuthentication(options =>
 {
@@ -20,22 +31,28 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = false;
+    options.RequireHttpsMetadata = false; // Tắt khi dev local
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
         ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+
+        ValidateIssuer = true,
         ValidIssuer = jwtSettings["Issuer"],
+
+        ValidateAudience = true,
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
     };
 });
 
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -44,8 +61,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Thêm hai middleware quan trọng này
-app.UseAuthentication();  // <--- Phải có trước UseAuthorization()
+app.UseCors("AllowReactApp");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

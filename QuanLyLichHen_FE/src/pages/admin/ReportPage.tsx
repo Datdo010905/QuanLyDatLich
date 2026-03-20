@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import Modal from "../../components/ui/Modal";
 import StatCard from "../../components/ui/StatCard";
 
 const ReportPage = () => {

@@ -17,9 +17,13 @@ namespace BLL
         {
             _DAL = new DichVu_DAL(configuration);
         }
-        public DataTable GetAll()
+        public DataTable GetAllToc()
         {
-            return _DAL.GetAll();
+            return _DAL.GetAllToc();
+        }
+        public DataTable GetAllCSD()
+        {
+            return _DAL.GetAllCSD();
         }
         public DataTable GetByID(string ma)
         {

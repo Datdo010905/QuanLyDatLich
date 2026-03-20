@@ -57,6 +57,7 @@
   gap: 10px;
   transition: 0.2s;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .sidebar nav a:hover {
@@ -185,8 +186,8 @@
 }
 
 .card h3 {
-  color: #64748b;
-  font-size: 16px;
+  color: #356ebe;
+  font-size: 18px;
   margin-bottom: 8px;
 }
 
@@ -248,13 +249,14 @@
 }
 
 .table th {
-  background: #f8fafc;
-  color: #475569;
+  background: #59659e;
+  color: #ffffff;
   font-weight: 600;
 }
 
 .table tr:hover td {
   background: #f1f5f9;
+  cursor: pointer;
 }
 
 /* ========== BUTTONS ========== */
@@ -433,20 +435,21 @@
 
 .btn.primary {
   background-color: #007bff;
-  color: white;
+  color: white; 
 }
 
 .btn.primary:hover {
   background-color: #0056b3;
+
 }
 
 .btn.secondary {
-  background-color: #ccc;
-  color: #333;
+  background-color: #6dca61;
+  color: #ffffff;
 }
 
 .btn.secondary:hover {
-  background-color: #999;
+  background-color: #46b837;
 }
 
 /* Animation */
