@@ -78,7 +78,7 @@ namespace API_Admin.Controllers
 
         [Route("insert-taikhoan")]
         [HttpPost]
-        public IActionResult Create([FromBody] Models.TaiKhoan model)
+        public IActionResult Create([FromForm] Models.TaiKhoan model)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace API_Admin.Controllers
 
         [Route("update-taikhoan")]
         [HttpPut]
-        public IActionResult Update([FromBody] Models.TaiKhoan model)
+        public IActionResult Update([FromForm] Models.TaiKhoan model)
         {
             try
             {
@@ -124,19 +124,19 @@ namespace API_Admin.Controllers
         }
         [Route("delete-taikhoan")]
         [HttpDelete]
-        public IActionResult Delete([FromBody] Models.TaiKhoan model)
+        public IActionResult Delete(string ma)
         {
             try
             {
-                DataTable dt = _BLL.GetByID(model.MaTK.Trim());
+                DataTable dt = _BLL.GetByID(ma);
                 if (dt.Rows.Count == 1)
                 {
-                    DataTable data = _BLL.Delete(model);
+                    DataTable data = _BLL.Delete(ma);
                     return Ok(new { success = true, message = "Xoá thông tin tài khoản thành công:", data = ConvertToList(dt) });
                 }
                 else
                 {
-                    return Ok(new { message = "Không tồn tài khoản có mã: '" + model.MaTK.Trim() + "' để xoá" });
+                    return Ok(new { message = "Không tồn tài khoản có mã: '" + ma + "' để xoá" });
                 }
             }
             catch (Exception ex)

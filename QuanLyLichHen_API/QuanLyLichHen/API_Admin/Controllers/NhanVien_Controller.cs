@@ -77,7 +77,7 @@ namespace API_QuanLy.Controllers
         }
         [Route("insert-nhanvien")]
         [HttpPost]
-        public IActionResult Create([FromBody] Models.NhanVien model)
+        public IActionResult Create([FromForm] Models.NhanVien model)
         {
             
             try
@@ -116,7 +116,7 @@ namespace API_QuanLy.Controllers
 
         [Route("update-nhanvien")]
         [HttpPut]
-        public IActionResult Update([FromBody] Models.NhanVien model)
+        public IActionResult Update([FromForm] Models.NhanVien model)
         {
             try
             {
@@ -152,19 +152,19 @@ namespace API_QuanLy.Controllers
         }
         [Route("delete-nhanvien")]
         [HttpDelete]
-        public IActionResult Delete([FromBody] Models.NhanVien model)
+        public IActionResult Delete(string ma)
         {
             try
             {
-                DataTable dt = _BLL.GetByID(model.MaNV.Trim());
+                DataTable dt = _BLL.GetByID(ma);
                 if (dt.Rows.Count == 1)
                 {
-                    DataTable data = _BLL.Delete(model);
+                    DataTable data = _BLL.Delete(ma);
                     return Ok(new { success = true, message = "Xoá thông tin nhân viên thành công:", data = ConvertToList(dt) });
                 }
                 else
                 {
-                    return Ok(new { message = "Không tồn tại nhân viên có mã: '" + model.MaNV.Trim() + "' để xoá" });
+                    return Ok(new { message = "Không tồn tại nhân viên có mã: '" + ma + "' để xoá" });
                 }
             }
             catch (Exception ex)

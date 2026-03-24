@@ -81,11 +81,11 @@ namespace DAL
                 throw new Exception("Lỗi khi thay đổi thông tin khách hàng: " + ex.Message);
             }
         }
-        public DataTable Delete(Models.KhachHang model)
+        public DataTable Delete(string ma, string sdt)
         {
             try
             {
-                DataTable dt = db.GetDataTable("DELETE KHACHHANG WHERE MAKH = '" + model.MaKH.Trim() + "' OR SDT = '" + model.SDT.Trim() + "' ");
+                DataTable dt = db.GetDataTable("DELETE KHACHHANG WHERE MAKH = '" + ma + "' OR SDT = '" + sdt + "' ");
                 return dt;
             }
             catch (Exception ex)

@@ -86,11 +86,11 @@ namespace DAL
                 throw new Exception("Lỗi khi thay đổi thông tin khuyến mại: " + ex.Message);
             }
         }
-        public DataTable Delete(Models.KhuyenMai model)
+        public DataTable Delete(string ma)
         {
             try
             {
-                DataTable dt = db.GetDataTable("DELETE KHUYENMAI WHERE MAKM = '" + model.MaKM.Trim() + "'");
+                DataTable dt = db.GetDataTable("DELETE KHUYENMAI WHERE MAKM = '" + ma + "'");
                 return dt;
             }
             catch (Exception ex)

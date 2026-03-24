@@ -83,11 +83,11 @@ namespace DAL
                 throw new Exception("Lỗi khi thay đổi trạng thái lịch hẹn: " + ex.Message);
             }
         }
-        public DataTable Delete(Models.LichHen model)
+        public DataTable Delete(string ma)
         {
             try
             {
-                DataTable dt = db.GetDataTable("DELETE LICHHEN WHERE MALICH = '" + model.MaLich.Trim() + "'");
+                DataTable dt = db.GetDataTable("DELETE LICHHEN WHERE MALICH = '" + ma + "'");
                 return dt;
             }
             catch (Exception ex)

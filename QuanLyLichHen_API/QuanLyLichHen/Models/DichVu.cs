@@ -15,7 +15,7 @@ namespace Models
         public int ThoiGian { get; set; } // phút
         public double GiaDV { get; set; }
         public string TrangThai { get; set; }
-        public string HinhAnh { get; set; }
+        public string? HinhAnh { get; set; }
         public string QuyTrinh { get; set; }
     }
 }

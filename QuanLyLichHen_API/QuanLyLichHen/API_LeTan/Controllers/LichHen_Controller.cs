@@ -77,7 +77,7 @@ namespace API_Stylist.Controllers
         }
         [Route("insert-lichhen")]
         [HttpPost]
-        public IActionResult Create([FromBody] Models.LichHen model)
+        public IActionResult Create([FromForm] Models.LichHen model)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace API_Stylist.Controllers
         }
         [Route("insert-CTlichhen")]
         [HttpPost]
-        public IActionResult CreateCTLH([FromBody] Models.ChiTietLichHen model)
+        public IActionResult CreateCTLH([FromForm] Models.ChiTietLichHen model)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace API_Stylist.Controllers
 
         [Route("update-lichhen")]
         [HttpPut]
-        public IActionResult Update([FromBody] Models.LichHen model)
+        public IActionResult Update([FromForm] Models.LichHen model)
         {
             try
             {

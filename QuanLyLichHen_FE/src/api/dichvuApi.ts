@@ -2,6 +2,7 @@ import axiosClient from './axiosClient';
 
 export interface DichVu {
     madv: string;
+    loaidv: string;
     tendv: string;
     mota: string;
     thoigian: number;
@@ -22,6 +23,29 @@ const dichVuApi = {
         const url = '/api-admin/DichVu_/get-all-DichVuCSD';
         return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
     },
+    // Hàm thêm dịch vụ
+    create(data: FormData) {
+        const url = '/api-admin/DichVu_/insert-DichVu';
+        return axiosClient.post(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+    },
+    // Hàm sửa dịch vụ
+    update(data: FormData) {
+        const url = '/api-admin/DichVu_/update-DichVu';
+        return axiosClient.put(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+    },
+    // Hàm xoá dịch vụ
+    delete(id: string) { // Đổi FormData thành id (string)
+        const url = `/api-admin/DichVu_/delete-DichVu?ma=${id}`;
+        return axiosClient.delete(url); 
+    }
 };
 
 export default dichVuApi;

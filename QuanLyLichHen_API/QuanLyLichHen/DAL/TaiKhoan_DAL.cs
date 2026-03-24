@@ -104,11 +104,11 @@ namespace DAL
                 throw new Exception("Lỗi khi thay đổi thông tin tài khoản: " + ex.Message);
             }
         }
-        public DataTable Delete(Models.TaiKhoan model)
+        public DataTable Delete(string ma)
         {
             try
             {
-                DataTable dt = db.GetDataTable("DELETE TAIKHOAN WHERE MATK = '" + model.MaTK.Trim() + "'");
+                DataTable dt = db.GetDataTable("DELETE TAIKHOAN WHERE MATK = '" + ma + "'");
                 return dt;
             }
             catch (Exception ex)

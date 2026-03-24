@@ -1,8 +1,8 @@
 ﻿using BLL;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API_QuanLy.Controllers
 {
@@ -11,7 +11,6 @@ namespace API_QuanLy.Controllers
     [ApiController]
     public class DichVu_Controller : ControllerBase
     {
-        //DichVu_BLL _BLL = new DichVu_BLL();
         private readonly DichVu_BLL _BLL;
 
         public DichVu_Controller(IConfiguration configuration)
@@ -27,9 +26,9 @@ namespace API_QuanLy.Controllers
             {
                 list.Add(new
                 {
+                    TENDV = row["TENDV"].ToString().Trim(),
                     MADV = row["MADV"].ToString().Trim(),
                     LOAI = row["LOAI"].ToString().Trim(),
-                    TENDV = row["TENDV"].ToString().Trim(),
                     MOTA = row["MOTA"].ToString().Trim(),
                     THOIGIAN = row["THOIGIAN"].ToString().Trim(),
                     GIADV = row["GIADV"].ToString().Trim(),
@@ -92,9 +91,26 @@ namespace API_QuanLy.Controllers
         }
         [Route("insert-DichVu")]
         [HttpPost]
-        public IActionResult Create([FromBody] Models.DichVu model)
+        public IActionResult Create([FromForm] Models.DichVu model, IFormFile fileAnh)
         {
+            if (fileAnh != null && fileAnh.Length > 0)
+            {
+                var fileName = fileAnh.FileName;
 
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "product");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath); 
+                }
+
+                //Ghép tên file vào đường dẫn thư mục
+                var filePath = Path.Combine(folderPath, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    fileAnh.CopyTo(stream);
+                }
+                model.HinhAnh = $"img/product/{fileName}";
+            }
             try
             {
                 DataTable dt = _BLL.GetByID(model.MaDV.Trim());
@@ -118,8 +134,26 @@ namespace API_QuanLy.Controllers
 
         [Route("update-DichVu")]
         [HttpPut]
-        public IActionResult Update([FromBody] Models.DichVu model)
+        public IActionResult Update([FromForm] Models.DichVu model, IFormFile fileAnh)
         {
+            if (fileAnh != null && fileAnh.Length > 0)
+            {
+                var fileName = fileAnh.FileName;
+
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "product");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                //Ghép tên file vào đường dẫn thư mục
+                var filePath = Path.Combine(folderPath, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    fileAnh.CopyTo(stream);
+                }
+                model.HinhAnh = $"img/product/{fileName}";
+            }
             try
             {
                 DataTable dt = _BLL.GetByID(model.MaDV.Trim());
@@ -143,19 +177,19 @@ namespace API_QuanLy.Controllers
         }
         [Route("delete-DichVu")]
         [HttpDelete]
-        public IActionResult Delete([FromBody] Models.DichVu model)
+        public IActionResult Delete(string ma)
         {
             try
             {
-                DataTable dt = _BLL.GetByID(model.MaDV.Trim());
+                DataTable dt = _BLL.GetByID(ma);
                 if (dt.Rows.Count == 1)
                 {
-                    DataTable data = _BLL.Delete(model);
+                    DataTable data = _BLL.Delete(ma);
                     return Ok(new { success = true, message = "Xoá thông tin dịch vụ thành công:", data = ConvertToList(dt) });
                 }
                 else
                 {
-                    return Ok(new { message = "Không tồn tại dịch vụ có mã: '" + model.MaDV.Trim() + "' để xoá" });
+                    return Ok(new { message = "Không tồn tại dịch vụ có mã: '" + ma + "' để xoá" });
                 }
             }
             catch (Exception ex)

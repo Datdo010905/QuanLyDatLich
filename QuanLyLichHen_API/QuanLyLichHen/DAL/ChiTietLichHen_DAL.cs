@@ -42,11 +42,11 @@ namespace DAL
                 throw new Exception("Lỗi khi thêm chi tiết lịch hẹn: " + ex.Message);
             }
         }
-        public DataTable Delete(Models.ChiTietLichHen model)
+        public DataTable Delete(string ma)
         {
             try
             {
-                DataTable dt = db.GetDataTable("DELETE CHITIETLICHHEN WHERE MALICH = '" + model.MaLich.Trim() + "'");
+                DataTable dt = db.GetDataTable("DELETE CHITIETLICHHEN WHERE MALICH = '" + ma + "'");
                 return dt;
             }
             catch (Exception ex)

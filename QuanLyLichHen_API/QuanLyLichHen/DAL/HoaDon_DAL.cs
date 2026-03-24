@@ -73,11 +73,11 @@ namespace DAL
                 throw new Exception("Lỗi khi thay đổi trạng thái hoá đơn: " + ex.Message);
             }
         }
-        public DataTable Delete(Models.HoaDon model)
+        public DataTable Delete(string ma)
         {
             try
             {
-                DataTable dt = db.GetDataTable("DELETE HOADON WHERE MAHD = '" + model.MaHD.Trim() + "'");
+                DataTable dt = db.GetDataTable("DELETE HOADON WHERE MAHD = '" + ma + "'");
                 return dt;
             }
             catch (Exception ex)

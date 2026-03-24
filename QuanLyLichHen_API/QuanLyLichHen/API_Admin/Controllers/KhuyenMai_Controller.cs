@@ -74,7 +74,7 @@ namespace API_Admin.Controllers
         }
         [Route("insert-KhuyenMai")]
         [HttpPost]
-        public IActionResult Create([FromBody] Models.KhuyenMai model)
+        public IActionResult Create([FromForm] Models.KhuyenMai model)
         {
 
             try
@@ -102,7 +102,7 @@ namespace API_Admin.Controllers
 
         [Route("update-KhuyenMai")]
         [HttpPut]
-        public IActionResult Update([FromBody] Models.KhuyenMai model)
+        public IActionResult Update([FromForm] Models.KhuyenMai model)
         {
             try
             {
@@ -127,19 +127,19 @@ namespace API_Admin.Controllers
         }
         [Route("delete-KhuyenMai")]
         [HttpDelete]
-        public IActionResult Delete([FromBody] Models.KhuyenMai model)
+        public IActionResult Delete(string ma)
         {
             try
             {
-                DataTable dt = _BLL.GetByID(model.MaKM.Trim());
+                DataTable dt = _BLL.GetByID(ma);
                 if (dt.Rows.Count == 1)
                 {
-                    DataTable data = _BLL.Delete(model);
+                    DataTable data = _BLL.Delete(ma);
                     return Ok(new { success = true, message = "Xoá thông tin khuyến mại thành công:", data = ConvertToList(dt) });
                 }
                 else
                 {
-                    return Ok(new { message = "Không tồn tại khuyến mại có mã: '" + model.MaKM.Trim() + "' để xoá" });
+                    return Ok(new { message = "Không tồn tại khuyến mại có mã: '" + ma + "' để xoá" });
                 }
             }
             catch (Exception ex)

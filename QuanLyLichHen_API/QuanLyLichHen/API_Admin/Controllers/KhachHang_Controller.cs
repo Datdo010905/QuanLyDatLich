@@ -71,7 +71,7 @@ namespace API_QuanLy.Controllers
         }
         [Route("insert-khachhang")]
         [HttpPost]
-        public IActionResult Create([FromBody] Models.KhachHang model)
+        public IActionResult Create([FromForm] Models.KhachHang model)
         {
 
             try
@@ -105,7 +105,7 @@ namespace API_QuanLy.Controllers
 
         [Route("update-khachhang")]
         [HttpPut]
-        public IActionResult Update([FromBody] Models.KhachHang model)
+        public IActionResult Update([FromForm] Models.KhachHang model)
         {
             try
             {
@@ -136,19 +136,19 @@ namespace API_QuanLy.Controllers
         }
         [Route("delete-khachhang")]
         [HttpDelete]
-        public IActionResult Delete([FromBody] Models.KhachHang model)
+        public IActionResult Delete(string ma, string sdt)
         {
             try
             {
-                DataTable dt = _BLL.GetByID(model.MaKH.Trim());
+                DataTable dt = _BLL.GetByID(ma);
                 if (dt.Rows.Count == 1)
                 {
-                    DataTable data = _BLL.Delete(model);
+                    DataTable data = _BLL.Delete(ma, sdt);
                     return Ok(new { success = true, message = "Xoá thông tin khách hàng thành công:", data = ConvertToList(dt) });
                 }
                 else
                 {
-                    return Ok(new { message = "Không tồn tại khách hàng có mã: '" + model.MaKH.Trim() + "' để xoá" });
+                    return Ok(new { message = "Không tồn tại khách hàng có mã: '" + ma + "' hoặc có SĐT: '"+sdt+"' để xoá" });
                 }
             }
             catch (Exception ex)

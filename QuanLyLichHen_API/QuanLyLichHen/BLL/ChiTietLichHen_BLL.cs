@@ -25,9 +25,9 @@ namespace BLL
         {
             return _DAL.Create(model);
         }
-        public DataTable Delete(Models.ChiTietLichHen model)
+        public DataTable Delete(string ma)
         {
-            return _DAL.Delete(model);
+            return _DAL.Delete(ma);
         }
     }
 }

@@ -40,9 +40,9 @@ namespace BLL
         {
             return _DAL.Update(model);
         }
-        public DataTable Delete(Models.TaiKhoan model)
+        public DataTable Delete(string ma)
         {
-            return _DAL.Delete(model);
+            return _DAL.Delete(ma);
         }
     }
 }

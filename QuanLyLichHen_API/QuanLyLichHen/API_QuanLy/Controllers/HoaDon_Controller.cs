@@ -74,7 +74,7 @@ namespace API_ThuNgan.Controllers
         }
         [Route("insert-hoadon")]
         [HttpPost]
-        public IActionResult Create([FromBody] Models.HoaDon model)
+        public IActionResult Create([FromForm] Models.HoaDon model)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace API_ThuNgan.Controllers
 
         [Route("update-hoadon")]
         [HttpPut]
-        public IActionResult Update([FromBody] Models.HoaDon model)
+        public IActionResult Update([FromForm] Models.HoaDon model)
         {
             try
             {
@@ -120,19 +120,19 @@ namespace API_ThuNgan.Controllers
         }
         [Route("delete-hoadon")]
         [HttpDelete]
-        public IActionResult Delete([FromBody] Models.HoaDon model)
+        public IActionResult Delete(string ma)
         {
             try
             {
-                DataTable dt = _BLL.GetByID(model.MaHD.Trim());
+                DataTable dt = _BLL.GetByID(ma);
                 if (dt.Rows.Count == 1)
                 {
-                    DataTable data = _BLL.Delete(model);
+                    DataTable data = _BLL.Delete(ma);
                     return Ok(new { success = true, message = "Xoá thông tin hoá đơn thành công:", data = ConvertToList(dt) });
                 }
                 else
                 {
-                    return Ok(new { message = "Không tồn tại hoá đơn có mã: '" + model.MaHD.Trim() + "' để xoá" });
+                    return Ok(new { message = "Không tồn tại hoá đơn có mã: '" + ma + "' để xoá" });
                 }
             }
             catch (Exception ex)

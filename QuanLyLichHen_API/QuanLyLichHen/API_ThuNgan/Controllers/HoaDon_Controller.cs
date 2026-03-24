@@ -75,7 +75,7 @@ namespace API_ThuNgan.Controllers
         }
         [Route("insert-hoadon")]
         [HttpPost]
-        public IActionResult Create([FromBody] Models.HoaDon model)
+        public IActionResult Create([FromForm] Models.HoaDon model)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace API_ThuNgan.Controllers
 
         [Route("update-hoadon")]
         [HttpPut]
-        public IActionResult Update([FromBody] Models.HoaDon model)
+        public IActionResult Update([FromForm] Models.HoaDon model)
         {
             try
             {

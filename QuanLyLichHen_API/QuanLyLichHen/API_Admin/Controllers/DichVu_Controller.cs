@@ -91,9 +91,26 @@ namespace API_QuanLy.Controllers
         }
         [Route("insert-DichVu")]
         [HttpPost]
-        public IActionResult Create([FromBody] Models.DichVu model)
+        public IActionResult Create([FromForm] Models.DichVu model, IFormFile fileAnh)
         {
+            if (fileAnh != null && fileAnh.Length > 0)
+            {
+                var fileName = fileAnh.FileName;
 
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "product");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath); 
+                }
+
+                //Ghép tên file vào đường dẫn thư mục
+                var filePath = Path.Combine(folderPath, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    fileAnh.CopyTo(stream);
+                }
+                model.HinhAnh = $"img/product/{fileName}";
+            }
             try
             {
                 DataTable dt = _BLL.GetByID(model.MaDV.Trim());
@@ -117,8 +134,26 @@ namespace API_QuanLy.Controllers
 
         [Route("update-DichVu")]
         [HttpPut]
-        public IActionResult Update([FromBody] Models.DichVu model)
+        public IActionResult Update([FromForm] Models.DichVu model, IFormFile fileAnh)
         {
+            if (fileAnh != null && fileAnh.Length > 0)
+            {
+                var fileName = fileAnh.FileName;
+
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "product");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                //Ghép tên file vào đường dẫn thư mục
+                var filePath = Path.Combine(folderPath, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    fileAnh.CopyTo(stream);
+                }
+                model.HinhAnh = $"img/product/{fileName}";
+            }
             try
             {
                 DataTable dt = _BLL.GetByID(model.MaDV.Trim());
@@ -142,19 +177,19 @@ namespace API_QuanLy.Controllers
         }
         [Route("delete-DichVu")]
         [HttpDelete]
-        public IActionResult Delete([FromBody] Models.DichVu model)
+        public IActionResult Delete(string ma)
         {
             try
             {
-                DataTable dt = _BLL.GetByID(model.MaDV.Trim());
+                DataTable dt = _BLL.GetByID(ma);
                 if (dt.Rows.Count == 1)
                 {
-                    DataTable data = _BLL.Delete(model);
+                    DataTable data = _BLL.Delete(ma);
                     return Ok(new { success = true, message = "Xoá thông tin dịch vụ thành công:", data = ConvertToList(dt) });
                 }
                 else
                 {
-                    return Ok(new { message = "Không tồn tại dịch vụ có mã: '" + model.MaDV.Trim() + "' để xoá" });
+                    return Ok(new { message = "Không tồn tại dịch vụ có mã: '" + ma + "' để xoá" });
                 }
             }
             catch (Exception ex)

@@ -106,11 +106,11 @@ namespace DAL
                 throw new Exception("Lỗi khi thay đổi thông tin nhân viên: " + ex.Message);
             }
         }
-        public DataTable Delete(Models.NhanVien model)
+        public DataTable Delete(string ma)
         {
             try
             {
-                DataTable dt = db.GetDataTable("DELETE NHANVIEN WHERE MANV = '" + model.MaNV.Trim() + "'");
+                DataTable dt = db.GetDataTable("DELETE NHANVIEN WHERE MANV = '" + ma + "'");
                 return dt;
             }
             catch (Exception ex)

@@ -60,10 +60,10 @@ namespace DAL
                                                                             "N'" + model.Loai.Trim() + "'," +
                                                                             "N'" + model.TenDV.Trim() + "'," +
                                                                             "N'" + model.MoTa.Trim() + "'," +
-                                                                           "'" + model.ThoiGian + "'" +
-                                                                           "'" + model.GiaDV + "'" +
-                                                                           "N'" + model.TrangThai.Trim() + "'" +
-                                                                           "'" + model.HinhAnh.Trim() + "'" +
+                                                                           "'" + model.ThoiGian + "'," +
+                                                                           "'" + model.GiaDV + "'," +
+                                                                           "N'" + model.TrangThai.Trim() + "'," +
+                                                                           "'" + model.HinhAnh.Trim() + "'," +
                                                                            "N'" + model.QuyTrinh.Trim() + "'" +
                                                                            ")");
                 return dt;
@@ -94,11 +94,11 @@ namespace DAL
                 throw new Exception("Lỗi khi thay đổi thông tin dịch vụ: " + ex.Message);
             }
         }
-        public DataTable Delete(Models.DichVu model)
+        public DataTable Delete(string ma)
         {
             try
             {
-                DataTable dt = db.GetDataTable("DELETE DICHVU WHERE MADV = '" + model.MaDV.Trim() + "'");
+                DataTable dt = db.GetDataTable("DELETE DICHVU WHERE MADV = '" + ma + "'");
                 return dt;
             }
             catch (Exception ex)
