@@ -4,7 +4,7 @@ interface SearchContextType {
     searchTerm: string;
     setSearchTerm: (term: string) => void;
 }
-
+// Tạo context với giá trị mặc định
 const SearchContext = createContext<SearchContextType>({
     searchTerm: '',
     setSearchTerm: () => {},

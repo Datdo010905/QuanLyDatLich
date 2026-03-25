@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useSearch } from "../../context/SearchContext"; // Import hook
 
 const TopBarAdmin = () => {
+    // Lấy setSearchTerm từ SearchContext để cập nhật từ khóa tìm kiếm
     const {setSearchTerm } = useSearch();
     const [inputValue, setInputValue] = useState('');
     const handleExecuteSearch = () => {
-        setSearchTerm(inputValue); // Bắn từ khóa vào Context -> Bảng mới bắt đầu lọc
+        setSearchTerm(inputValue);
     };
     //bấm enter
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

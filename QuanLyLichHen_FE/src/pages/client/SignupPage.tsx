@@ -1,24 +1,68 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import "../../assets/css/login.css";
+import { Link, useNavigate } from "react-router-dom";
+import authApi from "../../api/authApi"; // Đảm bảo bạn có hàm signup trong authApi
+import { toast } from "react-toastify";
+
 const Signup = () => {
     const [fullName, setFullName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [rePassword, setRePassword] = useState("");
+
     const [showPwd, setShowPwd] = useState(false);
     const [showRePwd, setShowRePwd] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Thêm state loading
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (password !== rePassword) {
-            alert("Mật khẩu không khớp");
+            toast.error("Mật khẩu và xác nhận mật khẩu không khớp!");
             return;
         }
 
-        // xử lý đăng ký ở đây (localStorage / API)
-        console.log({ fullName, username, password });
+        setIsLoading(true);
+        try {
+            //TAIKHOAN
+            const submitData = new FormData();
+            submitData.append('MaTK', username);
+            submitData.append('Pass', password);
+            submitData.append('TrangThai', 'Hoạt động');
+            submitData.append('phanQuyen', '0');
+            //KHACHHANG
+            //lấy ngày tháng hiện tại để tạo mã khách hàng duy nhất
+            const currentDate = new Date();
+            const makh = `KH${currentDate.getTime()}`; // Tạo mã khách hàng duy nhất dựa trên timestamp
+
+            const submitDataKH = new FormData();
+            submitDataKH.append('MaKH', makh);
+            submitDataKH.append('HoTen', fullName);
+            submitDataKH.append('SDT', username);
+            submitDataKH.append('MaTK', username);
+
+            //dùng api đăng ký tài khoản và thêm khách hàng song song để tránh lỗi nếu một trong hai bước thất bại
+            const [response, responseKH] = await Promise.all([
+                authApi.signup(submitData),
+                authApi.themKH(submitDataKH)
+            ]);
+
+
+            if (response.data.success && responseKH.data.success) {
+                toast.success("Đăng ký tài khoản thành công! Vui lòng đăng nhập.");
+                navigate('/login');
+            } else {
+                toast.error(response.data.message || "Đăng ký thất bại!");
+            }
+
+        } catch (err: any) {
+            toast.error('Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.');
+            console.error('Lỗi đăng ký:', err);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const onlyNumber = (value: string) => value.replace(/[^0-9]/g, "");
@@ -50,12 +94,12 @@ const Signup = () => {
                         />
 
                         <label htmlFor="username">
-                            Tài khoản <span>*</span>
+                            Số điện thoại <span>*</span>
                         </label>
                         <input
                             id="username"
                             type="text"
-                            placeholder="Số điện thoại"
+                            placeholder="Nhập số điện thoại"
                             value={username}
                             maxLength={10}
                             onChange={(e) => setUsername(onlyNumber(e.target.value))}
@@ -100,8 +144,8 @@ const Signup = () => {
                             ></i>
                         </div>
 
-                        <button type="submit" id="btn-login">
-                            ĐĂNG KÝ
+                        <button type="submit" id="btn-login" disabled={isLoading}>
+                            {isLoading ? "ĐANG XỬ LÝ..." : "ĐĂNG KÝ"}
                         </button>
 
                         <div className="extra-links">

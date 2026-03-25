@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../assets/css/login.css";
+import { toast } from "react-toastify";
 const Forgot = () => {
   const [phone, setPhone] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // xử lý quên mật khẩu ở đây
-    console.log("Phone:", phone);
+    toast.info("Mật khẩu đã được gửi đến số điện thoại: " + phone);
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {

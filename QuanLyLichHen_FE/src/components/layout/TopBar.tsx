@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../context/AuthContext'; // Lấy hook ra để sử dụng trong component
+import {toast} from 'react-toastify';
 const TopBar = () => {
 
 	const navigate = useNavigate();
@@ -8,9 +9,12 @@ const TopBar = () => {
 
 	const handleLogout = () => {
 		const isConfirm = window.confirm("Bạn có chắc chắn muốn đăng xuất không?");
+		
 		if (isConfirm) {
 			logout(); // Xóa sạch dữ liệu trong vùng nhớ chung
+			toast.success("Đăng xuất thành công!");
 			navigate('/login', { replace: true });
+			
 		}
 	}
 

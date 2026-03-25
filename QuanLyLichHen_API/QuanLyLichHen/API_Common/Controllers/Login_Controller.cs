@@ -18,12 +18,31 @@ namespace QuanLyDatLich.Controllers
     public class Login_Controller : ControllerBase
     {
         private readonly TaiKhoan_BLL _BLL;
+        private readonly KhachHang_BLL KH_BLL;
         private readonly IConfiguration _config;
 
         public Login_Controller(IConfiguration configuration)
         {
             _BLL = new TaiKhoan_BLL(configuration);
             _config = configuration;
+            KH_BLL = new KhachHang_BLL(configuration);
+        }
+        private List<object> ConvertToList(DataTable dt)
+        {
+            //tạo list chứa đối tượng
+            var list = new List<object>();
+            //duyệt qua các hàng có trong datatable
+            foreach (DataRow row in dt.Rows)
+            {
+                list.Add(new
+                {
+                    MATK = row["MATK"].ToString().Trim(),
+                    PASS = row["PASS"].ToString().Trim(),
+                    PHANQUYEN = row["PHANQUYEN"].ToString().Trim(),
+                    TRANGTHAI = row["TRANGTHAI"].ToString().Trim(),
+                });
+            }
+            return list;
         }
         // Sinh JWT Token
         private string GenerateJwtToken(TaiKhoan user)
@@ -87,6 +106,60 @@ namespace QuanLyDatLich.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { success = false, message = "Lỗi hệ thống: " + ex.Message });
+            }
+        }
+        [Route("signup-taikhoan")]
+        [HttpPost]
+        public IActionResult DangKy([FromForm] Models.TaiKhoan model)
+        {
+            try
+            {
+                DataTable dt = _BLL.GetByID(model.MaTK.Trim());
+                if (dt.Rows.Count == 0)
+                {
+                    DataTable data = _BLL.Create(model);
+                    return Ok(new { success = true, message = "Thêm thông tin tài khoản thành công:", data = ConvertToList(dt) });
+                }
+                else
+                {
+                    return Ok(new { message = "Đã tồn tài khoản có mã: '" + model.MaTK.Trim() + "'" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
+        [Route("insert-khachhang")]
+        [HttpPost]
+        public IActionResult Create([FromForm] Models.KhachHang model)
+        {
+
+            try
+            {
+                DataTable dt = _BLL.GetByID(model.MaKH.Trim());
+                DataTable dtchecksdt = KH_BLL.CheckSDT(model.MaKH.Trim(), model.SDT.Trim());
+
+                if (dt.Rows.Count == 0)
+                {
+                    if (dtchecksdt.Rows.Count != 0)//tồn tại
+                    {
+                        return Ok(new { message = "Đã tồn tại khách hàng có dùng số điện thoại: '" + model.SDT.Trim() + "'" });
+                    }
+                    else
+                    {
+                        DataTable data = KH_BLL.Create(model);
+                        return Ok(new { success = true, message = "Thêm thông tin khách hàng thành công:", data = ConvertToList(dt) });
+                    }
+                }
+                else
+                {
+                    return Ok(new { message = "Đã tồn tại khách hàng có mã: '" + model.MaKH.Trim() + "'" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
             }
         }
     }

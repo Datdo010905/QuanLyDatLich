@@ -3,7 +3,7 @@ import { Link, useNavigate} from "react-router-dom";
 import "../../assets/css/login.css";
 import authApi, { LoginPayload } from '../../api/authApi';
 import { useAuth } from '../../context/AuthContext';
-
+import { toast } from 'react-toastify';
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -18,10 +18,10 @@ const Login: React.FC = () => {
   
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();// Ngăn trang bị reload khi submit form
-    setError(null); // Reset lỗi trước khi gửi yêu cầu
-    setIsLoading(true); // Bật trạng thái loading
-
+    e.preventDefault();
+    setError(null); 
+    setIsLoading(true);
+    
     try {
       const payload: LoginPayload = { username, password };
       const response = await authApi.login(payload);
@@ -35,29 +35,31 @@ const Login: React.FC = () => {
         login({ username, role: phanquyen.toString() }, token);
         if (phanquyen === 1 || phanquyen === 2 || phanquyen === 3 || phanquyen === 4 || phanquyen === 5){
           navigate('/admin/dashboard');
+          toast.success('Đăng nhập thành công! Chào mừng bạn đến với trang quản trị.');
         }
         else if (phanquyen === 0){
           navigate('/home');
+          toast.success('Đăng nhập thành công! Chào mừng bạn đến với trang chủ.');
         }
         else{
-          setError('Quyền truy cập không hợp lệ. Vui lòng liên hệ quản trị viên.');
+          toast.error('Quyền truy cập không hợp lệ. Vui lòng liên hệ quản trị viên.');
           logout(); // Đảm bảo xóa dữ liệu nếu quyền không hợp lệ
         };
       }
       else{
-        setError(response.data.message);
+        toast.error(response.data.message);
       }
 
     }
     catch (err: any) {
-      setError('Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.');
+      toast.error('Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.');
       console.error('Lỗi đăng nhập:', err);
     } 
     finally {
       setIsLoading(false);
     }
   };
-
+  
   return (
     <div className="login-page">
       <div className="login-container">

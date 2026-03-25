@@ -2,10 +2,13 @@
 import axiosClient from './axiosClient';
 
 export interface LoginPayload {
-  username: string; 
+  username: string;
   password: string;
 }
-
+export interface SignupPayload {
+  username: string;
+  password: string;
+}
 // Định nghĩa kiểu dữ liệu API trả về khi thành công
 export interface LoginResponse {
   success: boolean;
@@ -18,7 +21,6 @@ export interface LoginResponse {
     trangthai: string;
   };
 }
-
 const authApi = {
   login(data: LoginPayload) {
     const url = '/api-common/Login_/login-taikhoan';
@@ -26,7 +28,23 @@ const authApi = {
     return axiosClient.get<LoginResponse>(url, {
       params: {
         username: data.username,
-        pass: data.password 
+        pass: data.password
+      }
+    });
+  },
+  signup(data: FormData) {
+    const url = '/api-common/Login_/signup-taikhoan';
+    return axiosClient.post(url, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  },
+  themKH(data: FormData) {
+    const url = '/api-common/Login_/insert-khachhang';
+    return axiosClient.post(url, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
       }
     });
   },
