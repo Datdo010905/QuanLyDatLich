@@ -29,7 +29,7 @@ axiosClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       console.error("Token hết hạn hoặc không hợp lệ!");
       localStorage.removeItem('token');
-      localStorage.removeItem('role');
+      localStorage.removeItem('phanquyen');
       window.location.href = '/login'; // Chuyển hướng cứng về login
     }
     return Promise.reject(error);

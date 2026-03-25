@@ -1,5 +1,4 @@
 import React from 'react';
-
 // Định nghĩa cấu trúc của một Cột
 export interface Column<T> {
   tieude: string; // Tên hiển thị trên tiêu đề bảng
@@ -18,12 +17,12 @@ interface DataTableProps<T> {
 
 //Component DataTable sử dụng Generic <T>
 const DataTable = <T extends object>({ columns, data, isLoading }: DataTableProps<T>) => {
-  
   if (isLoading) {
     return <div style={{ padding: '20px', textAlign: 'center' }}>Đang tải dữ liệu...</div>;
   }
   if (!data || data.length === 0) {
     return <div style={{ padding: '20px', textAlign: 'center' }}>Không có dữ liệu.</div>;
+    
   }
   return (
     <>

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import Modal from "../../components/ui/Modal";
 import DataTable, { Column } from '../../components/ui/DataTable';
 import dichVuApi, { DichVu } from "../../api/dichvuApi";
+import { dichVuSchema } from '../../utils/dichVuSchema';
+import { useSearch } from '../../context/SearchContext';
+import { toast } from 'react-toastify';
 
 const DichVuPage: React.FC = () => {
     //Gộp state
@@ -9,18 +12,36 @@ const DichVuPage: React.FC = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [idToDelete, setIdToDelete] = useState<string | null>(null); // Lưu ID cần xóa
 
+    //State dùng chung cho tìm kiếm
+    const { searchTerm } = useSearch();
+
+    //Dữ liệu dịch vụ
     const [dichVuList, setDichVuList] = useState<DichVu[]>([]);
     const [dichVuCSDList, setDichVuCSDList] = useState<DichVu[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    //Form data và lỗi
+    const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
     const [formData, setFormData] = useState({
         serviceID: '', serviceName: '', serviceType: 'CT',
         serviceDesc: '', serviceTime: '', servicePrice: '',
         serviceStatus: 'Đang cung cấp', serviceProcedure: '',
     });
+    //Xử lý preview ảnh
     const [previewImg, setPreviewImg] = useState<string>('');
     const [imageFile, setImageFile] = useState<File | null>(null);
+
+
+    const filteredDichVuList = dichVuList.filter(dv =>
+        dv.tendv?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        dv.madv?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const filteredDichVuCSDList = dichVuCSDList.filter(dv =>
+        dv.tendv?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        dv.madv?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     //up data từ api lên bảng
     const fetchData = async () => {
@@ -39,14 +60,25 @@ const DichVuPage: React.FC = () => {
             setIsLoading(false);
         }
     };
-
+    // Tải dữ liệu khi component mount
     useEffect(() => {
         fetchData();
     }, []);
 
+    //xử lý thay đổi form
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
+        // Cập nhật dữ liệu người dùng nhập vào formData
         setFormData((prev) => ({ ...prev, [id]: value }));
+
+        //Tự động xóa lỗi của chính field đang được gõ
+        if (formErrors[id]) {
+            setFormErrors((prev) => {
+                const newErrors = { ...prev };
+                delete newErrors[id]; // Xóa thông báo lỗi của field này
+                return newErrors;
+            });
+        }
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +86,17 @@ const DichVuPage: React.FC = () => {
         if (file) {
             setImageFile(file);
             setPreviewImg(URL.createObjectURL(file));
+
+            //Tự động xóa lỗi nếu đã chọn ảnh
+            if (formErrors.serviceImg) {
+                setFormErrors((prev) => {
+                    const newErrors = { ...prev };
+                    delete newErrors.serviceImg;
+                    return newErrors;
+                });
+            }
         }
+
     };
 
     // Chuẩn bị form rỗng khi Thêm 
@@ -66,6 +108,7 @@ const DichVuPage: React.FC = () => {
         });
         setPreviewImg('');
         setImageFile(null);
+        setFormErrors({}); // Xóa lỗi cũ
         setModalType('add');
     };
 
@@ -82,19 +125,43 @@ const DichVuPage: React.FC = () => {
             serviceProcedure: row.quytrinh || '',
         });
         setPreviewImg(row.hinh ? (row.hinh.startsWith('/') ? row.hinh : `/${row.hinh}`) : '');
-        //setImageFile(null); // Giữ nguyên file cũ nếu không chọn ảnh mới
+        setFormErrors({}); // Xóa lỗi cũ
+        setImageFile(null);
         setModalType('edit');
-    };
 
-    // Mở modal xóa và lưu ID
-    const handleDeleteClick = (id: string) => {
-        setIdToDelete(id);
+    };
+    const handleDeleteClick = (row: DichVu) => {
+        if (row.trangthai !== 'Ngừng cung cấp') {
+            toast.error('Lỗi: Chỉ có thể xóa dịch vụ khi trạng thái là "Ngừng cung cấp"!');
+            return;
+        }
+        setIdToDelete(row.madv);
         setIsDeleteModalOpen(true);
     };
 
     //HÀM SUBMIT CHO CẢ THÊM VÀ SỬA
     const handleSubmitForm = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        //Kiểm tra dữ liệu với Zod
+        const validationResult = dichVuSchema.safeParse(formData);
+
+        //có lỗi
+        if (!validationResult.success) {
+            const fieldErrors = validationResult.error.flatten().fieldErrors;
+            const newErrors: Record<string, string> = {};
+
+            // Lấy thông báo lỗi đầu tiên của mỗi trường
+            for (const key in fieldErrors) {
+                newErrors[key] = fieldErrors[key as keyof typeof fieldErrors]?.[0] || '';
+            }
+
+            setFormErrors(newErrors);
+            return; // Dừng hàm lại, không gọi API
+        }
+        //hợp lệ
+        setFormErrors({});
+        //tạo FormData để gửi kèm file ảnh
         const submitData = new FormData();
         submitData.append('maDV', formData.serviceID);
         submitData.append('tenDV', formData.serviceName);
@@ -106,37 +173,41 @@ const DichVuPage: React.FC = () => {
         submitData.append('loai', formData.serviceType);
 
         if (imageFile) submitData.append('fileAnh', imageFile);
-
+        if (!imageFile) {
+            setFormErrors((prev) => ({ ...prev, serviceImg: "Vui lòng chọn ảnh cho dịch vụ!" }));
+            return;
+        }
         try {
             if (modalType === 'add') {
                 await dichVuApi.create(submitData);
-                alert("Đã thêm thành công!");
+                //alert("Đã thêm thành công!");
+                toast.success("Thêm dịch vụ thành công!");
             } else {
                 await dichVuApi.update(submitData);
-                alert("Đã cập nhật thành công!");
+                toast.success("Cập nhật dịch vụ thành công!");
             }
             setModalType('none'); // Đóng form
             fetchData(); // Tải lại dữ liệu
         } catch (error) {
             console.error("Lỗi:", error);
-            alert("Thao tác thất bại, vui lòng kiểm tra lại!");
+            toast.error("Thao tác thất bại, vui lòng kiểm tra lại!");
         }
     };
 
-    // Xoá
+    // Xoá dịch vụ
     const handleDeleteConfirm = async () => {
         if (!idToDelete) return;
         try {
             await dichVuApi.delete(idToDelete);
-            alert("Đã xóa thành công!");
+            toast.success("Xóa dịch vụ thành công!");
             setIsDeleteModalOpen(false);
             fetchData(); // Load lại bảng
         } catch (error) {
             console.error("Lỗi xóa:", error);
-            alert("Xóa thất bại!");
+            toast.error("Xóa thất bại!");
         }
     };
-
+    //Định nghĩa cột cho DataTable
     const dichVuColumns: Column<DichVu>[] = [
         { tieude: "ID", cotnhandulieu: "madv" },
         { tieude: "Tên dịch vụ", cotnhandulieu: "tendv" },
@@ -153,7 +224,13 @@ const DichVuPage: React.FC = () => {
             tieude: "Hành động", cotnhandulieu: "madv", render: (row) => (
                 <>
                     <button className="btn small edit" onClick={() => handleEditClick(row)}><i className="fas fa-edit"></i></button>
-                    <button className="btn small delete" onClick={() => handleDeleteClick(row.madv)}><i className="fas fa-trash"></i></button>
+                    <button
+                        className="btn small delete"
+                        onClick={() => handleDeleteClick(row)}                       
+                        title="Chỉ xoá những dịch vụ đã ngừng cung cấp!"
+                    >
+                        <i className="fas fa-trash"></i>
+                    </button>                
                 </>
             )
         },
@@ -165,11 +242,13 @@ const DichVuPage: React.FC = () => {
             <div className="form-group">
                 <label htmlFor="serviceID">Mã dịch vụ:</label>
                 {/* Khóa input ID nếu đang sửa */}
-                <input type="text" id="serviceID" required disabled={modalType === 'edit'} placeholder="VD: CSD001" value={formData.serviceID} onChange={handleChange} />
+                <input type="text" id="serviceID" disabled={modalType === 'edit'} placeholder="VD: CSD001" value={formData.serviceID} onChange={handleChange} />
+                {formErrors.serviceID && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.serviceID}</span>}
             </div>
             <div className="form-group">
                 <label htmlFor="serviceName">Tên dịch vụ:</label>
-                <input type="text" id="serviceName" required value={formData.serviceName} onChange={handleChange} />
+                <input type="text" id="serviceName" value={formData.serviceName} onChange={handleChange} />
+                {formErrors.serviceName && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.serviceName}</span>}
             </div>
             <div className="form-group">
                 <label htmlFor="serviceType">Loại dịch vụ:</label>
@@ -181,14 +260,17 @@ const DichVuPage: React.FC = () => {
             <div className="form-group">
                 <label htmlFor="serviceDesc">Mô tả:</label>
                 <textarea id="serviceDesc" rows={3} value={formData.serviceDesc} onChange={handleChange} />
+                {formErrors.serviceDesc && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.serviceDesc}</span>}
             </div>
             <div className="form-group">
                 <label htmlFor="serviceTime">Thời gian (phút):</label>
-                <input type="number" id="serviceTime" required value={formData.serviceTime} onChange={handleChange} />
+                <input type="number" id="serviceTime" value={formData.serviceTime} onChange={handleChange} />
+                {formErrors.serviceTime && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.serviceTime}</span>}
             </div>
             <div className="form-group">
                 <label htmlFor="servicePrice">Giá (VND):</label>
-                <input type="number" id="servicePrice" required value={formData.servicePrice} onChange={handleChange} />
+                <input type="number" id="servicePrice" value={formData.servicePrice} onChange={handleChange} />
+                {formErrors.servicePrice && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.servicePrice}</span>}
             </div>
             <div className="form-group">
                 <label htmlFor="serviceStatus">Trạng thái:</label>
@@ -199,6 +281,7 @@ const DichVuPage: React.FC = () => {
             </div>
             <div className="form-group">
                 <label htmlFor="serviceImg">Ảnh (Chọn để thay đổi):</label>
+                {formErrors.serviceImg && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.serviceImg}</span>}
                 <input type="file" accept="image/*" id="serviceImg" onChange={handleImageChange} />
                 {previewImg && <img src={previewImg} alt="Preview" style={{ marginTop: '10px', maxWidth: '200px' }} />}
             </div>
@@ -220,12 +303,12 @@ const DichVuPage: React.FC = () => {
             <div className="panel">
                 <h3>Tóc</h3>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <DataTable<DichVu> columns={dichVuColumns} data={dichVuList} isLoading={isLoading} />
+                <DataTable<DichVu> columns={dichVuColumns} data={filteredDichVuList} isLoading={isLoading} />
             </div>
 
             <div className="panel">
                 <h3>Chăm sóc da & Thư giãn</h3>
-                <DataTable<DichVu> columns={dichVuColumns} data={dichVuCSDList} isLoading={isLoading} />
+                <DataTable<DichVu> columns={dichVuColumns} data={filteredDichVuCSDList} isLoading={isLoading} />
             </div>
 
             {/* DÙNG CHUNG MODAL CHO CẢ THÊM VÀ SỬA */}
