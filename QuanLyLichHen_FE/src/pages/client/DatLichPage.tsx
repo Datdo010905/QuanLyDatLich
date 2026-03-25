@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../../assets/css/lichhen.css";
+import { toast } from "react-toastify";
 const DatLichPage = () => {
 
 	const [phone, setPhone] = useState("");
@@ -7,7 +8,7 @@ const DatLichPage = () => {
 	const themlichhen = (e: React.FormEvent) => {
 		e.preventDefault();
 		// Xử lý logic đặt lịch ở đây
-		console.log("Đặt lịch thành công!");
+		toast.info("Đặt lịch sắp thành công!");
 	};
 
 	const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +22,7 @@ const DatLichPage = () => {
 			<div className="datlich-page">
 				<div className="datlich-form">
 					<h1>ĐẶT LỊCH GIỮ CHỖ</h1>
-					<form onSubmit={themlichhen}>
+					<form>
 						<span>Họ và tên:<span style={{ color: "red" }}>*</span></span><br />
 						<input id="hoten-dat" className="input-field" maxLength={50} type="text"
 							placeholder="Nhập họ và tên của bạn" required /><br />

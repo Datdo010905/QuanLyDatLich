@@ -26,17 +26,17 @@ const Footer = () => {
             <h1>KẾT NỐI VỚI 30SHINE!</h1>
             <hr />
             <a className="social-icons" target="_blank" href="https://www.youtube.com/@D_awryn">
-              <img id="ytb" src="img/social/ytb.png" alt="DanyLab Youtube Chanel" /> <span>Follow Youtube Chanel
+              <img id="ytb" src="/img/social/ytb.png" alt="DanyLab Youtube Chanel" /> <span>Follow Youtube Chanel
                 30Shine</span>
             </a>
             <a className="social-icons" target="_blank" href="https://www.facebook.com/toladatdo">
-              <img src="img/social/fb.png" alt="DanyLab Fanpage" /> <span>Follow Facebook Fanpage 30Shine</span>
+              <img src="/img/social/fb.png" alt="DanyLab Fanpage" /> <span>Follow Facebook Fanpage 30Shine</span>
             </a>
             <a className="social-icons" target="_blank" href="https://www.instagram.com/@_arisu.09/">
-              <img src="img/social/ig.png" alt="DanyLab Instagram" /> <span>Follow Instagram 30Shine</span>
+              <img src="/img/social/ig.png" alt="DanyLab Instagram" /> <span>Follow Instagram 30Shine</span>
             </a>
             <a className="social-icons" target="_blank" href="https://www.tiktok.com/@ddany.jr">
-              <img src="img/social/tt.png" alt="DanyLab TikTok" /> <span>Follow Tiktok 30Shine</span>
+              <img src="/img/social/tt.png" alt="DanyLab TikTok" /> <span>Follow Tiktok 30Shine</span>
             </a>
 
             <h3 style={{ "padding": "0", "margin": "0", "color": "white" }}>Tải ứng dụng 30Shine</h3>

@@ -23,6 +23,21 @@ const dichVuApi = {
         const url = '/api-admin/DichVu_/get-all-DichVuCSD';
         return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
     },
+    // Hàm lấy danh sách tất cả dịch vụ
+    getAllClient() {
+        const url = '/api-common/DichVu_/get-all-DichVuToc';
+        return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
+    },
+    // Hàm lấy danh sách tất cả dịch vụ
+    getAllCSDClient() {
+        const url = '/api-common/DichVu_/get-all-DichVuCSD';
+        return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
+    },
+    // Hàm lấy dịch vụ theo ID
+    getById(id: string) {
+        const url = `/api-common/DichVu_/get-byId-DichVu?ma=${id}`;
+        return axiosClient.get<{ success: boolean; message: string; data: DichVu }>(url);
+    },
     // Hàm thêm dịch vụ
     create(data: FormData) {
         const url = '/api-admin/DichVu_/insert-DichVu';

@@ -49,7 +49,7 @@ const TopBar = () => {
 					<div id="r2">
 						<div id="language">
 							<div id="icon_l">
-								<div><img className="picture_l" src="img/language.jpg" /></div>
+								<div><img className="picture_l" src="/img/language.jpg" /></div>
 								<div id="a_lang">Vietnamese</div>
 							</div>
 						</div>

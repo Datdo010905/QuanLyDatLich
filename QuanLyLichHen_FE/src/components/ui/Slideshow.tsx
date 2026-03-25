@@ -20,7 +20,7 @@ const SlideShow = () => {
   return (
     <div className="product">
       <div id="slideshow">
-        <img id="slide_dv" src="img/SLIDE/slideshow_1.jpg" />
+        <img id="slide_dv" src="/img/SLIDE/slideshow_1.jpg" />
       </div>
     </div>
   );

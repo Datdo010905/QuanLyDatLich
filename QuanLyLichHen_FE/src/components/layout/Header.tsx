@@ -6,14 +6,14 @@ const Header = () => {
         <div id="top">
           <div id="top-content">
             <div id="top-left">
-              <a href="/"><img src="img/logoTo.png" /></a>
+              <a href="/"><img src="/img/logoTo.png" /></a>
             </div>
             <div id="top-mid">
               <div style={{ "position": "relative" }}>
                 <form autoComplete="off">
                   <input type="text" id="indexSearch" placeholder="Tìm kiếm tên dịch vụ" />
                   <button type="button">
-                    <img src="img/find.jpg" alt="Tìm kiếm" />
+                    <img src="/img/find.jpg" alt="Tìm kiếm" />
                   </button>
                 </form>
                 <ul id="searchResults" className="search-dropdown">

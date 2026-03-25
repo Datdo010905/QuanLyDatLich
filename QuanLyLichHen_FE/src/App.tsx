@@ -98,7 +98,7 @@ class App extends React.Component<any, any> {
           <Route path="/about" element={<About />} />
           <Route path="/datlich" element={<DatLichPage />} />
           <Route path="/lichsu" element={<LichSuPage />} />
-          <Route path="/dichvuchitiet" element={<DichVuDetailsPage />} />
+          <Route path="/dichvuchitiet/:madv" element={<DichVuDetailsPage />} />
         </Route>
 
       </Routes>
