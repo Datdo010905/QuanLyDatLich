@@ -207,13 +207,34 @@ const DichVuPage: React.FC = () => {
             toast.error("Xóa thất bại!");
         }
     };
+    const status: Record<string, React.CSSProperties> = {
+        'Ngừng cung cấp': { backgroundColor: '#fff1f0', color: '#f5222d', border: '1px solid #ffa39e' },
+        'Đang cung cấp': { backgroundColor: '#e6f7ff', color: '#52c41a', border: '1px solid #b7eb8f' },
+    };
+
     //Định nghĩa cột cho DataTable
     const dichVuColumns: Column<DichVu>[] = [
         { tieude: "ID", cotnhandulieu: "madv" },
         { tieude: "Tên dịch vụ", cotnhandulieu: "tendv" },
-        { tieude: "Thời gian", cotnhandulieu: "thoigian" },
+        { tieude: "Thời gian", cotnhandulieu: "thoigian", render: (row) => `${row.thoigian} phút` },
         { tieude: "Giá", cotnhandulieu: "giadv", render: (row) => `${row.giadv.toLocaleString("vi-VN")} ₫` },
-        { tieude: "Trạng thái", cotnhandulieu: "trangthai" },
+        { tieude: "Trạng thái", cotnhandulieu: "trangthai", render: (row) => {
+                const codeStatus = row.trangthai;
+                const style = status[codeStatus] || status['Đang cung cấp'];
+
+                return (
+                    <span style={{
+                        padding: '4px 10px',
+                        borderRadius: '15px',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        whiteSpace: 'nowrap',
+                        ...style
+                    }}>
+                    {codeStatus}
+                    </span>
+                )
+            }},
         {
             tieude: "Ảnh", cotnhandulieu: "hinh", render: (row) => {
                 const imgPath = row.hinh?.startsWith('/') ? row.hinh : `/${row.hinh}`;
@@ -226,11 +247,11 @@ const DichVuPage: React.FC = () => {
                     <button className="btn small edit" onClick={() => handleEditClick(row)}><i className="fas fa-edit"></i></button>
                     <button
                         className="btn small delete"
-                        onClick={() => handleDeleteClick(row)}                       
+                        onClick={() => handleDeleteClick(row)}
                         title="Chỉ xoá những dịch vụ đã ngừng cung cấp!"
                     >
                         <i className="fas fa-trash"></i>
-                    </button>                
+                    </button>
                 </>
             )
         },
