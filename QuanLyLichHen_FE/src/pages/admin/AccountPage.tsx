@@ -30,7 +30,8 @@ const AccountPage: React.FC = () => {
     });
 
     const filteredtaikhoanList = taikhoanList.filter(tk =>
-        tk.matk?.toLowerCase().includes(searchTerm.toLowerCase())
+        tk.matk?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tk.trangthai?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     //up data từ api lên bảng
