@@ -131,6 +131,11 @@ const AccountPage: React.FC = () => {
 
         try {
             if (modalType === 'add') {
+                const checkExist = await taikhoanApi.getById(formData.accUsername);
+                if (checkExist) {
+                    toast.error("Tài khoản đã tồn tại!");
+                    return;
+                }
                 await taikhoanApi.create(submitData);
 
                 toast.success("Thêm tài khoản thành công!");

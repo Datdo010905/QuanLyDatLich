@@ -10,7 +10,7 @@ export const khuyenMaiSchema = z.object({
   promotionBD: z.coerce.string().min(1, { message: "Vui lòng chọn ngày bắt đầu" }),
   promotionKT: z.coerce.string().min(1, { message: "Vui lòng chọn ngày kết thúc" }),
   
-  promotionValue: z.coerce.number().min(0, { message: "Khuyến mại nhỏ nhất là 0%" }),
+  promotionValue: z.coerce.number().min(0).max(100, { message: "Khuyến mại từ 0% đến 100%" }),
 }).refine(data => {
   const startDate = new Date(data.promotionBD);
   const endDate = new Date(data.promotionKT);

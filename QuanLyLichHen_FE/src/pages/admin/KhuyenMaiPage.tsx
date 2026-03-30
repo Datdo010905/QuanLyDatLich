@@ -211,7 +211,7 @@ const KhuyenMaiPage = () => {
         },
         {
             tieude: "Giá trị", cotnhandulieu: "giatri", render(row) {
-                return `${row.giatri * 100}%`;
+                return `${row.giatri}%`;
             },
         },
         {
@@ -269,7 +269,7 @@ const KhuyenMaiPage = () => {
                     type="text"
                     id="promotionName"
                     placeholder="VD: Giảm giá mùa hè"
-                    value={formData.promotionName} // Thêm value
+                    value={formData.promotionName} 
                     onChange={handleChange}
                 />
                 {formErrors.promotionName && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionName}</span>}
@@ -280,7 +280,7 @@ const KhuyenMaiPage = () => {
                 <textarea
                     id="promotionDesc"
                     rows={3}
-                    value={formData.promotionDesc} // Thêm value
+                    value={formData.promotionDesc} 
                     onChange={handleChange}
                 ></textarea>
                 {formErrors.promotionDesc && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionDesc}</span>}
@@ -291,7 +291,7 @@ const KhuyenMaiPage = () => {
                 <input
                     type="date"
                     id="promotionBD"
-                    value={formData.promotionBD} // Thêm value
+                    value={formData.promotionBD}
                     onChange={handleChange}
                 />
                 {formErrors.promotionBD && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionBD}</span>}
@@ -302,7 +302,7 @@ const KhuyenMaiPage = () => {
                 <input
                     type="date"
                     id="promotionKT"
-                    value={formData.promotionKT} // Thêm value
+                    value={formData.promotionKT} 
                     onChange={handleChange}
                 />
                 {formErrors.promotionKT && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionKT}</span>}
@@ -313,7 +313,7 @@ const KhuyenMaiPage = () => {
                 <input
                     type="number"
                     id="promotionValue"
-                    value={formData.promotionValue} // Thêm value
+                    value={formData.promotionValue} 
                     onChange={handleChange}
                 />
                 {formErrors.promotionValue && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionValue}</span>}

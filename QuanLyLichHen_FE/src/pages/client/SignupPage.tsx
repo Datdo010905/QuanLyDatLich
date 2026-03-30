@@ -33,12 +33,9 @@ const Signup = () => {
             submitData.append('TrangThai', 'Hoạt động');
             submitData.append('phanQuyen', '0');
             //KHACHHANG
-            //lấy ngày tháng hiện tại để tạo mã khách hàng duy nhất
-            const currentDate = new Date();
-            const makh = `KH${currentDate.getTime()}`; // Tạo mã khách hàng duy nhất dựa trên timestamp
 
             const submitDataKH = new FormData();
-            submitDataKH.append('MaKH', makh);
+            submitDataKH.append('MaKH', username);
             submitDataKH.append('HoTen', fullName);
             submitDataKH.append('SDT', username);
             submitDataKH.append('MaTK', username);
