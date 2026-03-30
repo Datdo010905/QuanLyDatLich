@@ -52,9 +52,9 @@ namespace DAL
                 DataTable dt = db.GetDataTable("INSERT INTO KHUYENMAI VALUES ('" + model.MaKM.Trim() + "'," +
                                                                             "N'" + model.TenKM.Trim() + "'," +
                                                                             "N'" + model.MoTa.Trim() + "'," +
-                                                                           "'" + ngaybd + "'" +
-                                                                           "'" + ngaykt + "'" +
-                                                                           "'" + model.GiaTri + "'" +
+                                                                           "'" + ngaybd + "'," +
+                                                                           "'" + ngaykt + "'," +
+                                                                           "'" + model.GiaTri + "'," +
                                                                            "N'" + model.TrangThai.Trim() + "'" +
                                                                            ")");
                 return dt;

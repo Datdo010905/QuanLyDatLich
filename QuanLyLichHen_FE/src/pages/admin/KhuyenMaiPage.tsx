@@ -23,15 +23,19 @@ const KhuyenMaiPage = () => {
     //Form data và lỗi
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
+
+
     const [formData, setFormData] = useState({
+
         promotionID: '',
         promotionName: '',
         promotionDesc: '',
         promotionBD: '',
         promotionKT: '',
-        promotionValue: '',
+        promotionValue: '0',
         promotionStatus: ''
     });
+
 
     const filteredkhuyenmaiList = khuyenmaiList.filter(km =>
         km.makm?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -67,7 +71,7 @@ const KhuyenMaiPage = () => {
             promotionDesc: '',
             promotionBD: '',
             promotionKT: '',
-            promotionValue: '',
+            promotionValue: '0',
             promotionStatus: ''
         });
         setFormErrors({}); // Xóa lỗi cũ
@@ -76,13 +80,14 @@ const KhuyenMaiPage = () => {
     //click nút sửa
     const handleEditClick = (row: KhuyenMai) => {
         setFormData({
-            promotionID: row.makm || '',
-            promotionName: row.tenkm || '',
-            promotionDesc: row.mota || '',
-            promotionBD: row.ngaybd || '',
-            promotionKT: row.ngaykt || '',
-            promotionValue: row.giatri ? String(row.giatri) : '',
-            promotionStatus: row.trangthai || '',
+            promotionID: row.makm,
+            promotionName: row.tenkm,
+            promotionDesc: row.mota,
+            // Cắt chuỗi để lấy đúng định dạng YYYY-MM-DD
+            promotionBD: row.ngaybd ? row.ngaybd.split('T')[0] : '',
+            promotionKT: row.ngaykt ? row.ngaykt.split('T')[0] : '',
+            promotionValue: row.giatri.toString(),
+            promotionStatus: row.trangthai,
         });
         setFormErrors({}); // Xóa lỗi cũ
         setModalType('edit');
@@ -134,6 +139,14 @@ const KhuyenMaiPage = () => {
         //hợp lệ
         setFormErrors({});
 
+        const currentDate = new Date();
+        const endDate = new Date(formData.promotionKT);
+        const autoStatus = endDate < currentDate ? 'Hết hạn' : 'Đang áp dụng';
+
+        // Cập nhật trạng thái vào formData
+        setFormData((prev) => ({ ...prev, promotionStatus: autoStatus }));
+
+
         //tạo FormData theo swagger
         const submitData = new FormData();
         submitData.append('MaKM', formData.promotionID);
@@ -142,7 +155,7 @@ const KhuyenMaiPage = () => {
         submitData.append('NgayBD', formData.promotionBD);
         submitData.append('NgayKT', formData.promotionKT);
         submitData.append('GiaTri', formData.promotionValue);
-        submitData.append('TrangThai', formData.promotionStatus);
+        submitData.append('TrangThai', autoStatus);
 
         try {
             if (modalType === 'add') {
@@ -184,9 +197,23 @@ const KhuyenMaiPage = () => {
         { tieude: "ID", cotnhandulieu: "makm" },
         { tieude: "Tên chương trình", cotnhandulieu: "tenkm" },
         { tieude: "Mô tả", cotnhandulieu: "mota" },
-        { tieude: "Ngày bắt đầu", cotnhandulieu: "ngaybd" },
-        { tieude: "Ngày kết thúc", cotnhandulieu: "ngaykt" },
-        { tieude: "Giá trị", cotnhandulieu: "giatri" },
+        {
+            tieude: "Ngày bắt đầu", cotnhandulieu: "ngaybd", render: (row) => {
+                const date = new Date(row.ngaybd);
+                return date.toLocaleDateString('vi-VN');
+            }
+        },
+        {
+            tieude: "Ngày kết thúc", cotnhandulieu: "ngaykt", render: (row) => {
+                const date = new Date(row.ngaykt);
+                return date.toLocaleDateString('vi-VN');
+            }
+        },
+        {
+            tieude: "Giá trị", cotnhandulieu: "giatri", render(row) {
+                return `${row.giatri * 100}%`;
+            },
+        },
         {
             tieude: "Trạng thái", cotnhandulieu: "trangthai", render: (row) => {
                 const codeStatus = row.trangthai;
@@ -221,46 +248,75 @@ const KhuyenMaiPage = () => {
             )
         },
     ];
-    //HÀM RENDER FORM CHUNG CHO CẢ THÊM VÀ SỬA
+    // HÀM RENDER FORM CHUNG CHO CẢ THÊM VÀ SỬA
     const renderFormContent = () => (
         <>
             <div className="form-group">
                 <label htmlFor="promotionID">Mã khuyến mại:</label>
-                <input type="text" id="promotionID" placeholder="VD: KM001" />
+                <input
+                    type="text"
+                    id="promotionID"
+                    placeholder="VD: KM001"
+                    value={formData.promotionID} // Thêm value
+                    onChange={handleChange}
+                />
                 {formErrors.promotionID && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionID}</span>}
             </div>
 
             <div className="form-group">
                 <label htmlFor="promotionName">Tên chương trình:</label>
-                <input type="text" id="promotionName" placeholder="VD: Giảm giá mùa hè" />
+                <input
+                    type="text"
+                    id="promotionName"
+                    placeholder="VD: Giảm giá mùa hè"
+                    value={formData.promotionName} // Thêm value
+                    onChange={handleChange}
+                />
                 {formErrors.promotionName && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionName}</span>}
-
             </div>
 
             <div className="form-group">
                 <label htmlFor="promotionDesc">Mô tả:</label>
-                <textarea id="promoDesc" rows={3}></textarea>
+                <textarea
+                    id="promotionDesc"
+                    rows={3}
+                    value={formData.promotionDesc} // Thêm value
+                    onChange={handleChange}
+                ></textarea>
+                {formErrors.promotionDesc && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionDesc}</span>}
             </div>
 
             <div className="form-group">
                 <label htmlFor="promotionBD">Ngày bắt đầu:</label>
-                <input type="date" id="promotionBD" />
+                <input
+                    type="date"
+                    id="promotionBD"
+                    value={formData.promotionBD} // Thêm value
+                    onChange={handleChange}
+                />
                 {formErrors.promotionBD && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionBD}</span>}
-
             </div>
 
             <div className="form-group">
                 <label htmlFor="promotionKT">Ngày kết thúc:</label>
-                <input type="date" id="promotionKT" />
+                <input
+                    type="date"
+                    id="promotionKT"
+                    value={formData.promotionKT} // Thêm value
+                    onChange={handleChange}
+                />
                 {formErrors.promotionKT && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionKT}</span>}
-
             </div>
 
             <div className="form-group">
                 <label htmlFor="promotionValue">Giá trị giảm (%):</label>
-                <input type="number" id="promotionValue" />
+                <input
+                    type="number"
+                    id="promotionValue"
+                    value={formData.promotionValue} // Thêm value
+                    onChange={handleChange}
+                />
                 {formErrors.promotionValue && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.promotionValue}</span>}
-
             </div>
             <button type="submit" className="btn primary">{modalType === 'add' ? 'Lưu mới' : 'Cập nhật'}</button>
         </>

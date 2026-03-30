@@ -1,6 +1,8 @@
 import React from "react";
 const Footer = () => {
     return(
+      <>
+      <div className="clear"></div>
         <div id="footer">
         <div id="fo-content">
 
@@ -67,6 +69,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
+      </>
     );
 };
 
