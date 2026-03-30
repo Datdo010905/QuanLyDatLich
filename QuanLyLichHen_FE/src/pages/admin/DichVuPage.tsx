@@ -179,6 +179,11 @@ const DichVuPage: React.FC = () => {
         }
         try {
             if (modalType === 'add') {
+                const ex = await dichVuApi.getById(formData.serviceID);
+                if (ex && ex.data.data) {
+                    toast.error("Mã dịch vụ đã tồn tại!");
+                    return;
+                }
                 await dichVuApi.create(submitData);
                 //alert("Đã thêm thành công!");
                 toast.success("Thêm dịch vụ thành công!");

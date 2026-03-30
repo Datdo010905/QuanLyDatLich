@@ -14,6 +14,7 @@ const CustomerPage: React.FC = () => {
     const [modalType, setModalType] = useState<'add' | 'edit' | 'none'>('none');
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [idToDelete, setIdToDelete] = useState<string | null>(null); // Lưu ID cần xóa
+    const [sdtToDelete, setSdtToDelete] = useState<string | null>(null); // Lưu SĐT cần xóa (cho tài khoản)
 
     //State dùng chung cho tìm kiếm
     const { searchTerm } = useSearch();
@@ -95,6 +96,7 @@ const CustomerPage: React.FC = () => {
     };
     const handleDeleteClick = (row: Customer) => {
         setIdToDelete(row.makh || null); // Lưu ID của khách hàng cần xóa
+        setSdtToDelete(row.sdt || null); // Lưu SĐT của khách hàng cần xóa
         setIsDeleteModalOpen(true);
     };
     //HÀM SUBMIT CHO CẢ THÊM VÀ SỬA
@@ -122,10 +124,10 @@ const CustomerPage: React.FC = () => {
 
         //tạo FormData theo swagger
         const submitData = new FormData();
-        submitData.append('MaKH', formData.cusID);
+        submitData.append('MaKH', formData.cusPhone);
         submitData.append('HoTen', formData.cusName);
         submitData.append('SDT', formData.cusPhone);
-        submitData.append('MaTK', formData.cusAcc);
+        submitData.append('MaTK', formData.cusPhone);
 
         const submitDataTK = new FormData();
         submitDataTK.append('MaTK', formData.cusPhone);
@@ -135,6 +137,16 @@ const CustomerPage: React.FC = () => {
 
         try {
             if (modalType === 'add') {
+                const ex = await customerApi.getById(formData.cusPhone);
+                if (ex && ex.data.data) {
+                    toast.error("Khách hàng đã tồn tại!");
+                    return;
+                }
+                const checkExistTK = await taikhoanApi.getById(formData.cusPhone);
+                if (checkExistTK && checkExistTK.data.data) {
+                    toast.error("Tài khoản đã tồn tại!");
+                    return;
+                }
                 await Promise.all([
                     taikhoanApi.create(submitDataTK),
                     customerApi.create(submitData)
@@ -155,10 +167,11 @@ const CustomerPage: React.FC = () => {
     // xoá
     const handleDeleteConfirm = async () => {
         if (!idToDelete) return;
+        if (!sdtToDelete) return;
         try {
             //song song
             await Promise.all([
-                taikhoanApi.delete(idToDelete),
+                taikhoanApi.delete(sdtToDelete),
                 customerApi.delete(idToDelete)
             ]);
             toast.success("Xóa khách hàng thành công!");
@@ -193,7 +206,7 @@ const CustomerPage: React.FC = () => {
     //HÀM RENDER FORM CHUNG CHO CẢ THÊM VÀ SỬA
     const renderFormContent = () => (
         <>
-            <div className="form-group">
+            <div hidden={modalType === 'add'} className="form-group">
                 <label htmlFor="cusID">Mã khách hàng:</label>
                 <input
                     type="text"
@@ -202,8 +215,8 @@ const CustomerPage: React.FC = () => {
                     value={formData.cusID}
                     onChange={handleChange}
                     disabled={modalType === 'edit'}
+                    
                 />
-                {formErrors.cusID && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.cusID}</span>}
             </div>
 
             <div className="form-group">
@@ -237,8 +250,8 @@ const CustomerPage: React.FC = () => {
             </div>
 
 
-            <div className="form-group">
-                <label htmlFor="cusAcc">Tài khoản:</label>
+            <div hidden={modalType === 'add'} className="form-group">
+                <label  htmlFor="cusAcc">Tài khoản:</label>
                 <input
                     type="text"
                     id="cusAcc"
@@ -247,7 +260,6 @@ const CustomerPage: React.FC = () => {
                     disabled={modalType === 'edit'}
                     onChange={handleChange}
                 />
-                {formErrors.cusAcc && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.cusAcc}</span>}
             </div>
             <button type="submit" className="btn primary">{modalType === 'add' ? 'Lưu mới' : 'Cập nhật'}</button>
         </>

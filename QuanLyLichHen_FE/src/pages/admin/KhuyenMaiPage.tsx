@@ -159,6 +159,11 @@ const KhuyenMaiPage = () => {
 
         try {
             if (modalType === 'add') {
+                const ex = await khuyenmaiApi.getById(formData.promotionID);
+                if (ex && ex.data.data) {
+                    toast.error("Mã khuyến mại đã tồn tại!");
+                    return;
+                }
                 await khuyenmaiApi.create(submitData);
 
                 toast.success("Thêm khuyến mại thành công!");
