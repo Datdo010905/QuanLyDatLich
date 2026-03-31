@@ -34,7 +34,10 @@ namespace DAL
                 DataTable dt = db.GetDataTable("INSERT INTO CHITIETLICHHEN VALUES ('" + model.MaLich.Trim() + "'," +
                                                                             "'" + model.MaDV.Trim() + "'," +
                                                                             "'" + model.SoLuong + "'," +
-                                                                            "N'" + model.GhiChu.Trim() + "'");
+                                                                            "N'" + model.GhiChu.Trim() + "'," +
+                                                                            "N'" + model.MaNV.Trim() + "'," +
+                                                                            "N'" + model.GiaDuKien + "'" +
+                                                                            "");
                 return dt;
             }
             catch (Exception ex)

@@ -44,7 +44,7 @@ namespace DAL
             try
             {
                 DataTable dt = db.GetDataTable("SELECT * FROM LICHHEN L INNER JOIN KHACHHANG K ON K.MAKH = L.MAKH WHERE MALICH = '" + ma + "' OR K.SDT = '"+ma+"'");
-                return dt;
+                return dt;  
             }
             catch (Exception ex)
             {
@@ -59,7 +59,6 @@ namespace DAL
                                                                             "'" + model.NgayHen + "'," +
                                                                             "'" + model.GioHen + "'," +
                                                                             "N'" + model.TrangThai.Trim() + "'," +
-                                                                            "'" + model.MaNV.Trim() + "'," +
                                                                             "'" + model.MaKH.Trim() + "'," +
                                                                            "N'" + model.MaChiNhanh.Trim() + "')");
                 return dt;
