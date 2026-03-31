@@ -12,7 +12,6 @@ namespace Models
         public DateOnly NgayHen { get; set; }
         public TimeSpan GioHen { get; set; }
         public string TrangThai { get; set; }
-        public string MaNV { get; set; }
         public string MaChiNhanh { get; set; }
         public string MaKH { get; set; }
     }
