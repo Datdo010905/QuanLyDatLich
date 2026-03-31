@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import DataTable, { Column } from '../../components/ui/DataTable';
 import staffApi, { NhanVien } from "../../api/staffApi";
 import taikhoanApi, { TaiKhoan } from "../../api/taikhoanApi";
-import { customerSchema } from "../../utils/customerSchema";
 import { staffSchema } from "../../utils/staffSchema";
 
 const StaffPage: React.FC = () => {
