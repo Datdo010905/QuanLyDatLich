@@ -167,34 +167,35 @@ const StaffPage: React.FC = () => {
         try {
             if (modalType === 'add') {
                 const checkExist = await taikhoanApi.getById(formData.staffAcc);
-                if (checkExist && checkExist.data.data) {
-                    toast.error("Tài khoản đã tồn tại!");
-                    return;
-                }
                 const checkPhone = await staffApi.getAll();
-                const phoneExists = checkPhone.data.data.some((nv) => nv.sdt === formData.staffPhone);
-                if (phoneExists) {
-                    toast.error("Số điện thoại đã tồn tại!");
-                    return;
-                }
                 const staffExist = await staffApi.getById(formData.staffID);
+
+                const phoneExists = checkPhone.data.data.some((nv) => nv.sdt === formData.staffPhone);
                 if (staffExist && staffExist.data.data) {
                     toast.error("Mã nhân viên đã tồn tại!");
                     return;
                 }
-                await Promise.all([
-                    taikhoanApi.create(submitDataTK),
-                    staffApi.create(submitData)
-                ]);
-                toast.success("Thêm nhân viên thành công!");
+                if (phoneExists) {
+                    toast.error("Số điện thoại đã tồn tại!");
+                    return;
+
+                } if (checkExist && checkExist.data.data) {
+                    toast.error("Tài khoản đã tồn tại!");
+                    return;
+                }
+
+                const taikhoanResult = await taikhoanApi.create(submitDataTK);
+                if(taikhoanResult.data.success) {
+                    await staffApi.create(submitData);
+                    toast.success("Thêm nhân viên thành công!");
+                }
             }
-            else if (modalType === 'edit') {
-                if(formData.staffID === 'NV001') {
+            else {
+                if (formData.staffID === 'NV001') {
                     toast.error("Không thể sửa nhân viên này!");
                     setModalType('none');
                     return;
                 }
-            } else {
                 await staffApi.update(submitData);
                 toast.success("Cập nhật nhân viên thành công!");
             }
@@ -269,11 +270,12 @@ const StaffPage: React.FC = () => {
                         fontSize: '13px',
                         fontWeight: '600',
                         whiteSpace: 'nowrap',
-                    ...style
-                }}>
-                    {style ? row.chucvu : "Không xác định"}
-                </span>
-            )}
+                        ...style
+                    }}>
+                        {style ? row.chucvu : "Không xác định"}
+                    </span>
+                )
+            }
         },
         { tieude: "SĐT", cotnhandulieu: "sdt" },
         {

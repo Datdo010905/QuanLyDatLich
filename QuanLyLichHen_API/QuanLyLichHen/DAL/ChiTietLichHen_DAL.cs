@@ -15,6 +15,18 @@ namespace DAL
         {
             db = new DataBase_Connect(configuration);
         }
+        public DataTable GetAll()
+        {
+            try
+            {
+                DataTable dt = db.GetDataTable("SELECT * FROM CHITIETLICHHEN ");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy chi tiết lịch hẹn: " + ex.Message);
+            }
+        }
         public DataTable GetById(string ma)
         {
             try
@@ -36,8 +48,7 @@ namespace DAL
                                                                             "'" + model.SoLuong + "'," +
                                                                             "N'" + model.GhiChu.Trim() + "'," +
                                                                             "N'" + model.MaNV.Trim() + "'," +
-                                                                            "N'" + model.GiaDuKien + "'" +
-                                                                            "");
+                                                                            "N'" + model.GiaDuKien + "')");
                 return dt;
             }
             catch (Exception ex)

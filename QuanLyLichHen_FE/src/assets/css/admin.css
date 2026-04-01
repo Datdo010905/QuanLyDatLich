@@ -492,7 +492,7 @@ textarea {
   border: 1px solid #ddd;
 }
 
-.status.đang-xử-lý {
+/* .status.đang-xử-lý {
   color: #c6ba0f;
 }
 
@@ -514,7 +514,7 @@ textarea {
 
 .status.chưa-áp-dụng {
   color: #c6ba0f;
-}
+} */
 
 .previewImg {
   width: 120px;

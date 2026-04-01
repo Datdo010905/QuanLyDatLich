@@ -17,6 +17,10 @@ namespace BLL
         {
             _DAL = new ChiTietLichHen_DAL(configuration);
         }
+        public DataTable GetAll()
+        {
+            return _DAL.GetAll();
+        }
         public DataTable GetById(string ma)
         {
             return _DAL.GetById(ma);

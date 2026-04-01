@@ -59,8 +59,8 @@ namespace DAL
                                                                             "'" + model.NgayHen + "'," +
                                                                             "'" + model.GioHen + "'," +
                                                                             "N'" + model.TrangThai.Trim() + "'," +
-                                                                            "'" + model.MaKH.Trim() + "'," +
-                                                                           "N'" + model.MaChiNhanh.Trim() + "')");
+                                                                            "'" + model.MaChiNhanh.Trim() + "'," +
+                                                                           "N'" + model.MaKH.Trim() + "')");
                 return dt;
             }
             catch (Exception ex)

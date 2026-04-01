@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Modal from "../../components/ui/Modal";
 import { useSearch } from '../../context/SearchContext';
 import { toast } from 'react-toastify';
 import DataTable, { Column } from '../../components/ui/DataTable';
-import bookingApi, { Booking } from "../../api/bookingApi";
+import bookingApi, { Booking, BookingDetails } from "../../api/bookingApi";
 import { BookingSchema } from "../../utils/bookingSchema";
+import customerApi, { Customer } from "../../api/customerApi";
+import dichVuApi, { DichVu } from "../../api/dichvuApi";
+import staffApi, { NhanVien } from "../../api/staffApi";
+import { set } from "zod";
 
 const BookingPage = () => {
     //khởi tạo state
@@ -12,12 +16,21 @@ const BookingPage = () => {
     const [modalType, setModalType] = useState<'add' | 'edit' | 'none'>('none');
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [idToDelete, setIdToDelete] = useState<string | null>(null); // Lưu ID cần xóa
+    const [IDtoView, setIDtoView] = useState<string | null>(null); // Lưu ID cần xem chi tiết
+    const [viewDetailsList, setViewDetailsList] = useState<BookingDetails[]>([]);
 
     //State dùng chung cho tìm kiếm
     const { searchTerm } = useSearch();
 
+
+
     //Dữ liệu
     const [bookingList, setBookingList] = useState<Booking[]>([]);
+    const [bookingDetailsList, setBookingDetailsList] = useState<BookingDetails[]>([]); // Dữ liệu chi tiết lịch hẹn để hiển thị khi xem chi tiết
+    const [customerList, setCustomerList] = useState<Customer[]>([]); // Dữ liệu khách hàng để đổ vào select
+    const [dichVuList, setDichVuList] = useState<DichVu[]>([]); // Dữ liệu dịch vụ để đổ vào select
+    const [nhanVienList, setNhanVienList] = useState<NhanVien[]>([]); // Dữ liệu nhân viên để đổ vào select
+
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     //Form data và lỗi
@@ -28,7 +41,10 @@ const BookingPage = () => {
         branchID: '',
         bookingDate: '',
         bookingTime: '',
-        status: ''
+        status: '',
+        dichvu: '',
+        soluong: '',
+        nhanvien: '',
     });
     const filteredBookingList = bookingList.filter(lichhen =>
         lichhen.malich?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -41,6 +57,25 @@ const BookingPage = () => {
         setError(null);
         try {
             const resBooking = await bookingApi.getAll();
+            const resCustomer = await customerApi.getAll();
+            const resDichVu = await dichVuApi.getAll();
+            const resNhanVien = await staffApi.getAll();
+
+            const resBookingDetails = await bookingApi.getAllCT();
+
+            if (resCustomer.data.success) {
+                setCustomerList(resCustomer.data.data);
+            }
+            if (resDichVu.data.success) {
+                setDichVuList(resDichVu.data.data);
+            }
+            if (resNhanVien.data.success) {
+                setNhanVienList(resNhanVien.data.data);
+            }
+            if (resBookingDetails.data.success) {
+                setBookingDetailsList(resBookingDetails.data.data);
+            }
+
 
             setBookingList(resBooking.data.data);
         } catch (err) {
@@ -54,6 +89,7 @@ const BookingPage = () => {
         fetchData();
     }, []);
 
+
     // Chuẩn bị form rỗng khi Thêm 
     const handleOpenAdd = () => {
         setFormData({
@@ -62,7 +98,10 @@ const BookingPage = () => {
             branchID: '',
             bookingDate: '',
             bookingTime: '',
-            status: ''
+            status: 'Đã đặt', // Mặc định là "Đã đặt" khi tạo mới
+            dichvu: '',
+            soluong: '',
+            nhanvien: '',
         });
         setFormErrors({}); // Xóa lỗi cũ
         setModalType('add');
@@ -75,7 +114,10 @@ const BookingPage = () => {
             branchID: row.machinhanh || '',
             bookingTime: row.giohen || '',
             bookingDate: row.ngayhen ? row.ngayhen.split('T')[0] : '',
-            status: row.trangthai || ''
+            status: row.trangthai || '',
+            dichvu: '', //tạm để trống
+            soluong: '', //tạm để trống
+            nhanvien: '' //tạm để trống
         });
         setFormErrors({}); // Xóa lỗi cũ
         setModalType('edit');
@@ -97,10 +139,12 @@ const BookingPage = () => {
             });
         }
     };
+
     const handleDeleteClick = (row: Booking) => {
-        setIdToDelete(row.malich || null); // Lưu ID của nhân viên cần xóa
+        setIdToDelete(row.malich || null);
         setIsDeleteModalOpen(true);
     };
+
     //HÀM SUBMIT CHO CẢ THÊM VÀ SỬA
     const handleSubmitForm = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -133,18 +177,27 @@ const BookingPage = () => {
         submitData.append('MaChiNhanh', formData.branchID);
         submitData.append('MaKH', formData.customerID);
 
+        const submitDataCT = new FormData();
+        submitDataCT.append('MaLich', formData.bookingID);
+        submitDataCT.append('MaDV', formData.dichvu);
+        submitDataCT.append('MaNV', formData.nhanvien);
+        submitDataCT.append('SoLuong', formData.soluong);
+        const dichVuSelected = dichVuList.find(dv => dv.madv === formData.dichvu);
+        submitDataCT.append('GiaDuKien', dichVuSelected ? dichVuSelected.giadv.toString() : '0');
+        submitDataCT.append('GhiChu', 'Không có ghi chú');
 
         try {
             if (modalType === 'add') {
+                
                 const checkExist = await bookingApi.getById(formData.bookingID);
                 if (checkExist && checkExist.data.data) {
                     toast.error("Lịch hẹn đã tồn tại!");
                     return;
                 }
-                await Promise.all([
-                    bookingApi.create(submitData)
-                ]);
+                await bookingApi.create(submitData);
+                await bookingApi.createCT(submitDataCT);
                 toast.success("Thêm lịch hẹn thành công!");
+                
             }
             else {
                 await bookingApi.update(submitData);
@@ -162,16 +215,43 @@ const BookingPage = () => {
     const handleDeleteConfirm = async () => {
         if (!idToDelete) return;
         try {
-            //song song
-            await Promise.all([
-                bookingApi.delete(idToDelete)
-            ]);
+            
+            await bookingApi.deleteCT(idToDelete); 
+            await bookingApi.delete(idToDelete)
+            
             toast.success("Xóa lịch hẹn thành công!");
             setIsDeleteModalOpen(false);
             fetchData(); // Load lại bảng
+            if (idToDelete === IDtoView) {
+            setIDtoView(null);
+            setViewDetailsList([]);
+        }
         } catch (error) {
             console.error("Lỗi xóa:", error);
             toast.error("Xóa thất bại!");
+        }
+    };
+    const handleViewClick = async (row: Booking) => {
+        try {
+            setIDtoView(row.malich || null);
+
+            const view = await bookingApi.getByIdCT(row.malich || '');
+            if (view.data.success) {
+                const responseData = view.data.data;
+                // Nếu là mảng thì giữ nguyên, không thì bọc []
+                const formattedData = Array.isArray(responseData) ? responseData : [responseData];
+
+                setViewDetailsList(formattedData);
+                //toast.info(`Xem chi tiết lịch hẹn: ${row.malich}`);
+
+            } else {
+                toast.error("Không tìm thấy chi tiết lịch hẹn!");
+                setViewDetailsList([]); // Xóa rỗng bảng nếu không có data
+            }
+        } catch (error) {
+            console.error("Lỗi xem chi tiết:", error);
+            toast.error("Xem chi tiết thất bại!");
+            setViewDetailsList([]); // Xóa rỗng bảng nếu không có data
         }
     };
     const getChiNhanhName = (branchCode: string) => {
@@ -189,12 +269,45 @@ const BookingPage = () => {
         "CN003": { backgroundColor: '#f6ffed', color: '#52c41a' },
         "CN004": { backgroundColor: '#fff7e6', color: '#fa8c16' },
     };
+
+    //lấy theo trạng thái
+    //<option value="Đã đặt">Đã đặt</option>
+    // <option value="Đang chờ">Đang chờ</option>
+    // <option value="Đang thực hiện">Đang thực hiện</option>
+    // <option value="Hoàn thành">Hoàn thành</option>
+    // <option value="Đã huỷ">Đã huỷ</option>
+    const statusStyles: Record<string, React.CSSProperties> = {
+        "Đã đặt": { backgroundColor: '#e6f7ff', color: '#1890ff', border: '1px solid #91d5ff' },
+        "Đang chờ": { backgroundColor: '#f9f0ff', color: '#722ed1', border: '1px solid #d3adf7' },
+        "Đang thực hiện": { backgroundColor: '#fff7e6', color: '#fa8c16', border: '1px solid #ffd591' },
+        "Hoàn thành": { backgroundColor: '#f6ffed', color: '#52c41a', border: '1px solid #b7eb8f' },
+        "Đã huỷ": { backgroundColor: '#fff1f0', color: '#f5222d', border: '1px solid #ffa39e' },
+    };
+
     //Định nghĩa cột cho DataTable theo api trả về
-    const staffColumns: Column<Booking>[] = [
+    const bookingColumns: Column<Booking>[] = [
         { tieude: "ID", cotnhandulieu: "malich" },
-        { tieude: "Ngày hẹn", cotnhandulieu: "ngayhen" },
-        { tieude: "Giờ hẹn", cotnhandulieu: "giohen" },
-        { tieude: "Trạng thái", cotnhandulieu: "trangthai" },
+        { tieude: "Ngày hẹn", cotnhandulieu: "ngayhen", render: (row) => row.ngayhen ? new Date(row.ngayhen).toLocaleDateString() : '' },
+        {
+            tieude: "Giờ hẹn", cotnhandulieu: "giohen"
+        },
+        {
+            tieude: "Trạng thái", cotnhandulieu: "trangthai", render: (row) => {
+                const style = statusStyles[row.trangthai || ''] || {};
+                return (
+                    <span style={{
+                        padding: '4px 10px',
+                        borderRadius: '6px',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        whiteSpace: 'nowrap',
+                        ...style
+                    }}>
+                        {style ? row.trangthai : "Không xác định"}
+                    </span>
+                )
+            }
+        },
         {
             tieude: "Chi nhánh", cotnhandulieu: "machinhanh", render: (row) => {
                 const style = branchStyles[row.machinhanh || ''] || {};
@@ -211,6 +324,7 @@ const BookingPage = () => {
         {
             tieude: "Hành động", cotnhandulieu: "malich", render: (row) => (
                 <>
+                    <button className="btn small view" onClick={() => handleViewClick(row)}><i className="fas fa-eye"></i></button>
                     <button className="btn small edit" onClick={() => handleEditClick(row)}><i className="fas fa-edit"></i></button>
                     <button
                         className="btn small delete"
@@ -222,17 +336,210 @@ const BookingPage = () => {
             )
         },
     ];
+    //Định nghĩa cột cho DataTable theo api trả về
+    const bookingDetailsColumns: Column<BookingDetails>[] = [
+        { tieude: "ID", cotnhandulieu: "malich" },
+        { tieude: "Mã dịch vụ", cotnhandulieu: "madv", render(row) {
+            const dichVu = dichVuList.find(dv => dv.madv === row.madv);
+            return dichVu ? dichVu.tendv : "Không xác định";
+
+        }},
+        { tieude: "Mã nhân viên", cotnhandulieu: "manv", render(row) {
+            const nv = nhanVienList.find(nv => nv.manv === row.manv);
+            return nv ? `${nv.hoten} (${nv.manv})` : "Không xác định";
+        }},
+        { tieude: "Số lượng", cotnhandulieu: "soluong" },
+        {
+            tieude: "Giá dự kiến", cotnhandulieu: "giA_DUKIEN", render(row) {
+                return row.giA_DUKIEN.toLocaleString() + " VNĐ";
+            },
+        },
+        { tieude: "Ghi chú", cotnhandulieu: "ghichu" },
+    ];
+
+
+
+    // TỰ ĐỘNG TÍNH TOÁN GIỜ TRỐNG
+    const availableHours = useMemo(() => {
+        if (!formData.nhanvien || !formData.bookingDate) {
+            return [];
+        }
+
+        //tìm nhân viên đã chọn có những lịch hẹn nào trong ngày đó
+        const bookedIdsForStaff = bookingDetailsList
+            .filter(detail => detail.manv === formData.nhanvien)
+            .map(detail => detail.malich);
+
+        //lọc ra những lịch hẹn của nhân viên đó vào ngày đã chọn và chưa bị huỷ
+        const bookedAppointments = bookingList.filter(booking => {
+            const isSameDate = booking.ngayhen && booking.ngayhen.split('T')[0] === formData.bookingDate;
+            const isNotCancelled = booking.trangthai !== "Đã huỷ";
+            const isStaffAssigned = bookedIdsForStaff.includes(booking.malich);
+
+            return isSameDate && isNotCancelled && isStaffAssigned;
+        });
+
+        //giờ đã đặt của nhân viên đó trong ngày đã chọn
+        const bookedHours = bookedAppointments.map(b => b.giohen);
+
+        //tạo danh sách giờ trống từ 8:00 đến 22:00, cách 30 phút, và loại bỏ những giờ đã đặt
+        const hours: string[] = [];
+        for (let h = 8; h <= 22; h++) {
+            for (let m of [0, 30]) {
+                const time = `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+
+                //thêm vào giờ trống nếu nó chưa bị đặt
+                if (!bookedHours.includes(time)) {
+                    hours.push(time);
+                }
+            }
+        }
+        return hours;
+    }, [formData.nhanvien, formData.bookingDate, bookingList, bookingDetailsList]);
 
     //HÀM RENDER FORM CHUNG CHO CẢ THÊM VÀ SỬA
     const renderFormContent = () => (
         <>
-            
+            <div className="form-group">
+                <label>Mã lịch hẹn:</label>
+                <input type="text"
+                    id="bookingID"
+                    placeholder="Nhập mã lịch hẹn..."
+                    value={formData.bookingID}
+                    onChange={handleChange}
+                    disabled={modalType === 'edit'} />
+                {formErrors.bookingID && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.bookingID}</span>}
+            </div>
+            <div className="form-group">
+                <label>Chi Nhánh:</label>
+                <select id="branchID" value={formData.branchID} onChange={handleChange}>
+                    <option value="">-- Chọn chi nhánh --</option>
+                    <option value="CN001">30Shine - Nguyễn Trãi</option>
+                    <option value="CN002">30Shine - Cầu Giấy</option>
+                    <option value="CN003">30Shine - Tân Bình</option>
+                    <option value="CN004">30Shine - Đà Nẵng</option>
+                </select>
+                {formErrors.branchID && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.branchID}</span>}
+            </div>
+            <div className="form-group">
+                <label>Nhân viên:</label>
+                <select id="nhanvien" value={formData.nhanvien} disabled={!formData.branchID} onChange={handleChange}>
+                    <option value="">-- Chọn nhân viên --</option>
+                    {/* lọc nhân viên theo chi nhánh đã chọn và chức vụ */}
+                    {nhanVienList.filter((nv) => nv.machinhanh === formData.branchID && nv.chucvu === "Stylist").map((nv) => (
+                        <option key={nv.manv} value={nv.manv}>
+                            {nv.manv} - {nv.hoten} {`(${nv.sdt})`}
+                        </option>
+                    ))}
+                </select>
+                {formErrors.nhanvien && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.nhanvien}</span>}
+            </div>
+            <div className="form-group">
+                <label>Ngày hẹn:</label>
+                <input type="date" id="bookingDate" value={formData.bookingDate} onChange={handleChange} />
+                {formErrors.bookingDate && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.bookingDate}</span>}
+            </div>
+            <div className="form-group">
+                <label>Giờ hẹn:</label>
+                <select
+                    id="bookingTime"
+                    className="input-field"
+                    value={formData.bookingTime}
+                    onChange={handleChange}
+                    disabled={!formData.nhanvien || !formData.bookingDate}
+                >
+                    <option value="">-- Chọn giờ hẹn --</option>
+                    {/* Đổ danh sách giờ trống */}
+                    {availableHours.map((time) => (
+                        <option key={time} value={time}>
+                            {time}
+                        </option>
+                    ))}
+                </select>
+                {formErrors.bookingTime && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.bookingTime}</span>}
+            </div>
+
+            <div className="form-group">
+                <label>Khách Hàng:</label>
+                <select id="customerID" value={formData.customerID} onChange={handleChange}>
+                    <option value="">-- Chọn khách hàng --</option>
+                    {/* đổ dữ liệu khách hàng */}
+                    {customerList.map((customer) => (
+                        <option key={customer.makh} value={customer.makh}>
+                            ({customer.sdt}) {customer.hoten}
+                        </option>
+                    ))}
+                </select>
+                {formErrors.customerID && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.customerID}</span>}
+            </div>
+            <div className="form-group">
+                <label>Dịch vụ:</label>
+                <select id="dichvu" value={formData.dichvu} onChange={handleChange}>
+                    <option value="">-- Chọn dịch vụ --</option>
+                    {/* đổ dữ liệu dịch vụ */}
+                    {dichVuList.map((dv) => (
+                        <option key={dv.madv} value={dv.madv}>
+                            {dv.tendv} - {dv.thoigian} phút - {dv.giadv.toLocaleString()} VNĐ
+                        </option>
+                    ))}
+                </select>
+                {formErrors.dichvu && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.dichvu}</span>}
+            </div>
+            <div className="form-group">
+                <label>Số lượng:</label>
+                <input type="number" id="soluong" value={formData.soluong} onChange={handleChange} min="1" max="20" />
+            </div>
             <button type="submit" className="btn primary">{modalType === 'add' ? 'Lưu mới' : 'Cập nhật'}</button>
         </>
     );
     return (
         <>
-            
+            <div id="bookings" className="section">
+                <div className="panel header-actions">
+                    <h2>Lịch hẹn</h2>
+                    <button className="btn primary" onClick={handleOpenAdd}>Thêm lịch hẹn</button>
+                </div>
+                {/* CHỈ RENDER KHU VỰC NÀY NẾU IDtoView CÓ GIÁ TRỊ */}
+                {IDtoView && (
+                    <div id="booking-details" className="booking-details" style={{display: 'block'}}>
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                        <h3 id="tieudechitiet">Chi tiết lịch hẹn {IDtoView}</h3>
+                        <button
+                            type="button"
+                            className="btn small"
+                            onClick={() => {    
+                                setIDtoView(null); //ẩn bảng
+                                setViewDetailsList([]); //Xóa data
+                            }}
+                        >
+                            <i style={{ color: 'red' }} className="fas fa-times"></i>
+                        </button>
+                        <DataTable<BookingDetails>
+                            columns={bookingDetailsColumns}
+                            data={viewDetailsList}
+                            isLoading={isLoading}
+                        />
+                        
+                    </div>
+                )}
+                <div className="panel">
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    <DataTable<Booking> columns={bookingColumns} data={filteredBookingList} isLoading={isLoading} />
+                </div>
+                {/* DÙNG CHUNG MODAL CHO CẢ THÊM VÀ SỬA */}
+                <Modal isOpen={modalType !== 'none'} onClose={() => setModalType('none')} title={modalType === 'add' ? "Thêm mới lịch hẹn" : "Sửa thông tin lịch hẹn"}>
+                    <form className="service-form" onSubmit={handleSubmitForm}>
+                        {renderFormContent()}
+                    </form>
+                </Modal>
+
+                {/* Modal xóa */}
+                <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} title="Xác nhận Xóa">
+                    <p>Bạn có chắc chắn muốn xóa lịch hẹn <strong>{idToDelete}</strong> không?</p><br />
+                    <button className="btn small delete" onClick={handleDeleteConfirm}><i className="fas fa-trash"></i> Xóa ngay</button>
+                </Modal>
+            </div>
         </>
     );
 };

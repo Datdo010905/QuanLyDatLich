@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace API_Stylist.Controllers
 {
@@ -33,7 +34,6 @@ namespace API_Stylist.Controllers
                     NGAYHEN = row["NGAYHEN"].ToString().Trim(),
                     GIOHEN = row["GIOHEN"].ToString().Trim(),
                     TRANGTHAI = row["TRANGTHAI"].ToString().Trim(),
-                    MANV = row["MANV"].ToString().Trim(),
                     MAKH = row["MAKH"].ToString().Trim(),
                     MACHINHANH = row["MACHINHANH"].ToString().Trim(),
                 });
@@ -48,6 +48,36 @@ namespace API_Stylist.Controllers
             {
                 DataTable dt = _BLL.GetAll();
                 return Ok(new { success = true, message = "Lấy danh sách lịch hẹn thành công:", data = ConvertToList(dt) });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
+        [Route("get-all-CTlichhen")]
+        [HttpGet]
+        public IActionResult GetAllCT()
+        {
+            try
+            {
+                DataTable dt = CTLH_BLL.GetAll();
+
+                var data = dt.AsEnumerable().Select(r => new
+                {
+                    MALICH = r["MALICH"].ToString().Trim(),
+                    MADV = r["MADV"].ToString().Trim(),
+                    MANV = r["MANV"].ToString().Trim(),
+                    SOLUONG = r["SOLUONG"].ToString().Trim(),
+                    GIA_DUKIEN = r["GIA_DUKIEN"].ToString().Trim(),
+                    GHICHU = r["GHICHU"].ToString().Trim()
+                });
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Lấy danh sách lịch hẹn thành công",
+                    data = data
+                });
             }
             catch (Exception ex)
             {
@@ -83,6 +113,36 @@ namespace API_Stylist.Controllers
                 {
                     return Ok(new { message = "Không tìm thấy lịch hẹn: '" + ma + "'" });
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
+        [Route("get-byId-CTlichhen")]
+        [HttpGet]
+        public IActionResult GetByIDCT(string ma)
+        {
+            try
+            {
+                DataTable dt = CTLH_BLL.GetById(ma);
+
+                var data = dt.AsEnumerable().Select(r => new
+                {
+                    MALICH = r["MALICH"].ToString().Trim(),
+                    MADV = r["MADV"].ToString().Trim(),
+                    MANV = r["MANV"].ToString().Trim(),
+                    SOLUONG = r["SOLUONG"].ToString().Trim(),
+                    GIA_DUKIEN = r["GIA_DUKIEN"].ToString().Trim(),
+                    GHICHU = r["GHICHU"].ToString().Trim()
+                });
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Lấy chi tiết lịch hẹn thành công",
+                    data = data
+                });
             }
             catch (Exception ex)
             {
@@ -188,7 +248,7 @@ namespace API_Stylist.Controllers
                 if (dt.Rows.Count == 1)
                 {
                     DataTable data = CTLH_BLL.Delete(ma);
-                    return Ok(new { success = true, message = "Xoá thông tin chi tiết lịch hẹn thành công:", data = ConvertToList(dt) });
+                    return Ok(new { success = true, message = "Xoá thông tin chi tiết lịch hẹn thành công:" });
                 }
                 else
                 {

@@ -147,11 +147,13 @@ const CustomerPage: React.FC = () => {
                     toast.error("Tài khoản đã tồn tại!");
                     return;
                 }
-                await Promise.all([
-                    taikhoanApi.create(submitDataTK),
-                    customerApi.create(submitData)
-                ]);
-                toast.success("Thêm khách hàng thành công!");
+                const taikhoanResult = await taikhoanApi.create(submitDataTK);
+                if(taikhoanResult.data.success) {
+                    await customerApi.create(submitData);
+                    toast.success("Thêm khách hàng thành công!");
+                }
+
+                
             } else {
                 await customerApi.update(submitData);
                 toast.success("Cập nhật khách hàng thành công!");

@@ -14,13 +14,17 @@ export interface BookingDetails {
     madv: string;
     manv: string;
     soluong: number;
-    giadukien: number;
+    giA_DUKIEN: number;
     ghichu: string;
 };
 const BookingApi = {
     getAll() {
         const url = '/api-admin/LichHen_/get-all-lichhen';
         return axiosClient.get<{ success: boolean; message: string; data: Booking[] }>(url);
+    },
+     getAllCT() {
+        const url = '/api-admin/LichHen_/get-all-CTlichhen';
+        return axiosClient.get<{ success: boolean; message: string; data: BookingDetails[] }>(url);
     },
     getAllByIdNV(id: string) {
         const url = `/api-admin/LichHen_/get-allbyIdNV-lichhen?manv=${id}`;
@@ -29,6 +33,10 @@ const BookingApi = {
     getById(id: string) {
         const url = `/api-admin/LichHen_/get-byId-lichhen?ma=${id}`;
         return axiosClient.get<{ success: boolean; message: string; data: Booking }>(url);
+    },
+    getByIdCT(id: string) {
+        const url = `/api-admin/LichHen_/get-byId-CTlichhen?ma=${id}`;
+        return axiosClient.get<{ success: boolean; message: string; data: BookingDetails }>(url);
     },
     create(data: FormData) {
         const url = '/api-admin/LichHen_/insert-lichhen';
