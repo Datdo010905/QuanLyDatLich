@@ -43,7 +43,7 @@ namespace DAL
         {
             try
             {
-                DataTable dt = db.GetDataTable("SELECT * FROM LICHHEN L INNER JOIN KHACHHANG K ON K.MAKH = L.MAKH WHERE MALICH = '" + ma + "' OR K.SDT = '"+ma+"'");
+                DataTable dt = db.GetDataTable("SELECT * FROM LICHHEN L INNER JOIN KHACHHANG K ON K.MAKH = L.MAKH WHERE MALICH = '" + ma.Trim() + "' OR K.SDT = '"+ma+"'");
                 return dt;  
             }
             catch (Exception ex)
@@ -86,7 +86,7 @@ namespace DAL
         {
             try
             {
-                DataTable dt = db.GetDataTable("DELETE LICHHEN WHERE MALICH = '" + ma + "'");
+                DataTable dt = db.GetDataTable("DELETE LICHHEN WHERE MALICH = '" + ma.Trim() + "'");
                 return dt;
             }
             catch (Exception ex)

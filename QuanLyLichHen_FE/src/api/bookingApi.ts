@@ -59,11 +59,11 @@ const BookingApi = {
         return axiosClient.put(url); 
     },
     delete(id: string) {
-        const url = `/api-admin/LichHen_/delete-lichhen?ma=${id}&sdt=${id}`;
+        const url = `/api-admin/LichHen_/delete-lichhen?ma=${id}`;
         return axiosClient.delete(url); 
     },
     deleteCT(id: string) {
-        const url = `/api-admin/LichHen_/delete-CTlichhen?ma=${id}&sdt=${id}`;
+        const url = `/api-admin/LichHen_/delete-CTlichhen?ma=${id}`;
         return axiosClient.delete(url); 
     }
 };

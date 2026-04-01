@@ -31,7 +31,7 @@ namespace DAL
         {
             try
             {
-                DataTable dt = db.GetDataTable("SELECT * FROM CHITIETLICHHEN WHERE MALICH = '" + ma + "'");
+                DataTable dt = db.GetDataTable("SELECT * FROM CHITIETLICHHEN WHERE MALICH = '" + ma.Trim() + "'");
                 return dt;
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace DAL
         {
             try
             {
-                DataTable dt = db.GetDataTable("DELETE CHITIETLICHHEN WHERE MALICH = '" + ma + "'");
+                DataTable dt = db.GetDataTable("DELETE CHITIETLICHHEN WHERE MALICH = '" + ma.Trim() + "'");
                 return dt;
             }
             catch (Exception ex)

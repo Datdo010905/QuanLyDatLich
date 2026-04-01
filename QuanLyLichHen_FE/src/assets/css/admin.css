@@ -336,11 +336,13 @@
 .btn.small.edit {
   color: #0164f9;
 }
-
-.btn.small.delete {
-  color: #e53935;
+.btn.small.addDetail {
+  color: #f95801;
 }
 
+.btn.small.delete {
+  color:red;
+}
 /* Nền modal */
 .modal {
   display: none;

@@ -13,7 +13,7 @@ import { set } from "zod";
 const BookingPage = () => {
     //khởi tạo state
     //Gộp state
-    const [modalType, setModalType] = useState<'add' | 'edit' | 'none'>('none');
+    const [modalType, setModalType] = useState<'add' | 'addDetails' | 'edit' | 'none'>('none');
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [idToDelete, setIdToDelete] = useState<string | null>(null); // Lưu ID cần xóa
     const [IDtoView, setIDtoView] = useState<string | null>(null); // Lưu ID cần xem chi tiết
@@ -46,6 +46,17 @@ const BookingPage = () => {
         soluong: '',
         nhanvien: '',
     });
+
+    const [formDataDetails, setFormDataDetails] = useState({
+        bookingID: '',
+        branchID: '',
+        dichvu: '',
+        soluong: '',
+        giadukien: '',
+        nhanvien: '',
+        ghichu: '',
+    });
+
     const filteredBookingList = bookingList.filter(lichhen =>
         lichhen.malich?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         lichhen.makh?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -105,6 +116,32 @@ const BookingPage = () => {
         });
         setFormErrors({}); // Xóa lỗi cũ
         setModalType('add');
+    };
+    //lấy mã lịch và mã chi nhánh của lịch được click để chuẩn bị form thêm chi tiết
+    const handleAddDetailsClick = (row: Booking) => {
+        setFormData({
+            bookingID: row.malich?.trim() || '',
+            customerID: row.makh || '',
+            branchID: row.machinhanh || '',
+            bookingDate: row.ngayhen ? row.ngayhen.split('T')[0] : '',
+            bookingTime: row.giohen || '',
+            status: row.trangthai || '',
+            dichvu: '',
+            soluong: '1',
+            nhanvien: '',
+        });
+
+        setFormDataDetails({
+            bookingID: row.malich.trim() || '',
+            branchID: row.machinhanh || '',
+            dichvu: '',
+            soluong: '1',
+            giadukien: '',
+            nhanvien: '',
+            ghichu: '',
+        });
+        setFormErrors({}); // Xóa lỗi cũ
+        setModalType('addDetails');
     };
     //click nút sửa
     const handleEditClick = (row: Booking) => {
@@ -193,9 +230,13 @@ const BookingPage = () => {
         submitDataCT.append('SoLuong', formData.soluong);
         const dichVuSelected = dichVuList.find(dv => dv.madv === formData.dichvu);
         submitDataCT.append('GiaDuKien', dichVuSelected ? dichVuSelected.giadv.toString() : '0');
-        submitDataCT.append('GhiChu', 'Không có ghi chú');
+        submitDataCT.append('GhiChu', formDataDetails.ghichu || 'Không có ghi chú');
 
+        //khởi tạo bên ngoài để dùng chung cho các trường hợp
+        const trangthaiHienTai = bookingList.find(b => b.malich === formData.bookingID)?.trangthai;
+        const trangthaiMoi = formData.status;
         try {
+
             if (modalType === 'add') {
 
                 const checkExist = await bookingApi.getById(formData.bookingID);
@@ -208,13 +249,11 @@ const BookingPage = () => {
                 toast.success("Thêm lịch hẹn thành công!");
 
             }
-            else {
+            else if (modalType === 'edit') {
                 //check quy trình của 5 trạng thái
                 //1. Đã đặt -> Đang chờ -> Đang thực hiện -> Hoàn thành
-                //2. Đã đặt -> Đã huỷ        
-
-                const trangthaiHienTai = bookingList.find(b => b.malich === formData.bookingID)?.trangthai;
-                const trangthaiMoi = formData.status;
+                //2. Đã đặt -> Đã huỷ 
+                //3. Đang chờ -> Đã huỷ       
                 if (trangthaiHienTai === "Đã huỷ" || trangthaiHienTai === "Hoàn thành") {
                     toast.error("Lịch hẹn đã " + trangthaiHienTai + ", không thể thay đổi trạng thái nữa!");
                     return;
@@ -223,8 +262,8 @@ const BookingPage = () => {
                     toast.error("Trạng thái phải theo quy trình: Đã đặt -> Đang chờ trước khi chuyển sang trạng thái khác hoặc -> Đã huỷ");
                     return;
                 }
-                if (trangthaiHienTai === "Đang chờ" && trangthaiMoi !== "Đang thực hiện") {
-                    toast.error("Trạng thái phải theo quy trình: Đã đặt -> Đang chờ -> Đang thực hiện");
+                if (trangthaiHienTai === "Đang chờ" && trangthaiMoi !== "Đang thực hiện" && trangthaiMoi !== "Đã huỷ") {
+                    toast.error("Trạng thái phải theo quy trình: Đã đặt -> Đang chờ -> Đang thực hiện hoặc -> Đã huỷ");
                     return;
                 }
                 if (trangthaiHienTai === "Đang thực hiện" && trangthaiMoi !== "Hoàn thành") {
@@ -234,6 +273,19 @@ const BookingPage = () => {
 
                 await bookingApi.update(formData.bookingID, formData.status);
                 toast.success("Cập nhật lịch hẹn thành công!");
+            }
+            else {
+                if (trangthaiHienTai !== "Đã đặt" && trangthaiHienTai !== "Đang chờ") {
+                    toast.error("Chỉ có thể thêm chi tiết cho lịch hẹn ở trạng thái Đã đặt hoặc Đang chờ!");
+                    return;
+                }
+
+                if (!formData.dichvu || !formData.soluong || !formData.nhanvien) {
+                    toast.error("Dịch vụ, số lượng và nhân viên không được để trống!");
+                    return;
+                }
+                await bookingApi.createCT(submitDataCT);
+                toast.success("Thêm chi tiết lịch hẹn thành công!");
             }
             setModalType('none'); // Đóng form
             fetchData(); // Tải lại dữ liệu
@@ -253,9 +305,14 @@ const BookingPage = () => {
                 toast.error("Chỉ có thể xóa những lịch hẹn đã huỷ!");
                 return;
             }
+            try {
+                await bookingApi.deleteCT(idToDelete.trim());
+            }
+            catch (error) {
+                console.error("Lỗi xóa chi tiết:", error);
+            }
 
-            await bookingApi.deleteCT(idToDelete);
-            await bookingApi.delete(idToDelete)
+            await bookingApi.delete(idToDelete.trim());
 
             toast.success("Xóa lịch hẹn thành công!");
             setIsDeleteModalOpen(false);
@@ -363,6 +420,7 @@ const BookingPage = () => {
             tieude: "Hành động", cotnhandulieu: "malich", render: (row) => (
                 <>
                     <button className="btn small view" onClick={() => handleViewClick(row)}><i className="fas fa-eye"></i></button>
+                    <button className="btn small addDetail" onClick={() => handleAddDetailsClick(row)}><i className="fa-regular fa-calendar-plus"></i></button>
                     <button className="btn small edit" onClick={() => handleEditClick(row)}><i className="fas fa-edit"></i></button>
                     <button
                         className="btn small delete"
@@ -447,12 +505,12 @@ const BookingPage = () => {
                 <input type="text"
                     id="bookingID"
                     placeholder="Nhập mã lịch hẹn..."
-                    value={formData.bookingID}
+                    value={formData.bookingID || formDataDetails.bookingID}
                     onChange={handleChange}
-                    disabled={modalType === 'edit'} />
+                    disabled={modalType !== 'add'} />
                 {formErrors.bookingID && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.bookingID}</span>}
             </div>
-            <div hidden={modalType === 'edit'} className="form-group">
+            <div hidden={modalType === 'edit' || modalType === 'addDetails'} className="form-group">
                 <label>Chi Nhánh:</label>
                 <select id="branchID" value={formData.branchID} onChange={handleChange}>
                     <option value="">-- Chọn chi nhánh --</option>
@@ -476,12 +534,12 @@ const BookingPage = () => {
                 </select>
                 {formErrors.nhanvien && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.nhanvien}</span>}
             </div>
-            <div hidden={modalType === 'edit'} className="form-group">
+            <div hidden={modalType === 'edit' || modalType === 'addDetails'} className="form-group">
                 <label>Ngày hẹn:</label>
                 <input type="date" id="bookingDate" value={formData.bookingDate} onChange={handleChange} />
                 {formErrors.bookingDate && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.bookingDate}</span>}
             </div>
-            <div hidden={modalType === 'edit'} className="form-group">
+            <div hidden={modalType === 'edit' || modalType === 'addDetails'} className="form-group">
                 <label>Giờ hẹn:</label>
                 <select
                     id="bookingTime"
@@ -501,7 +559,7 @@ const BookingPage = () => {
                 {formErrors.bookingTime && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.bookingTime}</span>}
             </div>
 
-            <div hidden={modalType === 'edit'} className="form-group">
+            <div hidden={modalType === 'edit' || modalType === 'addDetails'} className="form-group">
                 <label>Khách Hàng:</label>
                 <select id="customerID" value={formData.customerID} onChange={handleChange}>
                     <option value="">-- Chọn khách hàng --</option>
@@ -531,7 +589,7 @@ const BookingPage = () => {
                 <label>Số lượng:</label>
                 <input type="number" id="soluong" value={formData.soluong} onChange={handleChange} min="1" max="20" />
             </div>
-            <div hidden={modalType === 'add'} className="form-group">
+            <div hidden={modalType === 'add' || modalType === 'addDetails'} className="form-group">
                 <label>Trạng thái:</label>
                 <select id="status" value={formData.status} onChange={handleChange}>
                     <option value="">-- Chọn trạng thái --</option>
@@ -543,11 +601,16 @@ const BookingPage = () => {
                 </select>
                 {formErrors.trangthai && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.trangthai}</span>}
             </div>
+            <div hidden={modalType !== 'addDetails'} className="form-group">
+                <label>Ghi chú:</label>
+                <textarea id="ghichu" placeholder="Nhập ghi chú..." value={formDataDetails.ghichu} onChange={(e) => setFormDataDetails(prev => ({ ...prev, ghichu: e.target.value }))}></textarea>
+            </div>
 
             <button type="submit" className="btn primary">{modalType === 'add' ? 'Lưu mới' : 'Cập nhật'}</button>
         </>
     );
     return (
+
         <>
             <div id="bookings" className="section">
                 <div className="panel header-actions">
@@ -562,14 +625,15 @@ const BookingPage = () => {
                         <h3 id="tieudechitiet">Chi tiết lịch hẹn {IDtoView}</h3>
                         <button
                             type="button"
-                            className="btn small"
+                            className="btn small delete"
                             onClick={() => {
                                 setIDtoView(null); //ẩn bảng
                                 setViewDetailsList([]); //Xóa data
                             }}
                         >
-                            <i style={{ color: 'red' }} className="fas fa-times"></i>
+                            <i className="fa-solid fa-circle-xmark"></i> Đóng
                         </button>
+
                         <DataTable<BookingDetails>
                             columns={bookingDetailsColumns}
                             data={viewDetailsList}
@@ -584,6 +648,12 @@ const BookingPage = () => {
                 </div>
                 {/* DÙNG CHUNG MODAL CHO CẢ THÊM VÀ SỬA */}
                 <Modal isOpen={modalType !== 'none'} onClose={() => setModalType('none')} title={modalType === 'add' ? "Thêm mới lịch hẹn" : "Sửa thông tin lịch hẹn"}>
+                    <form className="service-form" onSubmit={handleSubmitForm}>
+                        {renderFormContent()}
+                    </form>
+                </Modal>
+                {/* modal thêm chi tiết */}
+                <Modal isOpen={modalType === 'addDetails'} onClose={() => setModalType('none')} title="Thêm chi tiết lịch hẹn">
                     <form className="service-form" onSubmit={handleSubmitForm}>
                         {renderFormContent()}
                     </form>

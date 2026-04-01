@@ -177,16 +177,8 @@ namespace API_Stylist.Controllers
         {
             try
             {
-                DataTable dt = CTLH_BLL.GetById(model.MaLich.Trim());
-                if (dt.Rows.Count == 0)
-                {
-                    DataTable data = CTLH_BLL.Create(model);
-                    return Ok(new { success = true, message = "Thêm thông tin chi tiết lịch hẹn thành công:", data = ConvertToList(dt) });
-                }
-                else
-                {
-                    return Ok(new { message = "Đã tồn tại chi tiết lịch hẹn có mã: '" + model.MaLich.Trim() + "'" });
-                }
+                DataTable data = CTLH_BLL.Create(model);
+                return Ok(new { success = true, message = "Thêm thông tin chi tiết lịch hẹn thành công:", data = ConvertToList(data) });
             }
             catch (Exception ex)
             {
@@ -244,15 +236,15 @@ namespace API_Stylist.Controllers
         {
             try
             {
-                DataTable dt = CTLH_BLL.GetById(ma);
-                if (dt.Rows.Count == 1)
+                DataTable dt = CTLH_BLL.GetById(ma.Trim());
+                if (dt.Rows.Count >= 1 )
                 {
-                    DataTable data = CTLH_BLL.Delete(ma);
+                    DataTable data = CTLH_BLL.Delete(ma.Trim());
                     return Ok(new { success = true, message = "Xoá thông tin chi tiết lịch hẹn thành công:" });
                 }
                 else
                 {
-                    return Ok(new { message = "Không tồn tại chi tiết lịch hẹn có mã: '" + ma + "' để xoá" });
+                    return Ok(new { message = "Không tồn tại chi tiết lịch hẹn có mã: '" + ma.Trim() + "' để xoá" });
                 }
             }
             catch (Exception ex)
