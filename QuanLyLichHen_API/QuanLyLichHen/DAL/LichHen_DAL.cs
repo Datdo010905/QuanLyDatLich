@@ -69,12 +69,12 @@ namespace DAL
             }
         }
 
-        public DataTable Update(Models.LichHen model)
+        public DataTable Update(string ma, string trangthai)
         {
             try
             {
-                DataTable dt = db.GetDataTable("UPDATE LICHHEN SET TRANGTHAI = N'" + model.TrangThai.Trim() + "' " +
-                                                                  "WHERE MALICH = '" + model.MaLich.Trim() + "'");
+                DataTable dt = db.GetDataTable("UPDATE LICHHEN SET TRANGTHAI = N'" + trangthai.Trim() + "' " +
+                                                                  "WHERE MALICH = '" + ma.Trim() + "'");
                 return dt;
             }
             catch (Exception ex)

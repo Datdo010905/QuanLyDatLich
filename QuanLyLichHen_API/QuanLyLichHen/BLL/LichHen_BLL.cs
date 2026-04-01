@@ -33,9 +33,9 @@ namespace BLL
         {
             return _DAL.Create(model);
         }
-        public DataTable Update(Models.LichHen model)
+        public DataTable Update(string ma, string trangthai)
         {
-            return _DAL.Update(model);
+            return _DAL.Update(ma, trangthai);
         }
         public DataTable Delete(string ma)
         {

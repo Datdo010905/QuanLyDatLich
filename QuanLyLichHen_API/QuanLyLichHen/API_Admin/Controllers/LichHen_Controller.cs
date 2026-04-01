@@ -196,19 +196,19 @@ namespace API_Stylist.Controllers
 
         [Route("update-lichhen")]
         [HttpPut]
-        public IActionResult Update([FromForm] Models.LichHen model)
+        public IActionResult Update(string ma, string trangthai)
         {
             try
             {
-                DataTable dt = _BLL.GetByID(model.MaLich.Trim());
+                DataTable dt = _BLL.GetByID(ma);
                 if (dt.Rows.Count == 1)
                 {
-                    DataTable data = _BLL.Update(model);
+                    DataTable data = _BLL.Update(ma, trangthai);
                     return Ok(new { success = true, message = "Thay đổi trạng thái lịch hẹn thành công:", data = ConvertToList(dt) });
                 }
                 else
                 {
-                    return Ok(new { message = "Không tồn tại lịch hẹn có mã: '" + model.MaLich.Trim() + "' để thay đổi" });
+                    return Ok(new { message = "Không tồn tại lịch hẹn có mã: '" + ma.Trim() + "' để thay đổi" });
                 }
             }
             catch (Exception ex)

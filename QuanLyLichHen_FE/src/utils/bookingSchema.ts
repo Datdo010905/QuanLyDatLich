@@ -4,7 +4,6 @@ export const BookingSchema = z.object({
     bookingID: z.string().min(1, { message: "Mã lịch không được để trống" }),
     bookingDate: z.string().min(1, { message: "Ngày hẹn không được để trống" }),
     bookingTime: z.string(),
-    status: z.string().min(1, { message: "Trạng thái không được để trống" }),
     branchID: z.string().min(1, { message: "Mã chi nhánh không được để trống" }),
     customerID: z.string().min(1, { message: "Mã khách hàng không được để trống" }),
     dichvu: z.string().min(1, { message: "Dịch vụ không được để trống" }),

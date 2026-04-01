@@ -54,13 +54,9 @@ const BookingApi = {
             }
         });
     },
-    update(data: FormData) {
-        const url = '/api-admin/LichHen_/update-lichhen';
-        return axiosClient.put(url, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+    update(id: string, trangthai: string) {
+        const url = `/api-admin/LichHen_/update-lichhen?ma=${id}&trangthai=${trangthai}`;
+        return axiosClient.put(url); 
     },
     delete(id: string) {
         const url = `/api-admin/LichHen_/delete-lichhen?ma=${id}&sdt=${id}`;

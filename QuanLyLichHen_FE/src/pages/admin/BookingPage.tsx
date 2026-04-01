@@ -153,17 +153,26 @@ const BookingPage = () => {
         const validationResult = BookingSchema.safeParse(formData);
 
         //có lỗi
-        if (!validationResult.success) {
-            const fieldErrors = validationResult.error.flatten().fieldErrors;
-            const newErrors: Record<string, string> = {};
+        if (modalType === 'add') {
+            // Kiểm tra toàn bộ dữ liệu với Zod khi thêm mới
+            const validationResult = BookingSchema.safeParse(formData);
 
-            // Lấy thông báo lỗi đầu tiên của mỗi trường
-            for (const key in fieldErrors) {
-                newErrors[key] = fieldErrors[key as keyof typeof fieldErrors]?.[0] || '';
+            if (!validationResult.success) {
+                const fieldErrors = validationResult.error.flatten().fieldErrors;
+                const newErrors: Record<string, string> = {};
+
+                for (const key in fieldErrors) {
+                    newErrors[key] = fieldErrors[key as keyof typeof fieldErrors]?.[0] || '';
+                }
+
+                setFormErrors(newErrors);
+                return;
             }
-
-            setFormErrors(newErrors);
-            return; // Dừng hàm lại, không gọi API
+        } else if (modalType === 'edit') {
+            if (!formData.status) {
+                setFormErrors({ trangthai: "Trạng thái không được để trống" });
+                return;
+            }
         }
         //hợp lệ
         setFormErrors({});
@@ -188,7 +197,7 @@ const BookingPage = () => {
 
         try {
             if (modalType === 'add') {
-                
+
                 const checkExist = await bookingApi.getById(formData.bookingID);
                 if (checkExist && checkExist.data.data) {
                     toast.error("Lịch hẹn đã tồn tại!");
@@ -197,10 +206,33 @@ const BookingPage = () => {
                 await bookingApi.create(submitData);
                 await bookingApi.createCT(submitDataCT);
                 toast.success("Thêm lịch hẹn thành công!");
-                
+
             }
             else {
-                await bookingApi.update(submitData);
+                //check quy trình của 5 trạng thái
+                //1. Đã đặt -> Đang chờ -> Đang thực hiện -> Hoàn thành
+                //2. Đã đặt -> Đã huỷ        
+
+                const trangthaiHienTai = bookingList.find(b => b.malich === formData.bookingID)?.trangthai;
+                const trangthaiMoi = formData.status;
+                if (trangthaiHienTai === "Đã huỷ" || trangthaiHienTai === "Hoàn thành") {
+                    toast.error("Lịch hẹn đã " + trangthaiHienTai + ", không thể thay đổi trạng thái nữa!");
+                    return;
+                }
+                if (trangthaiHienTai === "Đã đặt" && trangthaiMoi !== "Đang chờ" && trangthaiMoi !== "Đã huỷ") {
+                    toast.error("Trạng thái phải theo quy trình: Đã đặt -> Đang chờ trước khi chuyển sang trạng thái khác hoặc -> Đã huỷ");
+                    return;
+                }
+                if (trangthaiHienTai === "Đang chờ" && trangthaiMoi !== "Đang thực hiện") {
+                    toast.error("Trạng thái phải theo quy trình: Đã đặt -> Đang chờ -> Đang thực hiện");
+                    return;
+                }
+                if (trangthaiHienTai === "Đang thực hiện" && trangthaiMoi !== "Hoàn thành") {
+                    toast.error("Trạng thái phải theo quy trình: Đang thực hiện -> Hoàn thành");
+                    return;
+                }
+
+                await bookingApi.update(formData.bookingID, formData.status);
                 toast.success("Cập nhật lịch hẹn thành công!");
             }
             setModalType('none'); // Đóng form
@@ -215,17 +247,23 @@ const BookingPage = () => {
     const handleDeleteConfirm = async () => {
         if (!idToDelete) return;
         try {
-            
-            await bookingApi.deleteCT(idToDelete); 
+            //chỉ xoá những lịch đã huỷ
+            const lichHen = bookingList.find(b => b.malich === idToDelete);
+            if (lichHen?.trangthai !== "Đã huỷ") {
+                toast.error("Chỉ có thể xóa những lịch hẹn đã huỷ!");
+                return;
+            }
+
+            await bookingApi.deleteCT(idToDelete);
             await bookingApi.delete(idToDelete)
-            
+
             toast.success("Xóa lịch hẹn thành công!");
             setIsDeleteModalOpen(false);
             fetchData(); // Load lại bảng
             if (idToDelete === IDtoView) {
-            setIDtoView(null);
-            setViewDetailsList([]);
-        }
+                setIDtoView(null);
+                setViewDetailsList([]);
+            }
         } catch (error) {
             console.error("Lỗi xóa:", error);
             toast.error("Xóa thất bại!");
@@ -339,15 +377,19 @@ const BookingPage = () => {
     //Định nghĩa cột cho DataTable theo api trả về
     const bookingDetailsColumns: Column<BookingDetails>[] = [
         { tieude: "ID", cotnhandulieu: "malich" },
-        { tieude: "Mã dịch vụ", cotnhandulieu: "madv", render(row) {
-            const dichVu = dichVuList.find(dv => dv.madv === row.madv);
-            return dichVu ? dichVu.tendv : "Không xác định";
+        {
+            tieude: "Mã dịch vụ", cotnhandulieu: "madv", render(row) {
+                const dichVu = dichVuList.find(dv => dv.madv === row.madv);
+                return dichVu ? dichVu.tendv : "Không xác định";
 
-        }},
-        { tieude: "Mã nhân viên", cotnhandulieu: "manv", render(row) {
-            const nv = nhanVienList.find(nv => nv.manv === row.manv);
-            return nv ? `${nv.hoten} (${nv.manv})` : "Không xác định";
-        }},
+            }
+        },
+        {
+            tieude: "Mã nhân viên", cotnhandulieu: "manv", render(row) {
+                const nv = nhanVienList.find(nv => nv.manv === row.manv);
+                return nv ? `${nv.hoten} (${nv.manv})` : "Không xác định";
+            }
+        },
         { tieude: "Số lượng", cotnhandulieu: "soluong" },
         {
             tieude: "Giá dự kiến", cotnhandulieu: "giA_DUKIEN", render(row) {
@@ -410,7 +452,7 @@ const BookingPage = () => {
                     disabled={modalType === 'edit'} />
                 {formErrors.bookingID && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.bookingID}</span>}
             </div>
-            <div className="form-group">
+            <div hidden={modalType === 'edit'} className="form-group">
                 <label>Chi Nhánh:</label>
                 <select id="branchID" value={formData.branchID} onChange={handleChange}>
                     <option value="">-- Chọn chi nhánh --</option>
@@ -421,7 +463,7 @@ const BookingPage = () => {
                 </select>
                 {formErrors.branchID && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.branchID}</span>}
             </div>
-            <div className="form-group">
+            <div hidden={modalType === 'edit'} className="form-group">
                 <label>Nhân viên:</label>
                 <select id="nhanvien" value={formData.nhanvien} disabled={!formData.branchID} onChange={handleChange}>
                     <option value="">-- Chọn nhân viên --</option>
@@ -434,12 +476,12 @@ const BookingPage = () => {
                 </select>
                 {formErrors.nhanvien && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.nhanvien}</span>}
             </div>
-            <div className="form-group">
+            <div hidden={modalType === 'edit'} className="form-group">
                 <label>Ngày hẹn:</label>
                 <input type="date" id="bookingDate" value={formData.bookingDate} onChange={handleChange} />
                 {formErrors.bookingDate && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.bookingDate}</span>}
             </div>
-            <div className="form-group">
+            <div hidden={modalType === 'edit'} className="form-group">
                 <label>Giờ hẹn:</label>
                 <select
                     id="bookingTime"
@@ -459,7 +501,7 @@ const BookingPage = () => {
                 {formErrors.bookingTime && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.bookingTime}</span>}
             </div>
 
-            <div className="form-group">
+            <div hidden={modalType === 'edit'} className="form-group">
                 <label>Khách Hàng:</label>
                 <select id="customerID" value={formData.customerID} onChange={handleChange}>
                     <option value="">-- Chọn khách hàng --</option>
@@ -472,7 +514,7 @@ const BookingPage = () => {
                 </select>
                 {formErrors.customerID && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.customerID}</span>}
             </div>
-            <div className="form-group">
+            <div hidden={modalType === 'edit'} className="form-group">
                 <label>Dịch vụ:</label>
                 <select id="dichvu" value={formData.dichvu} onChange={handleChange}>
                     <option value="">-- Chọn dịch vụ --</option>
@@ -485,10 +527,23 @@ const BookingPage = () => {
                 </select>
                 {formErrors.dichvu && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.dichvu}</span>}
             </div>
-            <div className="form-group">
+            <div hidden={modalType === 'edit'} className="form-group">
                 <label>Số lượng:</label>
                 <input type="number" id="soluong" value={formData.soluong} onChange={handleChange} min="1" max="20" />
             </div>
+            <div hidden={modalType === 'add'} className="form-group">
+                <label>Trạng thái:</label>
+                <select id="status" value={formData.status} onChange={handleChange}>
+                    <option value="">-- Chọn trạng thái --</option>
+                    <option value="Đã đặt">Đã đặt</option>
+                    <option value="Đang chờ">Đang chờ</option>
+                    <option value="Đang thực hiện">Đang thực hiện</option>
+                    <option value="Hoàn thành">Hoàn thành</option>
+                    <option value="Đã huỷ">Đã huỷ</option>
+                </select>
+                {formErrors.trangthai && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.trangthai}</span>}
+            </div>
+
             <button type="submit" className="btn primary">{modalType === 'add' ? 'Lưu mới' : 'Cập nhật'}</button>
         </>
     );
@@ -501,14 +556,14 @@ const BookingPage = () => {
                 </div>
                 {/* CHỈ RENDER KHU VỰC NÀY NẾU IDtoView CÓ GIÁ TRỊ */}
                 {IDtoView && (
-                    <div id="booking-details" className="booking-details" style={{display: 'block'}}>
+                    <div id="booking-details" className="booking-details" style={{ display: 'block' }}>
                         {error && <p style={{ color: 'red' }}>{error}</p>}
 
                         <h3 id="tieudechitiet">Chi tiết lịch hẹn {IDtoView}</h3>
                         <button
                             type="button"
                             className="btn small"
-                            onClick={() => {    
+                            onClick={() => {
                                 setIDtoView(null); //ẩn bảng
                                 setViewDetailsList([]); //Xóa data
                             }}
@@ -520,7 +575,7 @@ const BookingPage = () => {
                             data={viewDetailsList}
                             isLoading={isLoading}
                         />
-                        
+
                     </div>
                 )}
                 <div className="panel">
