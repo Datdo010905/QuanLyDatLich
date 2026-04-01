@@ -9,7 +9,7 @@ namespace Models
     public class LichHen
     {
         public string MaLich { get; set; }
-        public DateOnly NgayHen { get; set; }
+        public DateTime NgayHen { get; set; }
         public TimeSpan GioHen { get; set; }
         public string TrangThai { get; set; }
         public string MaChiNhanh { get; set; }

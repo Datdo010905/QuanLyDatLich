@@ -31,7 +31,7 @@ namespace API_Stylist.Controllers
                 list.Add(new
                 {
                     MALICH = row["MALICH"].ToString().Trim(),
-                    NGAYHEN = row["NGAYHEN"].ToString().Trim(),
+                    NGAYHEN = row["NGAYHEN"],
                     GIOHEN = row["GIOHEN"].ToString().Trim(),
                     TRANGTHAI = row["TRANGTHAI"].ToString().Trim(),
                     MAKH = row["MAKH"].ToString().Trim(),

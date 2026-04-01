@@ -382,7 +382,7 @@ const BookingPage = () => {
     //Định nghĩa cột cho DataTable theo api trả về
     const bookingColumns: Column<Booking>[] = [
         { tieude: "ID", cotnhandulieu: "malich" },
-        { tieude: "Ngày hẹn", cotnhandulieu: "ngayhen", render: (row) => row.ngayhen ? new Date(row.ngayhen).toLocaleDateString() : '' },
+        { tieude: "Ngày hẹn", cotnhandulieu: "ngayhen", render: (row) => row.ngayhen ? new Date(row.ngayhen).toLocaleDateString('vi-VN') : '' },
         {
             tieude: "Giờ hẹn", cotnhandulieu: "giohen"
         },
@@ -464,31 +464,34 @@ const BookingPage = () => {
         if (!formData.nhanvien || !formData.bookingDate) {
             return [];
         }
-
-        //tìm nhân viên đã chọn có những lịch hẹn nào trong ngày đó
+        //tìm lịch đã được khách chọn nhân viên thực hiện trong ngày đó
         const bookedIdsForStaff = bookingDetailsList
             .filter(detail => detail.manv === formData.nhanvien)
-            .map(detail => detail.malich);
+            .map(detail => detail.malich?.trim()); 
 
-        //lọc ra những lịch hẹn của nhân viên đó vào ngày đã chọn và chưa bị huỷ
-        const bookedAppointments = bookingList.filter(booking => {
-            const isSameDate = booking.ngayhen && booking.ngayhen.split('T')[0] === formData.bookingDate;
-            const isNotCancelled = booking.trangthai !== "Đã huỷ";
-            const isStaffAssigned = bookedIdsForStaff.includes(booking.malich);
+        //lọc ra những lịch ngày đó, chưa huỷ hoặc chưa hoàn thành và có nhân viên thực hiện trùng với nhân viên đang chọn
+        const lichDabook = bookingList.filter(booking => {
+            const trungNgay = booking.ngayhen && booking.ngayhen.split('T')[0] === formData.bookingDate;
+            const chuahuy = booking.trangthai !== "Đã huỷ";
+            const chuahoanthanh = booking.trangthai !== "Đã hoàn thành";
+            //iclude kiểm tra mã lịch của booking có nằm trong danh sách mã lịch đã được chọn nhân viên thực hiện hay không
+            const NVDuocChon = bookedIdsForStaff.includes(booking.malich?.trim());
 
-            return isSameDate && isNotCancelled && isStaffAssigned;
+            return trungNgay && chuahuy && chuahoanthanh && NVDuocChon;
         });
 
-        //giờ đã đặt của nhân viên đó trong ngày đã chọn
-        const bookedHours = bookedAppointments.map(b => b.giohen);
-
-        //tạo danh sách giờ trống từ 8:00 đến 22:00, cách 30 phút, và loại bỏ những giờ đã đặt
+        //giờ hẹn từ API
+        //Chỉ lấy 5 ký tự đầu (HH:mm) để bỏ qua giây (nếu có)
+        const bookedHours = lichDabook.map(b => {
+            return b.giohen ? b.giohen.substring(0, 5) : ""; 
+        });
+        //tạo danh sách giờ trống từ 8h đến 22h với khoảng cách 30 phút
         const hours: string[] = [];
         for (let h = 8; h <= 22; h++) {
             for (let m of [0, 30]) {
+                //Định dạng giờ thành HH:mm
                 const time = `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
-
-                //thêm vào giờ trống nếu nó chưa bị đặt
+                //thêm vào select
                 if (!bookedHours.includes(time)) {
                     hours.push(time);
                 }
