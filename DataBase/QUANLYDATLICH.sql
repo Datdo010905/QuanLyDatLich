@@ -410,3 +410,61 @@ GO
 SELECT * FROM LICHHEN L INNER JOIN KHACHHANG K 
 ON K.MAKH = L.MAKH
 WHERE MALICH = '0352512556' OR K.SDT = '0352512556'
+
+-- tự động tạo hoá đơn--
+CREATE OR ALTER TRIGGER TRG_TuDongTaoHoaDonTuLichHenDaHoanThanh
+ON LICHHEN
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    --kiểm tra có thay đổi trạng thái
+    IF UPDATE(TRANGTHAI)
+    BEGIN
+    -- tạo bảng tạm
+        DECLARE @HoaDonMoi TABLE (
+            MALICH CHAR(20),
+            MAHD CHAR(20),
+            MAKH CHAR(20),
+            MANV CHAR(20),
+            TONGTIEN INT
+        );
+        --đổ dữ liệu khi đã hoàn thành
+        INSERT INTO @HoaDonMoi (MALICH, MAHD, MAKH, MANV, TONGTIEN)
+        SELECT 
+            i.MALICH,
+            'HD' + FORMAT(GETDATE(), 'yyMMdd') + RIGHT(NEWID(), 4), 
+            i.MAKH,
+            NULL,--chưa có thu ngân
+            ISNULL((SELECT SUM(SOLUONG * GIA_DUKIEN) FROM CHITIETLICHHEN WHERE MALICH = i.MALICH), 0)
+        FROM inserted i
+        JOIN deleted d ON i.MALICH = d.MALICH
+        WHERE i.TRANGTHAI = N'Hoàn thành' 
+          AND d.TRANGTHAI <> N'Hoàn thành';-- chỉ thay đổi trạng thái mới được 
+
+          --đưa vào hoadon
+        INSERT INTO HOADON (MAHD, MAKH, MALICH, MAKM, MANV, TRANGTHAI, TONGTIEN, HINHTHUCTHANHTOAN)
+        SELECT 
+            MAHD,
+            MAKH,
+            MALICH,
+            NULL, --chưa có mã km
+            MANV,
+            N'Chưa thanh toán', 
+            TONGTIEN,
+            NULL--chưa có hình thức tt
+        FROM @HoaDonMoi;
+        --thêm cthd dựa trên ctlh
+        INSERT INTO CHITIETHOADON (MAHD, MADV, SOLUONG, DONGIA, THANHTIEN)
+        SELECT 
+            h.MAHD,
+            c.MADV,
+            c.SOLUONG,
+            c.GIA_DUKIEN,
+            (c.SOLUONG * c.GIA_DUKIEN)
+        FROM CHITIETLICHHEN c
+        JOIN @HoaDonMoi h ON c.MALICH = h.MALICH;
+
+    END
+END;
+GO
