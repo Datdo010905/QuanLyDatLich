@@ -27,11 +27,12 @@ namespace API_ThuNgan.Controllers
                 list.Add(new
                 {
                     MAHD = row["MAHD"].ToString().Trim(),
+                    MAKH = row["MAKH"].ToString().Trim(),
                     MAKM = row["MAKM"].ToString().Trim(),
+                    MALICH = row["MALICH"].ToString().Trim(),
+                    MANV = row["MANV"].ToString().Trim(),
                     TONGTIEN = row["TONGTIEN"].ToString().Trim(),
                     HINHTHUCTHANHTOAN = row["HINHTHUCTHANHTOAN"].ToString().Trim(),
-                    MANV = row["MANV"].ToString().Trim(),
-                    MALICH = row["MALICH"].ToString().Trim(),
                     TRANGTHAI = row["TRANGTHAI"].ToString().Trim(),
                 });
             }
