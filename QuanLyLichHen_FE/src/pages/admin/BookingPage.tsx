@@ -451,7 +451,8 @@ const BookingPage = () => {
         { tieude: "Số lượng", cotnhandulieu: "soluong" },
         {
             tieude: "Giá dự kiến", cotnhandulieu: "giA_DUKIEN", render(row) {
-                return row.giA_DUKIEN.toLocaleString() + " VNĐ";
+               const value = parseFloat(row.giA_DUKIEN as any);
+                return value ? value.toLocaleString('vi-VN') + '₫': "0₫";
             },
         },
         { tieude: "Ghi chú", cotnhandulieu: "ghichu" },

@@ -222,8 +222,15 @@ const DichVuPage: React.FC = () => {
         { tieude: "ID", cotnhandulieu: "madv" },
         { tieude: "Tên dịch vụ", cotnhandulieu: "tendv" },
         { tieude: "Thời gian", cotnhandulieu: "thoigian", render: (row) => `${row.thoigian} phút` },
-        { tieude: "Giá", cotnhandulieu: "giadv", render: (row) => `${row.giadv.toLocaleString("vi-VN")} ₫` },
-        { tieude: "Trạng thái", cotnhandulieu: "trangthai", render: (row) => {
+        {
+            tieude: "Giá", cotnhandulieu: "giadv", render: (row) => {
+                const value = parseFloat(row.giadv as any);
+                return value ? value.toLocaleString('vi-VN') + '₫' : "0₫";
+            }
+
+        },
+        {
+            tieude: "Trạng thái", cotnhandulieu: "trangthai", render: (row) => {
                 const codeStatus = row.trangthai;
                 const style = status[codeStatus] || status['Đang cung cấp'];
 
@@ -236,10 +243,11 @@ const DichVuPage: React.FC = () => {
                         whiteSpace: 'nowrap',
                         ...style
                     }}>
-                    {codeStatus}
+                        {codeStatus}
                     </span>
                 )
-            }},
+            }
+        },
         {
             tieude: "Ảnh", cotnhandulieu: "hinh", render: (row) => {
                 const imgPath = row.hinh?.startsWith('/') ? row.hinh : `/${row.hinh}`;
