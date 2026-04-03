@@ -141,7 +141,8 @@ const KhuyenMaiPage = () => {
 
         const currentDate = new Date();
         const endDate = new Date(formData.promotionKT);
-        const autoStatus = endDate < currentDate ? 'Hết hạn' : 'Đang áp dụng';
+        const startDate = new Date(formData.promotionBD);
+        const autoStatus = endDate < currentDate ? 'Hết hạn' : startDate > currentDate ? 'Chưa áp dụng' : 'Đang áp dụng';
 
         // Cập nhật trạng thái vào formData
         setFormData((prev) => ({ ...prev, promotionStatus: autoStatus }));
@@ -196,6 +197,7 @@ const KhuyenMaiPage = () => {
     const status: Record<string, React.CSSProperties> = {
         'Hết hạn': { backgroundColor: '#fff1f0', color: '#f5222d', border: '1px solid #ffa39e' },
         'Đang áp dụng': { backgroundColor: '#e6f7ff', color: '#52c41a', border: '1px solid #b7eb8f' },
+        'Chưa áp dụng': { backgroundColor: '#fffbe6', color: '#faad14', border: '1px solid #ffe58f' },
     };
     //Định nghĩa cột cho DataTable theo api trả về
     const taiKhoanColumns: Column<KhuyenMai>[] = [

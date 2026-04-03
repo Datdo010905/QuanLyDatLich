@@ -21,6 +21,10 @@ namespace BLL
         {
             return _DAL.GetAll();
         }
+        public DataTable GetAllCTTvaDHT()
+        {
+            return _DAL.GetAllCTTvaDHT();
+        }
         public DataTable GetByID(string ma)
         {
             return _DAL.GetById(ma);

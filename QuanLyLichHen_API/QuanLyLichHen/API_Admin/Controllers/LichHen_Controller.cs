@@ -54,6 +54,20 @@ namespace API_Stylist.Controllers
                 return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
             }
         }
+        [Route("get-all-lichhenCTTvaDHT")]
+        [HttpGet]
+        public IActionResult GetAllCTTvaDHT()
+        {
+            try
+            {
+                DataTable dt = _BLL.GetAllCTTvaDHT();
+                return Ok(new { success = true, message = "Lấy danh sách lịch hẹn thành công:", data = ConvertToList(dt) });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
         [Route("get-all-CTlichhen")]
         [HttpGet]
         public IActionResult GetAllCT()

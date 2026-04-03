@@ -22,7 +22,11 @@ const BookingApi = {
         const url = '/api-admin/LichHen_/get-all-lichhen';
         return axiosClient.get<{ success: boolean; message: string; data: Booking[] }>(url);
     },
-     getAllCT() {
+    getAllCTTvaDHT() {
+        const url = '/api-admin/LichHen_/get-all-lichhenCTTvaDHT';
+        return axiosClient.get<{ success: boolean; message: string; data: Booking[] }>(url);
+    },
+    getAllCT() {
         const url = '/api-admin/LichHen_/get-all-CTlichhen';
         return axiosClient.get<{ success: boolean; message: string; data: BookingDetails[] }>(url);
     },
@@ -56,15 +60,15 @@ const BookingApi = {
     },
     update(id: string, trangthai: string) {
         const url = `/api-admin/LichHen_/update-lichhen?ma=${id}&trangthai=${trangthai}`;
-        return axiosClient.put(url); 
+        return axiosClient.put(url);
     },
     delete(id: string) {
         const url = `/api-admin/LichHen_/delete-lichhen?ma=${id}`;
-        return axiosClient.delete(url); 
+        return axiosClient.delete(url);
     },
     deleteCT(id: string) {
         const url = `/api-admin/LichHen_/delete-CTlichhen?ma=${id}`;
-        return axiosClient.delete(url); 
+        return axiosClient.delete(url);
     }
 };
 

@@ -27,6 +27,18 @@ namespace DAL
                 throw new Exception("Lỗi khi lấy danh sách lịch hẹn: " + ex.Message);
             }
         }
+        public DataTable GetAllCTTvaDHT()
+        {
+            try
+            {
+                DataTable dt = db.GetDataTable("SELECT * FROM LICHHEN L INNER JOIN HOADON H ON L.MALICH=H.MALICH WHERE H.TRANGTHAI = N'Chưa thanh toán'");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy danh sách lịch hẹn: " + ex.Message);
+            }
+        }
         public DataTable GetAllByIdNV(string manv)
         {
             try
