@@ -185,10 +185,6 @@ const BookingPage = () => {
     //HÀM SUBMIT CHO CẢ THÊM VÀ SỬA
     const handleSubmitForm = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        //Kiểm tra dữ liệu với Zod
-        const validationResult = BookingSchema.safeParse(formData);
-
         //có lỗi
         if (modalType === 'add') {
             // Kiểm tra toàn bộ dữ liệu với Zod khi thêm mới

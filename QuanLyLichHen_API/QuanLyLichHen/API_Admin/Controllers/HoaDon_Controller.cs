@@ -128,7 +128,7 @@ namespace API_ThuNgan.Controllers
                 if (dt.Rows.Count == 0)
                 {
                     DataTable data = _BLL.Create(model);
-                    return Ok(new { success = true, message = "Thêm thông tin hoá đơn thành công:", data = ConvertToList(dt) });
+                    return Ok(new { success = true, message = "Thêm thông tin hoá đơn thành công:", data = ConvertToList(data) });
                 }
                 else
                 {

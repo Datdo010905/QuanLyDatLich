@@ -55,9 +55,13 @@ const HoaDonApi = {
             }
         });
     },
-    update(id: string, trangthai: string) {
-        const url = `/api-admin/HoaDon_/update-HoaDon?ma=${id}&trangthai=${trangthai}`;
-        return axiosClient.put(url); 
+    update(data: FormData) {
+        const url = `/api-admin/HoaDon_/update-HoaDon`;
+        return axiosClient.put(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
     },
     delete(id: string) {
         const url = `/api-admin/HoaDon_/delete-HoaDon?ma=${id}`;
