@@ -409,7 +409,6 @@ const HoaDonPage = () => {
                 <label>Lịch hẹn:</label>
                 <select id="bookingID" disabled={modalType === 'edit'} value={formData.bookingID} onChange={handleChange}>
                     <option value="">Không có lịch hẹn</option>
-
                     {formData.bookingID && formData.bookingID !== "" && (
                         <option value={formData.bookingID}>{formData.bookingID}</option>
                     )}
@@ -569,16 +568,16 @@ const HoaDonPage = () => {
                 return `${row.makh} - ${tenkh ? tenkh : "Khách vãng lai"}`;
             }
         },
-        {
-            tieude: "Khuyến mại", cotnhandulieu: "makm", render: (row) => {
-                return row.makm ? row.makm : "Không có";
-            }
-        },
-        {
-            tieude: "Lịch hẹn", cotnhandulieu: "malich", render: (row) => {
-                return row.malich ? row.malich : "Không có";
-            }
-        },
+        // {
+        //     tieude: "Khuyến mại", cotnhandulieu: "makm", render: (row) => {
+        //         return row.makm ? row.makm : "Không có";
+        //     }
+        // },
+        // {
+        //     tieude: "Lịch hẹn", cotnhandulieu: "malich", render: (row) => {
+        //         return row.malich ? row.malich : "Không có";
+        //     }
+        // },
         {
             tieude: "Thu ngân", cotnhandulieu: "manv", render: (row) => {
                 const tennv = nhanVienList.find(nv => nv.manv === row.manv)?.hoten;

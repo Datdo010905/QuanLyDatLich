@@ -1,15 +1,38 @@
 
 import StatCard from "../../components/ui/StatCard";
-// Import mảng dữ liệu
-import { KHACHHANG, LICHHEN } from '../../data/static_content';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../../components/ui/Modal";
+import CustomerApi from "../../api/customerApi";
+import BookingApi, { Booking } from "../../api/bookingApi";
 const DashboardPage: React.FC = () => {
 
-    const totalCustomers = KHACHHANG.length;
-    const today = "2025-10-09";
-    const bookingsToday = LICHHEN.filter(lich => lich.NGAYHEN === today);
-    const totalBookingsToday = bookingsToday.length;
+    //lưu state để dùng
+    const [totalCustomers, setTotalCustomers] = useState(0);
+    const [bookingsToday, setTotalBookingsToday] = useState(0);
+
+    const today = new Date().toISOString().split('T')[0];
+
+
+
+    const fetchData = async () => {
+        const resKH = await CustomerApi.getAll();
+
+        if (resKH.data.success) {
+            setTotalCustomers(resKH.data.data.length);
+        }
+        const resBooking = await BookingApi.getAll();
+        if (resBooking.data.success) {
+            const homnay = resBooking.data.data;
+            const Todaybookings = homnay.filter(
+                lich => lich.ngayhen.split('T')[0] === today
+            );
+            setTotalBookingsToday(Todaybookings.length);
+        }
+    };
+    // Tải dữ liệu khi component mount
+    useEffect(() => {
+        fetchData();
+    }, []);
     return (
         <>
             <div id="dashboard" className="section active-section">
@@ -20,7 +43,7 @@ const DashboardPage: React.FC = () => {
                     />
                     <StatCard
                         title="Đặt lịch hôm nay"
-                        value={totalBookingsToday}
+                        value={bookingsToday}
                         subText={`Cập nhật ngày: ${today}`}
                     />
                 </div>
