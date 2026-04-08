@@ -8,7 +8,6 @@ import { BookingSchema } from "../../utils/bookingSchema";
 import customerApi, { Customer } from "../../api/customerApi";
 import dichVuApi, { DichVu } from "../../api/dichvuApi";
 import staffApi, { NhanVien } from "../../api/staffApi";
-import { set } from "zod";
 
 const BookingPage = () => {
     //khởi tạo state
