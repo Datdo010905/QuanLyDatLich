@@ -49,8 +49,9 @@ namespace DAL
                 string maKHSql = string.IsNullOrEmpty(model.MaKH) ? "NULL" : $"'{model.MaKH.Trim()}'";
                 string maLichSql = string.IsNullOrEmpty(model.MaLich) ? "NULL" : $"'{model.MaLich.Trim()}'";
                 string maKMSql = string.IsNullOrEmpty(model.MaKM) ? "NULL" : $"'{model.MaKM.Trim()}'";
+                string ngayTT = $"'{model.NgayTT:yyyy-MM-dd}'";
 
-                string query = $@"INSERT INTO HOADON (MAHD, MAKH, MALICH, MAKM, MANV, TRANGTHAI, TONGTIEN, HINHTHUCTHANHTOAN)
+                string query = $@"INSERT INTO HOADON (MAHD, MAKH, MALICH, MAKM, MANV, TRANGTHAI, TONGTIEN, HINHTHUCTHANHTOAN, NGAYTHANHTOAN)
                           VALUES (
                             '{model.MaHD?.Trim()}',
                             {maKHSql},
@@ -59,7 +60,8 @@ namespace DAL
                             '{model.MaNV?.Trim()}',
                             N'{model.TrangThai?.Trim()}',
                             {model.TongTien}, 
-                            N'{model.HinhThucThanhToan?.Trim()}'
+                            N'{model.HinhThucThanhToan?.Trim()}',
+                            {ngayTT}
                         )";
 
                 DataTable dt = db.GetDataTable(query);
@@ -78,6 +80,7 @@ namespace DAL
                 string maKHSql = string.IsNullOrEmpty(model.MaKH) ? "NULL" : $"'{model.MaKH.Trim()}'";
                 string maLichSql = string.IsNullOrEmpty(model.MaLich) ? "NULL" : $"'{model.MaLich.Trim()}'";
                 string maKMSql = string.IsNullOrEmpty(model.MaKM) ? "NULL" : $"'{model.MaKM.Trim()}'";
+                string ngayTT = $"'{model.NgayTT:yyyy-MM-dd}'";
 
                 string query = $@"UPDATE HOADON 
                           SET 
@@ -87,7 +90,8 @@ namespace DAL
                               MANV = '{model.MaNV?.Trim()}',
                               TRANGTHAI = N'{model.TrangThai?.Trim()}',
                               TONGTIEN = {model.TongTien},
-                              HINHTHUCTHANHTOAN = N'{model.HinhThucThanhToan?.Trim()}'
+                              HINHTHUCTHANHTOAN = N'{model.HinhThucThanhToan?.Trim()}',
+                              NGAYTHANHTOAN = {ngayTT}
                           WHERE MAHD = '{model.MaHD?.Trim()}'";
 
                 DataTable dt = db.GetDataTable(query);

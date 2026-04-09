@@ -35,6 +35,7 @@ namespace API_ThuNgan.Controllers
                     TONGTIEN = row["TONGTIEN"].ToString().Trim(),
                     HINHTHUCTHANHTOAN = row["HINHTHUCTHANHTOAN"].ToString().Trim(),
                     TRANGTHAI = row["TRANGTHAI"].ToString().Trim(),
+                    NGAYTHANHTOAN = row["NGAYTHANHTOAN"]
                 });
             }
             return list;

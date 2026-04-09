@@ -10,6 +10,7 @@ export interface HoaDon {
     tongtien: number;
     hinhthucthanhtoan: string;
     trangthai: string;
+    ngaythanhtoan: string;
 };
 export interface HoaDonDetails {
     mahd: string;

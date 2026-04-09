@@ -15,6 +15,7 @@ const ReportPage = () => {
     const [totalLichHen, setTotalLichHen] = useState(0);
     const [bookingList, setbookingList] = useState<Booking[]>([]);
     const [lichTC, setLTC] = useState(0);
+    const [tongDT, settongDT] = useState(0);
 
     const [totalHoaDon, setTotalHoaDon] = useState(0);
     const [HoaDonList, setHoaDonList] = useState<HoaDon[]>([]);

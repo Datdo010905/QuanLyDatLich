@@ -16,5 +16,6 @@ namespace Models
         public int TongTien { get; set; } 
         public string HinhThucThanhToan { get; set; }
         public string TrangThai { get; set; }
+        public DateTime NgayTT { get; set; }
     }
 }

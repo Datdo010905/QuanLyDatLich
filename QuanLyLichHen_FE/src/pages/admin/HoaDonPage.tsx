@@ -80,6 +80,8 @@ const HoaDonPage = () => {
             if (resBookingDetails.data.success) {
                 setBookingDetailsList(resBookingDetails.data.data);
             }
+            // const ngaythanhtoan = new Date().toISOString().split('T')[0];
+            // console.log(ngaythanhtoan);
 
 
         } catch (err) {
@@ -106,6 +108,7 @@ const HoaDonPage = () => {
         methodPayment: '',
         status: '',
         branchID: '',
+        dateThanhToan: ''
     });
     const [formDataDetails, setFormDataDetails] = useState({
         hoadonID: '',
@@ -125,7 +128,8 @@ const HoaDonPage = () => {
             sum: '',
             methodPayment: '',
             status: '',
-            branchID: ''
+            branchID: '',
+            dateThanhToan: ''
         });
         setFormDataDetails({
             hoadonID: '',
@@ -207,20 +211,26 @@ const HoaDonPage = () => {
             const giamgia = khuyenmaiSelected ? (khuyenmaiSelected.giatri) : 0;
 
             const tongTienGoc = donGia * soLuong;
-            console.log("Tiền chưa giảm giá:", tongTienGoc);
-            console.log("Đơn giá:", donGia);
-            console.log("Số lượng:", soLuong);
-            console.log("Khuyến mại:", giamgia / 100);
+            //console.log("Tiền chưa giảm giá:", tongTienGoc);
+            //console.log("Đơn giá:", donGia);
+            //console.log("Số lượng:", soLuong);
+            //console.log("Khuyến mại:", giamgia / 100);
             finalTongTien = Math.round(tongTienGoc - (tongTienGoc * giamgia / 100));
         } else {
             finalTongTien = Math.round(Number(formData.sum || 0));
         }
-        console.log("Tổng tiền chuẩn bị gửi đi là:", finalTongTien);
+        //console.log("Tổng tiền chuẩn bị gửi đi là:", finalTongTien);
 
 
         submitData.append('TongTien', finalTongTien.toString());
         submitData.append('HinhThucThanhToan', formData.methodPayment);
         submitData.append('TrangThai', formData.status || 'Chưa thanh toán');
+        //chỉ thêm mới lấy ngày hiện tại
+        const ngayTT = modalType === 'add'
+            ? new Date().toISOString().split('T')[0]
+            : formData.dateThanhToan; // Lấy lại ngày cũ đã lưu trong state khi sửa
+
+        submitData.append('NgayTT', ngayTT);
 
         //form chi tiết hoá đơn
         const submitDataCT = new FormData();
@@ -356,7 +366,8 @@ const HoaDonPage = () => {
             sum: row.tongtien.toString() || '',
             methodPayment: row.hinhthucthanhtoan || '',
             status: row.trangthai || 'Chưa thanh toán',
-            branchID: machiNhanh
+            branchID: machiNhanh,
+            dateThanhToan: row.ngaythanhtoan ? row.ngaythanhtoan.split('T')[0] : '',
         });
         setFormErrors({}); // Xóa lỗi cũ
         setModalType('edit');
@@ -373,7 +384,8 @@ const HoaDonPage = () => {
             sum: row.tongtien.toString() || '',
             methodPayment: row.hinhthucthanhtoan || '',
             status: row.trangthai || 'Chưa thanh toán',
-            branchID: machiNhanh
+            branchID: machiNhanh,
+            dateThanhToan: row.ngaythanhtoan || 'Không xác định'
         });
         setFormDataDetails({
             hoadonID: row.mahd || '',
@@ -496,6 +508,16 @@ const HoaDonPage = () => {
                 <input disabled={modalType === 'edit'} type="text" id="sum" placeholder="Tổng tiền..." value={formData.sum} onChange={handleChange} />
                 {formErrors.sum && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.sum}</span>}
             </div>
+            <div className="form-group">
+                <label>Ngày thanh toán:</label>
+                <input
+                    type="date"
+                    id="dateThanhToan"
+                    value={formData.dateThanhToan}
+                    onChange={handleChange}
+                    disabled={modalType === 'edit'}
+                />
+            </div>
             <div hidden={modalType === "addDetails"} className="form-group">
                 <label>Hình thức thanh toán:</label>
                 <select id="methodPayment" value={formData.methodPayment} onChange={handleChange}>
@@ -562,6 +584,11 @@ const HoaDonPage = () => {
     //Định nghĩa cột cho DataTable theo api trả về
     const hoadonColumns: Column<HoaDon>[] = [
         { tieude: "ID", cotnhandulieu: "mahd" },
+        {
+            tieude: "Ngày lập", cotnhandulieu: "ngaythanhtoan", render(row) {
+                return row.ngaythanhtoan ? new Date(row.ngaythanhtoan).toLocaleDateString('vi-VN') : "Chưa có";
+            },
+        },
         {
             tieude: "Khách hàng", cotnhandulieu: "makh", render: (row) => {
                 const tenkh = customerList.find(kh => kh.makh === row.makh)?.hoten;
