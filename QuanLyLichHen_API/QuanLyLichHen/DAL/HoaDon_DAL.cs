@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -28,6 +29,18 @@ namespace DAL
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi lấy danh sách hoá đơn: " + ex.Message);
+            }
+        }
+        public DataTable GetHoaDonTheoNgay(string ngayBD, string ngayKT)
+        {
+            try
+            {
+                DataTable dt = db.GetDataTable("SELECT * FROM HOADON WHERE NGAYTHANHTOAN BETWEEN '"+ngayBD.Trim()+"' AND '"+ngayKT.Trim()+"' ORDER BY NGAYTHANHTOAN DESC; ");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy danh sách hoá đơn theo ngày: " + ex.Message);
             }
         }
         public DataTable GetById(string ma)

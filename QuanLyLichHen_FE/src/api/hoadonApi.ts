@@ -36,6 +36,10 @@ const HoaDonApi = {
         const url = `/api-admin/HoaDon_/get-byId-HoaDon?ma=${id}`;
         return axiosClient.get<{ success: boolean; message: string; data: HoaDon }>(url);
     },
+    getByNgay(ngaybd: string, ngaykt: string) {
+        const url = `/api-admin/HoaDon_/get-all-hoadonTheoNgay?ngaybd=${ngaybd}&ngaykt=${ngaykt}`;
+        return axiosClient.get<{ success: boolean; message: string; data: HoaDon[] }>(url);
+    },
     getByIdCT(id: string) {
         const url = `/api-admin/HoaDon_/get-byId-CTHoaDon?ma=${id}`;
         return axiosClient.get<{ success: boolean; message: string; data: HoaDonDetails }>(url);

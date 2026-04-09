@@ -54,6 +54,20 @@ namespace API_ThuNgan.Controllers
                 return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
             }
         }
+        [Route("get-all-hoadonTheoNgay")]
+        [HttpGet]
+        public IActionResult GetAllTheoNgay(string ngaybd, string ngaykt)
+        {
+            try
+            {
+                DataTable dt = _BLL.GetHoaDonTheoNgay(ngaybd, ngaykt);
+                return Ok(new { success = true, message = "Lấy danh sách hoá đơn theo ngày thành công:", data = ConvertToList(dt) });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
         [Route("get-all-CThoadon")]
         [HttpGet]
         public IActionResult GetAllCT()

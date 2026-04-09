@@ -27,6 +27,18 @@ namespace DAL
                 throw new Exception("Lỗi khi lấy danh sách lịch hẹn: " + ex.Message);
             }
         }
+        public DataTable GetTheoNgay(string ngayBD, string ngayKT)
+        {
+            try
+            {
+                DataTable dt = db.GetDataTable("SELECT * FROM LICHHEN WHERE NGAYHEN BETWEEN '" + ngayBD.Trim() + "' AND '" + ngayKT.Trim() + "' ORDER BY NGAYHEN DESC; ");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy danh sách lịch hẹn theo ngày: " + ex.Message);
+            }
+        }
         public DataTable GetAllCTTvaDHT()
         {
             try

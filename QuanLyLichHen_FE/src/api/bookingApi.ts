@@ -38,6 +38,10 @@ const BookingApi = {
         const url = `/api-admin/LichHen_/get-byId-lichhen?ma=${id}`;
         return axiosClient.get<{ success: boolean; message: string; data: Booking }>(url);
     },
+    getByNgay(ngaybd: string, ngaykt: string) {
+        const url = `/api-admin/LichHen_/get-all-lichhenTheoNgay?ngaybd=${ngaybd}&ngaykt=${ngaykt}`;
+        return axiosClient.get<{ success: boolean; message: string; data: Booking[] }>(url);
+    },
     getByIdCT(id: string) {
         const url = `/api-admin/LichHen_/get-byId-CTlichhen?ma=${id}`;
         return axiosClient.get<{ success: boolean; message: string; data: BookingDetails }>(url);

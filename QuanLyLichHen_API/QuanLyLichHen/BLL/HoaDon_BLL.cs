@@ -22,6 +22,10 @@ namespace BLL
         {
             return _DAL.GetAll();
         }
+        public DataTable GetHoaDonTheoNgay(string ngaybd, string ngaykt)
+        {
+            return _DAL.GetHoaDonTheoNgay(ngaybd, ngaykt);
+        }
         public DataTable GetByID(string ma)
         {
             return _DAL.GetById(ma);
