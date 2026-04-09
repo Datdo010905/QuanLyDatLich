@@ -11,6 +11,17 @@ export interface DichVu {
     hinh: string;
     quytrinh: string;
 };
+export interface TopDVData {
+    madv: string;
+    tendv: string;
+    mota: string;
+    thoigian: number;
+    giadv: number;
+    trangthai: string;
+    hinh: string;
+    quytrinh: string;
+    solan: number;
+};
 
 const dichVuApi = {
     // Hàm lấy danh sách tất cả dịch vụ

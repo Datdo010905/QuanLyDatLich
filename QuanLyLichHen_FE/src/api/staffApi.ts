@@ -12,6 +12,17 @@ export interface NhanVien {
     matk: string;
 };
 
+export interface TopStaffData {
+    manv: string;
+    hoten: string;
+    chucvu: string;
+    sdt: string;
+    diachi: string;
+    machinhanh: string;
+    ngaysinh: string;
+    matk: string;
+    solich: number;
+}
 const NhanVienApi = {
     getAll() {
         const url = '/api-admin/NhanVien_/get-all-nhanvien';

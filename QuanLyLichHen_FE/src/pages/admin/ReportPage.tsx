@@ -3,13 +3,14 @@ import StatCard from "../../components/ui/StatCard";
 import React, { useEffect, useState } from "react";
 import Modal from "../../components/ui/Modal";
 import CustomerApi from "../../api/customerApi";
-import BookingApi, { Booking } from "../../api/bookingApi";
-import StaffApi from "../../api/staffApi"
-import dichVuApi from "../../api/dichvuApi";
+import BookingApi, { Booking, BookingDetails } from "../../api/bookingApi";
+import StaffApi, { NhanVien, TopStaffData } from "../../api/staffApi"
+import dichVuApi, { DichVu, TopDVData } from "../../api/dichvuApi";
 import TaiKhoanApi from "../../api/taikhoanApi";
 import KhuyenMaiApi from "../../api/khuyenmaiApi";
-import HoaDonApi, { HoaDon } from "../../api/hoadonApi";
+import hoadonApi, { HoaDon, HoaDonDetails } from "../../api/hoadonApi";
 import { toast } from "react-toastify";
+import DataTable, { Column } from '../../components/ui/DataTable';
 
 const ReportPage = () => {
 
@@ -17,7 +18,16 @@ const ReportPage = () => {
     // const [totalHoaDon, setTotalHoaDon] = useState(0);
 
     const [bookingList, setbookingList] = useState<Booking[]>([]);
+    const [bookingDetailsList, setbookingDetailsList] = useState<BookingDetails[]>([]);
+    const [hoadonList, setHoadonList] = useState<HoaDon[]>([]);
+    const [hoadonDetailsList, setHoadonDetailsList] = useState<HoaDonDetails[]>([]);
+
     const [HoaDonList, setHoaDonList] = useState<HoaDon[]>([]);
+    const [NhanVienList, setNhanVienList] = useState<NhanVien[]>([]);
+    const [DichVuList, setDichVuList] = useState<DichVu[]>([]);
+
+    const [TopNV, setTopNV] = useState<TopStaffData[]>([]);
+    const [TopDV, setTopDV] = useState<TopDVData[]>([]);
 
     const [lichTC, setLTC] = useState(0);
     const [tongDT, settongDT] = useState(0);
@@ -26,7 +36,11 @@ const ReportPage = () => {
     const fetchData = async () => {
 
         const resBooking = await BookingApi.getAll();
-        const resHD = await HoaDonApi.getAll();
+        const resBookingCT = await BookingApi.getAllCT();
+        const resHD = await hoadonApi.getAll();
+        const resNV = await StaffApi.getAll();
+        const resDV = await dichVuApi.getAll();
+        const resHoaDonDetails = await hoadonApi.getAllCT();
 
         if (resBooking.data.success) {
             //setTotalLichHen(resBooking.data.data.length);
@@ -36,6 +50,20 @@ const ReportPage = () => {
             //setTotalHoaDon(resHD.data.data.length);
             setHoaDonList(resHD.data.data);
         }
+        if (resNV.data.success) {
+            setNhanVienList(resNV.data.data);
+        }
+        if (resDV.data.success) {
+            setDichVuList(resDV.data.data);
+        }
+        if (resBookingCT.data.success) {
+            setbookingDetailsList(resBookingCT.data.data);
+        }
+        if (resHoaDonDetails.data.success) {
+            setHoadonDetailsList(resHoaDonDetails.data.data);
+        }
+
+
 
     }
     const checkOK = () => {
@@ -51,10 +79,88 @@ const ReportPage = () => {
         settongDT(total);
         //console.log(total)
     }
+    //lấy nhân viên xuất hiện nhiều nhất trong các lịch hẹn
+    const gettopNV = () => {
+        //tạo mảng
+        const countNV: Record<string, number> = {};
+        bookingDetailsList.forEach(lh => {
+            //check true tránh underfined
+            if (lh.manv) {
+                countNV[lh.manv] = (countNV[lh.manv] || 0) + 1;//tìm nv nếu chưa có thì = 0, có thì + 1
+            };
+        });
+        //console.log(countNV);
+        //chuyển về ob cho dễ nhìn
+        const sortNhanVien = Object.entries(countNV)
+            .map(([manv, count]) => ({ manv, count }))
+            //Sắp xếp giảm dần
+            .sort((a, b) => b.count - a.count)
+            //lấy Top 5 nhân viên xuất sắc nhất
+            .slice(0, 5);
+        //console.log(sortNhanVien);
+        //return sortNhanVien;
+
+        const topStaffWithDetails = sortNhanVien.map(topItem => {
+            const staffDetail = NhanVienList.find(nv => nv.manv === topItem.manv);
+
+            return {
+                manv: topItem.manv,
+                hoten: staffDetail?.hoten || "Không xác định",
+                chucvu: staffDetail?.chucvu || "",
+                sdt: staffDetail?.sdt || "",
+                diachi: staffDetail?.diachi || "",
+                machinhanh: staffDetail?.machinhanh || "",
+                ngaysinh: staffDetail?.ngaysinh || "",
+                matk: staffDetail?.matk || "",
+                solich: topItem.count
+            };
+        });
+        //console.log(topStaffWithDetails)
+        setTopNV(topStaffWithDetails)
+    };
+
+
+
+
+
+    const gettopDV = () => {
+        //tạo mảng
+        const count: Record<string, number> = {};
+        hoadonDetailsList.forEach(hd => {
+            //check true tránh underfined
+            if (hd.madv) {
+                count[hd.madv] = (count[hd.madv] || 0) + 1;//tìm nv nếu chưa có thì = 0, có thì + 1
+            };
+        });
+        const sortDV = Object.entries(count)
+            .map(([madv, count]) => ({ madv, count }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 5);
+
+        const topDVWithDetails = sortDV.map(topItem => {
+            const DVDetail = DichVuList.find(dv => dv.madv === topItem.madv);
+
+            return {
+                madv: topItem.madv,
+                tendv: DVDetail?.tendv || "Dịch vụ không xác định",
+                mota: DVDetail?.mota || "",
+                thoigian: DVDetail?.thoigian || 0,
+                giadv: DVDetail?.giadv || 0,
+                trangthai: DVDetail?.trangthai || "",
+                hinh: DVDetail?.hinh || "",
+                quytrinh: DVDetail?.quytrinh || "",
+                solan: topItem.count//gán
+            };
+        });
+        console.log(topDVWithDetails);
+        setTopDV(topDVWithDetails);
+    };
 
     useEffect(() => {
         checkOK();
-    }, [bookingList, HoaDonList]);
+        gettopNV();
+        gettopDV();
+    }, [bookingList, HoaDonList, bookingDetailsList, NhanVienList, DichVuList, hoadonDetailsList]);
 
     //CHẠY KHI ĐC MOUNT
     useEffect(() => {
@@ -89,7 +195,7 @@ const ReportPage = () => {
             }
             const [resLichByNgay, resHoaDonByNgay] = await Promise.all([
                 BookingApi.getByNgay(formData.start, formData.end),
-                HoaDonApi.getByNgay(formData.start, formData.end)
+                hoadonApi.getByNgay(formData.start, formData.end)
             ]);
 
             if (resLichByNgay.data.success && resLichByNgay.data.data) {
@@ -119,8 +225,116 @@ const ReportPage = () => {
             end: ''
         })
         await fetchData();
-        toast.info('Làm mới thành công!');
+        toast.success('Làm mới thành công!');
     }
+    const handleClickExcel = async () => {
+        toast.info('Chức năng đang phát triển!');
+    }
+
+    const getChiNhanhName = (branchCode: string) => {
+        switch (branchCode) {
+            case "CN001": return "30Shine - Nguyễn Trãi";
+            case "CN002": return "30Shine - Cầu Giấy";
+            case "CN003": return "30Shine - Tân Bình";
+            case "CN004": return "30Shine - Đà Nẵng";
+            default: return "Không xác định";
+        }
+    };
+    //css theo chi nhánh
+    const branchStyles: Record<string, React.CSSProperties> = {
+        "CN001": { backgroundColor: '#fff1f0', color: '#f5222d' },
+        "CN002": { backgroundColor: '#e6f7ff', color: '#1890ff' },
+        "CN003": { backgroundColor: '#f6ffed', color: '#52c41a' },
+        "CN004": { backgroundColor: '#fff7e6', color: '#fa8c16' },
+    };
+    const roleStyles: Record<string, React.CSSProperties> = {
+        "Admin": { backgroundColor: '#fff1f0', color: '#f5222d', border: '1px solid #ffa39e' }, // Admin
+        "Quản lý": { backgroundColor: '#e6f7ff', color: '#1890ff', border: '1px solid #91d5ff' }, // Quản lý
+        "Stylist": { backgroundColor: '#f6ffed', color: '#52c41a', border: '1px solid #b7eb8f' }, // Stylist
+        "Thu ngân": { backgroundColor: '#fff7e6', color: '#fa8c16', border: '1px solid #ffd591' }, // Thu ngân
+        "Lễ tân": { backgroundColor: '#f9f0ff', color: '#722ed1', border: '1px solid #d3adf7' }, // Lễ tân
+    };
+
+    const staffColumns: Column<TopStaffData>[] = [
+        { tieude: "ID", cotnhandulieu: "manv" },
+        { tieude: "Họ tên", cotnhandulieu: "hoten" },
+        {
+            tieude: "Chức vụ", cotnhandulieu: "chucvu", render: (row) => {
+                const style = roleStyles[row.chucvu || ''] || {};
+                return (
+                    <span style={{
+                        padding: '4px 10px',
+                        borderRadius: '6px',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        whiteSpace: 'nowrap',
+                        ...style
+                    }}>
+                        {style ? row.chucvu : "Không xác định"}
+                    </span>
+                )
+            }
+        },
+        { tieude: "Số điện thoại", cotnhandulieu: "sdt" },
+        {
+            tieude: "Chi nhánh", cotnhandulieu: "machinhanh", render: (row) => {
+                const style = branchStyles[row.machinhanh || ''] || {};
+                return (
+                    <span style={style}>
+                        {getChiNhanhName(row.machinhanh || '')}
+                    </span>
+                );
+            }
+
+        },
+        {
+            tieude: "Ngày sinh", cotnhandulieu: "ngaysinh", render: (row) => {
+                const date = new Date(row.ngaysinh);
+                return date.toLocaleDateString('vi-VN');
+            }
+        },
+        {
+            tieude: "Số lịch hẹn", cotnhandulieu: "solich", render: (row) => {
+                return (
+                    <span style={{ color: '#2ecc71', fontWeight: 'bold' }}>
+                        {row.solich}
+                    </span>
+                );
+            }
+        },
+    ];
+
+
+
+
+    //dịch vụ top
+    const dichVuColumns: Column<TopDVData>[] = [
+        { tieude: "ID", cotnhandulieu: "madv" },
+        {
+            tieude: "Ảnh", cotnhandulieu: "hinh", render: (row) => {
+                const imgPath = row.hinh?.startsWith('/') ? row.hinh : `/${row.hinh}`;
+                return row.hinh ? <img src={imgPath} alt={row.tendv} height="60" width="70" style={{ objectFit: 'cover', borderRadius: '4px' }} /> : <span style={{ color: '#999', fontSize: '12px' }}>Không có ảnh</span>;
+            }
+        },
+        { tieude: "Tên dịch vụ", cotnhandulieu: "tendv" },
+        { tieude: "Thời gian", cotnhandulieu: "thoigian", render: (row) => `${row.thoigian} phút` },
+        {
+            tieude: "Giá", cotnhandulieu: "giadv", render: (row) => {
+                const value = parseFloat(row.giadv as any);
+                return value ? value.toLocaleString('vi-VN') + '₫' : "0₫";
+            }
+
+        },
+        {
+            tieude: "Số lần", cotnhandulieu: "solan", render: (row) => {
+                return (
+                    <span style={{ color: '#2ecc71', fontWeight: 'bold' }}>
+                        {row.solan}
+                    </span>
+                );
+            }
+        },
+    ];
 
     return (
         <>
@@ -171,50 +385,20 @@ const ReportPage = () => {
                 <div className="panel" style={{ "marginTop": "20px" }}>
                     <div className="report-filter">
                         <h3>Top Dịch Vụ hay dùng</h3>
-                        <button className="btn primary">
+                        <button onClick={handleClickExcel} className="btn primary">
                             <i className="fas fa-download"></i> Xuất Excel
                         </button>
                     </div>
-                    {/* <div className="panel">
-                        <div className="table-wrapper"> */}
-                    <table className="table" id="ServicesTop">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Ảnh</th>
-                                <th>Tên Dịch Vụ</th>
-                                <th>Thời Gian (phút)</th>
-                                <th>Giá (VND)</th>
-                                <th>Số lần</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-                    {/* </div>
-                    </div> */}
+                    <DataTable<TopDVData> columns={dichVuColumns} data={TopDV} />
                 </div>
                 <div className="panel" style={{ "marginTop": "20px" }}>
                     <div className="report-filter">
                         <h3>Top Nhân Viên Xuất Sắc</h3>
-                        <button className="btn primary">
-                            <i className="fas fa-download"></i> Xuất Excel</button>
+                        <button onClick={handleClickExcel} className="btn primary">
+                            <i className="fas fa-download"></i> Xuất Excel
+                        </button>
                     </div>
-                    <table className="table" id="staffTop">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Họ Tên</th>
-                                <th>Chức Vụ</th>
-                                <th>Số điện thoại</th>
-                                <th>Ngày Sinh</th>
-                                <th>Chi nhánh</th>
-                                <th>Số lịch hẹn</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    <DataTable<TopStaffData> columns={staffColumns} data={TopNV} />
                 </div>
 
             </div>
