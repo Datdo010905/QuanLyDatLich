@@ -12,6 +12,8 @@ import staffApi, { NhanVien } from "../../api/staffApi";
 
 const DatLichPage = () => {
 
+	const [modalType, setModalType] = useState<'checkpass' | 'none'>('none');
+
 	const getSDT = localStorage.getItem("username");
 	const getName = localStorage.getItem("tenkhach");
 
@@ -132,10 +134,20 @@ const DatLichPage = () => {
 
 	const themlichhen = (e: React.FormEvent) => {
 		e.preventDefault();
-		// Xử lý logic đặt lịch ở đây
+		//check mật khẩu trước rồi mới cho đặt lịch
+		//hiện popup xác nhận mật khẩu
+		if (!formData.bookingTime) {
+			toast.error("Hãy chọn thời điểm cần đặt lịch!");
+		}
 
-		toast.info("Đặt lịch sắp thành công!");
+		else {
+			setModalType('checkpass');
+		}
+		
 	};
+	const submitDatLich = async () => {
+		toast.info("Đặt lịch sắp thành công!");
+	}
 
 	return (
 		<>
@@ -215,6 +227,18 @@ const DatLichPage = () => {
 					</form>
 					<br />
 					<p style={{ "textAlign": "center" }}>📅 Cắt xong trả tiền – Huỷ lịch không sao</p>
+
+					<Modal isOpen={modalType !== 'none'} onClose={() => setModalType('none')} title="Nhập mật khẩu để tiếp tục">
+						<label>Mật khẩu:</label>
+						<div className="password-container">
+							<input id="password" className="input-field" type="password" placeholder="Mật khẩu" required/>
+						</div>
+						<div className="form-actions">
+							<button type="submit" className="btn primary" onClick={submitDatLich}>
+								Xác nhận
+							</button>
+						</div>
+					</Modal>
 				</div>
 			</div>
 		</>
