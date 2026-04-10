@@ -39,6 +39,18 @@ namespace DAL
                 throw new Exception("Lỗi khi lấy danh sách dịch vụ: " + ex.Message);
             }
         }
+        public DataTable GetAllCungCap()
+        {
+            try
+            {
+                DataTable dt = db.GetDataTable("SELECT * FROM DICHVU WHERE TRANGTHAI = N'Đang cung cấp'");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lấy danh sách dịch vụ: " + ex.Message);
+            }
+        }
         public DataTable GetAllTocCungCap()
         {
             try

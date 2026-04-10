@@ -29,6 +29,10 @@ namespace BLL
         {
             return _DAL.GetAllTocCungCap();
         }
+        public DataTable GetAllCungCap()
+        {
+            return _DAL.GetAllCungCap();
+        }
         public DataTable GetAllCSDCungCap()
         {
             return _DAL.GetAllCSDCungCap();

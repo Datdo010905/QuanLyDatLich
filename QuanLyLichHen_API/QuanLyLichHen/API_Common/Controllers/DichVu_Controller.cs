@@ -60,6 +60,20 @@ namespace API_QuanLy.Controllers
                 return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
             }
         }
+        [Route("get-all-DichVu")]
+        [HttpGet]
+        public IActionResult GetAllCungCap()
+        {
+            try
+            {
+                DataTable dt = _BLL.GetAllCungCap();
+                return Ok(new { success = true, message = "Lấy danh sách dịch vụ thành công:", data = ConvertToList(dt) });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
         [Route("get-all-DichVuToc")]
         [HttpGet]
         public IActionResult GetAll()

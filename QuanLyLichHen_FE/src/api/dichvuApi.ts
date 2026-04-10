@@ -40,6 +40,11 @@ const dichVuApi = {
         return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
     },
     // Hàm lấy danh sách tất cả dịch vụ
+    getAllDichVuClient() {
+        const url = '/api-common/DichVu_/get-all-DichVu';
+        return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
+    },
+    // Hàm lấy danh sách tất cả dịch vụ
     getAllCSDClient() {
         const url = '/api-common/DichVu_/get-all-DichVuCSD';
         return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);

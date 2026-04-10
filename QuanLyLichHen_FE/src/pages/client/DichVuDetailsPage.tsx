@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import dichVuApi, { DichVu } from "../../api/dichvuApi";
 import { toast } from "react-toastify";
+import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
+import CustomerApi, { Customer } from "../../api/customerApi";
 const DichVuDetailsPage = () => {
 
 	//Lấy mã dịch vụ từ URL có dạng /dichvuchitiet/:madv)
@@ -10,12 +12,12 @@ const DichVuDetailsPage = () => {
 	const [dichVu, setDichVu] = useState<DichVu | null>(null);
 	const [loading, setLoading] = useState(true);
 
+	const navigate = useNavigate();
 	//lấy dịch vụ từ api
 	useEffect(() => {
 		const fetchChiTiet = async () => {
 			if (!madv) return;
 			try {
-				// Tạm thời lấy tất cả dịch vụ từ cả 2 API để tìm (Nếu có API getById thì nên thay thế để tối ưu)
 				const response = await dichVuApi.getById(madv);
 
 				// Tìm dịch vụ khớp với madv trên URL
@@ -39,17 +41,46 @@ const DichVuDetailsPage = () => {
 	const formatPrice = (price: number) => {
 		return new Intl.NumberFormat('vi-VN').format(price) + ' VNĐ';
 	};
-	const themlichhen = (e: React.FormEvent) => {
-			e.preventDefault();
-			// Xử lý logic đặt lịch ở đây
-			toast.info("Đặt lịch sắp thành công!");
-		};
+	const themlichhen = async (e: React.FormEvent) => {
+		e.preventDefault();
+
+		const isLoggedIn = localStorage.getItem("username");
+		const token = localStorage.getItem("token");
+
+		if (madv) {
+			if (!isLoggedIn || !token) {
+				toast.warn("Vui lòng đăng nhập để tiếp tục đặt lịch!");
+				navigate('/login');
+				return;
+			} else {
+				//nếu đã đăng nhập
+				const savedSDT = localStorage.getItem("username");
+
+				if (savedSDT) {
+					localStorage.setItem("username", savedSDT);
+					//lấy tên KH
+					try {
+						const resKH = await CustomerApi.getBySDT(savedSDT);
+						localStorage.setItem("tenkhach", resKH.data.data.hoten);
+						localStorage.setItem('madvCanXem', madv);
+						navigate('/datlich');
+					}
+					catch {
+						toast.error("Có lỗi xảy ra khi đặt lịch!");
+					}
+				}
+				
+			}
+		}
+	};
+
 	// Hàm render quy trình hoặc mô tả dạng list
 	const renderListItems = (text?: string) => {
 		if (!text) return <li>Đang cập nhật...</li>;
 		const items = text.split(/[,\n]/).filter(item => item.trim() !== "");
 		return items.map((item, index) => <li key={index}>{item.trim()}</li>);
 	};
+
 	if (loading) {
 		return <div style={{ textAlign: 'center', marginTop: '50px' }}>Đang tải dữ liệu...</div>;
 	}
