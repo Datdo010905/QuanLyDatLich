@@ -4,6 +4,7 @@ import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
 import './assets/css/style.css';
 import './assets/css/admin.css';
 
+
 //import layout
 import TopBar from './components/layout/TopBar';
 import Header from './components/layout/Header';
@@ -63,10 +64,10 @@ class App extends React.Component<any, any> {
     { url: "/home", name: "Trang chủ" },
     { url: "/toptho", name: "Top thợ" },
     { url: "/about", name: "Về 30Shine" },
-    { url: "#timmap", name: "30Shine gần nhất", href: "#timmap" },
-    { url: "#nucuoidv", name: "Nụ cười dịch vụ", href: "#nucuoidv" },
-    { url: "#cuocthi", name: "Cuộc thi 30Shine", href: "#cuocthi" },
-    { url: "#saotoasang", name: "Sao toả sáng", href: "#saotoasang" },
+    //{ url: "#timmap", name: "30Shine gần nhất", href: "#timmap" },
+    //{ url: "#nucuoidv", name: "Nụ cười dịch vụ", href: "#nucuoidv" },
+   // { url: "#cuocthi", name: "Cuộc thi 30Shine", href: "#cuocthi" },
+    //{ url: "#saotoasang", name: "Sao toả sáng", href: "#saotoasang" },
   ];
   render(): React.ReactNode {
     return (

@@ -2,19 +2,14 @@ import React, { useState } from "react";
 import "../../assets/css/lichhen.css";
 import { toast } from "react-toastify";
 const DatLichPage = () => {
-
-	const [phone, setPhone] = useState("");
+	
+	const getSDT = localStorage.getItem("username");
+	const getName = localStorage.getItem("tenkhach");
 
 	const themlichhen = (e: React.FormEvent) => {
 		e.preventDefault();
 		// Xử lý logic đặt lịch ở đây
 		toast.info("Đặt lịch sắp thành công!");
-	};
-
-	const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-		// chỉ cho nhập số
-		const value = e.target.value.replace(/[^0-9]/g, "");
-		setPhone(value);
 	};
 
 	return (
@@ -24,14 +19,14 @@ const DatLichPage = () => {
 					<h1>ĐẶT LỊCH GIỮ CHỖ</h1>
 					<form>
 						<span>Họ và tên:<span style={{ color: "red" }}>*</span></span><br />
-						<input id="hoten-dat" className="input-field" maxLength={50} type="text"
-							placeholder="Nhập họ và tên của bạn" required /><br />
+						<input readOnly id="hoten-dat" className="input-field" maxLength={50} type="text"
+							placeholder="Nhập họ và tên của bạn"
+							value={getName || ''} /><br />
 
 						<span>Số điện thoại:<span style={{ color: "red" }}>*</span></span><br />
 						<input type="text" readOnly maxLength={10} id="sdt-dat" className="input-field" placeholder="Nhập số"
-							value={phone}
-							onChange={handleInput}
-							required />
+							value={getSDT||''}
+							 />
 						<br />
 						<span>Chi nhánh:<span style={{ color: "red" }}>*</span></span><br />
 						<select id="chinhanh" className="input-field" required>

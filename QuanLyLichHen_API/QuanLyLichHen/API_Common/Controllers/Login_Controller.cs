@@ -130,6 +130,42 @@ namespace QuanLyDatLich.Controllers
                 return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
             }
         }
+        [Route("get-bySDT-khachhang")]
+        [HttpGet]
+        public IActionResult GetByID(string SDT)
+        {
+            try
+            {
+                DataTable dt = KH_BLL.GetByID(SDT);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    DataRow row = dt.Rows[0];
+
+                    return Ok(new
+                    {
+                        success = true,
+                        message = "Tìm thấy khách hàng thành công",
+                        data = new
+                        {
+                            makh = row["MAKH"].ToString().Trim(),
+                            hoten = row["HOTEN"].ToString().Trim(),
+                            sdt = row["SDT"].ToString().Trim(),
+                            //có thể check null
+                            matk = row["MATK"] != DBNull.Value ? row["MATK"].ToString().Trim() : ""
+                        }
+                    });
+                }
+                else
+                {
+                    return Ok(new { success = false, message = "Không tìm thấy khách hàng có SDT: '" + SDT + "'" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi hệ thống: " + ex.Message });
+            }
+        }
         [Route("insert-khachhang")]
         [HttpPost]
         public IActionResult Create([FromForm] Models.KhachHang model)
