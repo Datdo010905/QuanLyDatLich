@@ -34,6 +34,10 @@ const BookingApi = {
         const url = `/api-admin/LichHen_/get-allbyIdNV-lichhen?manv=${id}`;
         return axiosClient.get<{ success: boolean; message: string; data: Booking }>(url);
     },
+    getAllByIdKH(id: string) {
+        const url = `/api-common/LichHen_/get-allbyIdKH-lichhen?ma=${id}`;
+        return axiosClient.get<{ success: boolean; message: string; data: Booking[] }>(url);
+    },
     getById(id: string) {
         const url = `/api-admin/LichHen_/get-byId-lichhen?ma=${id}`;
         return axiosClient.get<{ success: boolean; message: string; data: Booking }>(url);
@@ -44,7 +48,11 @@ const BookingApi = {
     },
     getByIdCT(id: string) {
         const url = `/api-admin/LichHen_/get-byId-CTlichhen?ma=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: BookingDetails }>(url);
+        return axiosClient.get<{ success: boolean; message: string; data: BookingDetails[] }>(url);
+    },
+    getByIdChiTiet(id: string) {
+        const url = `/api-common/LichHen_/get-byId-CTlichhen?ma=${id}`;
+        return axiosClient.get<{ success: boolean; message: string; data: BookingDetails[] }>(url);
     },
     create(data: FormData) {
         const url = '/api-admin/LichHen_/insert-lichhen';

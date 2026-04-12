@@ -431,14 +431,14 @@ const BookingPage = () => {
     const bookingDetailsColumns: Column<BookingDetails>[] = [
         { tieude: "ID", cotnhandulieu: "malich" },
         {
-            tieude: "Mã dịch vụ", cotnhandulieu: "madv", render(row) {
+            tieude: "Dịch vụ", cotnhandulieu: "madv", render(row) {
                 const dichVu = dichVuList.find(dv => dv.madv === row.madv);
                 return dichVu ? dichVu.tendv : "Không xác định";
 
             }
         },
         {
-            tieude: "Mã nhân viên", cotnhandulieu: "manv", render(row) {
+            tieude: "Nhân viên", cotnhandulieu: "manv", render(row) {
                 const nv = nhanVienList.find(nv => nv.manv === row.manv);
                 return nv ? `${nv.hoten} (${nv.manv})` : "Không xác định";
             }

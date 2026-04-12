@@ -54,34 +54,7 @@ namespace API_Stylist.Controllers
                 return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
             }
         }
-        [Route("get-all-lichhenTheoNgay")]
-        [HttpGet]
-        public IActionResult GetAllTheoNgay(string ngaybd, string ngaykt)
-        {
-            try
-            {
-                DataTable dt = _BLL.GetTheoNgay(ngaybd, ngaykt);
-                return Ok(new { success = true, message = "Lấy danh sách lịch hẹn theo ngày thành công:", data = ConvertToList(dt) });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
-        [Route("get-all-lichhenCTTvaDHT")]
-        [HttpGet]
-        public IActionResult GetAllCTTvaDHT()
-        {
-            try
-            {
-                DataTable dt = _BLL.GetAllCTTvaDHT();
-                return Ok(new { success = true, message = "Lấy danh sách lịch hẹn thành công:", data = ConvertToList(dt) });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
+        
         [Route("get-all-CTlichhen")]
         [HttpGet]
         public IActionResult GetAllCT()
@@ -120,6 +93,20 @@ namespace API_Stylist.Controllers
             {
                 DataTable dt = _BLL.GetAllByIdNV(manv);
                 return Ok(new { success = true, message = "Lấy danh sách lịch hẹn theo mã nhân viên thành công:", data = ConvertToList(dt) });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
+        [Route("get-allbyIdKH-lichhen")]
+        [HttpGet]
+        public IActionResult GetByKhachHang(string ma)
+        {
+            try
+            {
+                DataTable dt = _BLL.GetByKhachHang(ma);
+                return Ok(new { success = true, message = "Lấy danh sách lịch hẹn theo mã khách hàng thành công:", data = ConvertToList(dt) });
             }
             catch (Exception ex)
             {
@@ -229,50 +216,6 @@ namespace API_Stylist.Controllers
                 else
                 {
                     return Ok(new { message = "Không tồn tại lịch hẹn có mã: '" + ma.Trim() + "' để thay đổi" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
-        [Route("delete-lichhen")]
-        [HttpDelete]
-        public IActionResult Delete(string ma)
-        {
-            try
-            {
-                DataTable dt = _BLL.GetByID(ma);
-                if (dt.Rows.Count == 1)
-                {
-                    DataTable data = _BLL.Delete(ma);
-                    return Ok(new { success = true, message = "Xoá thông tin lịch hẹn thành công:", data = ConvertToList(dt) });
-                }
-                else
-                {
-                    return Ok(new { message = "Không tồn tại lịch hẹn có mã: '" + ma + "' để xoá" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
-            }
-        }
-        [Route("delete-CTlichhen")]
-        [HttpDelete]
-        public IActionResult DeleteCT(string ma)
-        {
-            try
-            {
-                DataTable dt = CTLH_BLL.GetById(ma.Trim());
-                if (dt.Rows.Count >= 1 )
-                {
-                    DataTable data = CTLH_BLL.Delete(ma.Trim());
-                    return Ok(new { success = true, message = "Xoá thông tin chi tiết lịch hẹn thành công:" });
-                }
-                else
-                {
-                    return Ok(new { message = "Không tồn tại chi tiết lịch hẹn có mã: '" + ma.Trim() + "' để xoá" });
                 }
             }
             catch (Exception ex)

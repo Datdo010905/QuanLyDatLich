@@ -75,6 +75,18 @@ namespace DAL
                 throw new Exception("Lỗi khi tìm lịch hẹn: " + ex.Message);
             }
         }
+        public DataTable GetByKhachHang(string ma)
+        {
+            try
+            {
+                DataTable dt = db.GetDataTable("SELECT * FROM LICHHEN L INNER JOIN KHACHHANG K ON K.MAKH = L.MAKH WHERE K.MAKH = '" + ma + "'");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi tìm lịch hẹn: " + ex.Message);
+            }
+        }
         public DataTable Create(Models.LichHen model)
         {
             try

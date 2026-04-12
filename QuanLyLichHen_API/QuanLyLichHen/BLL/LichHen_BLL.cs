@@ -25,6 +25,10 @@ namespace BLL
         {
             return _DAL.GetTheoNgay(ngaybd, ngaykt);
         }
+        public DataTable GetByKhachHang(string ma)
+        {
+            return _DAL.GetByKhachHang(ma);
+        }
         public DataTable GetAllCTTvaDHT()
         {
             return _DAL.GetAllCTTvaDHT();
