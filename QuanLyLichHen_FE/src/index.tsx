@@ -15,10 +15,10 @@ root.render(
       <AuthProvider>
         <SearchProvider>
           <App />
-          {/* đóng sau 3 giây */}
+          {/* đóng sau 1,5 giây */}
           <ToastContainer
             position="top-right"
-            autoClose={3000}    
+            autoClose={1500}    
             newestOnTop={true}      // Thông báo mới nhất sẽ hiện lên trên cùng
             closeOnClick            // Tắt ngay khi người dùng click vào
             rtl={false}             

@@ -74,6 +74,10 @@ const BookingApi = {
         const url = `/api-admin/LichHen_/update-lichhen?ma=${id}&trangthai=${trangthai}`;
         return axiosClient.put(url);
     },
+    updateCT(id: string, ghichu: string) {
+        const url = `/api-common/LichHen_/update-CTlichhen?ma=${id}&ghichu=${ghichu}`;
+        return axiosClient.put(url);
+    },
     delete(id: string) {
         const url = `/api-admin/LichHen_/delete-lichhen?ma=${id}`;
         return axiosClient.delete(url);

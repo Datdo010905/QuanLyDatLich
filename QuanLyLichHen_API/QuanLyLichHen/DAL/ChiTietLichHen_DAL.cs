@@ -56,6 +56,19 @@ namespace DAL
                 throw new Exception("Lỗi khi thêm chi tiết lịch hẹn: " + ex.Message);
             }
         }
+        public DataTable Update(string ma, string ghichu)
+        {
+            try
+            {
+                DataTable dt = db.GetDataTable("UPDATE CHITIETLICHHEN SET GHICHU = N'" + ghichu.Trim() + "' " +
+                                                                  "WHERE MALICH = '" + ma.Trim() + "'");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi thay đổi ghi chú chi tiết lịch hẹn: " + ex.Message);
+            }
+        }
         public DataTable Delete(string ma)
         {
             try

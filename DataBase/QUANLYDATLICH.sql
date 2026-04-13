@@ -448,7 +448,7 @@ BEGIN
           AND d.TRANGTHAI <> N'Hoàn thành';-- chỉ thay đổi trạng thái mới được 
 
           --đưa vào hoadon
-        INSERT INTO HOADON (MAHD, MAKH, MALICH, MAKM, MANV, TRANGTHAI, TONGTIEN, HINHTHUCTHANHTOAN)
+        INSERT INTO HOADON (MAHD, MAKH, MALICH, MAKM, MANV, TRANGTHAI, TONGTIEN, HINHTHUCTHANHTOAN, NGAYTHANHTOAN)
         SELECT 
             MAHD,
             MAKH,
@@ -457,7 +457,8 @@ BEGIN
             MANV,
             N'Chưa thanh toán', 
             TONGTIEN,
-            NULL--chưa có hình thức tt
+            NULL,--chưa có hình thức tt
+            GETDATE()
         FROM @HoaDonMoi;
         --thêm cthd dựa trên ctlh
         INSERT INTO CHITIETHOADON (MAHD, MADV, SOLUONG, DONGIA, THANHTIEN)

@@ -9,7 +9,8 @@ import bookingApi, { Booking, BookingDetails } from "../../api/bookingApi";
 import { BookingSchema } from "../../utils/bookingSchema";
 import customerApi, { Customer } from "../../api/customerApi";
 import staffApi, { NhanVien } from "../../api/staffApi";
-
+import TaiKhoanApi from "../../api/taikhoanApi";
+import { set } from "zod";
 const DatLichPage = () => {
 
 	const [modalType, setModalType] = useState<'checkpass' | 'none'>('none');
@@ -21,13 +22,12 @@ const DatLichPage = () => {
 	const [selectedDichVu, setSelectedDichVu] = useState<string>(localStorage.getItem("madvCanXem") || "");
 
 	//state lựa chọn
-
-
 	const [dichVuList, setDichVuList] = useState<DichVu[]>([]);
 	const [nhanVienList, setNhanVienList] = useState<NhanVien[]>([]); // Dữ liệu nhân viên để đổ vào select
 	const [bookingList, setBookingList] = useState<Booking[]>([]);
 	const [bookingDetailsList, setBookingDetailsList] = useState<BookingDetails[]>([]);
-	const [gioHenList, setGioHenList] = useState<string[]>([]);
+
+	const [matkhauCheck, setmatkhauCheck] = useState<string>("");
 
 	const [formData, setFormData] = useState({
 		bookingID: '',
@@ -64,6 +64,7 @@ const DatLichPage = () => {
 		try {
 			const resNhanVien = await staffApi.getAll();
 			const resBookingDetails = await bookingApi.getAllCT();
+
 			if (resNhanVien.data.success) {
 				setNhanVienList(resNhanVien.data.data);
 			}
@@ -90,6 +91,8 @@ const DatLichPage = () => {
 		const { id, value } = e.target;
 		// Cập nhật dữ liệu người dùng nhập vào formData
 		setFormData((prev) => ({ ...prev, [id]: value }));
+		setFormDataDetails((prev) => ({ ...prev, [id]: value }));
+		setmatkhauCheck((prev) => id === "password" ? value : prev); // Cập nhật mật khẩu kiểm tra nếu trường thay đổi là password
 	};
 	// TỰ ĐỘNG TÍNH TOÁN GIỜ TRỐNG
 	const availableHours = useMemo(() => {
@@ -138,15 +141,79 @@ const DatLichPage = () => {
 		//hiện popup xác nhận mật khẩu
 		if (!formData.bookingTime) {
 			toast.error("Hãy chọn thời điểm cần đặt lịch!");
+			return;
 		}
 
-		else {
-			setModalType('checkpass');
-		}
-		
+		setModalType('checkpass');
 	};
 	const submitDatLich = async () => {
-		toast.info("Đặt lịch sắp thành công!");
+
+		if (!matkhauCheck) {
+			toast.error("Mật khẩu không được để trống!");
+			return;
+		}
+
+		try {
+			const loggedUser = getSDT;
+			if (loggedUser) {
+				//tìm tk
+				const resTaiKhoan = await TaiKhoanApi.getById(loggedUser);
+				console.log("Thông tin tài khoản:", resTaiKhoan);
+				const thongTinTaiKhoan = resTaiKhoan.data.data[0];
+				console.log("Thông tin tài khoản sau khi lấy:", thongTinTaiKhoan);
+				//check mk
+				if (thongTinTaiKhoan.pass.trim() !== matkhauCheck.trim()) {
+					toast.error("Mật khẩu không chính xác! Vui lòng thử lại.");
+					console.log("Mật khẩu nhập vào:", matkhauCheck);
+					console.log("Mật khẩu thực tế:", thongTinTaiKhoan.pass);
+
+					return;
+				}
+				toast.success("Xác thực thành công! Đang xử lý đặt lịch...");
+				//tạo FormData theo swagger
+				const submitData = new FormData();
+
+				//tạo mã lịch mới theo format LH + timestamp + random 3 số để đảm bảo tính duy nhất
+				const maLichMoi = "LH" + Date.now() + Math.floor(Math.random() * 1000);
+
+				submitData.append('MaLich', maLichMoi);
+				submitData.append('NgayHen', formData.bookingDate);
+				submitData.append('GioHen', formData.bookingTime);
+				submitData.append('TrangThai', "Đã đặt");//mặc định
+				submitData.append('MaChiNhanh', formData.branchID);
+				//khách hàng là nick đang đăng nhập
+				submitData.append('MaKH', loggedUser);
+
+				const submitDataCT = new FormData();
+				submitDataCT.append('MaLich', maLichMoi);
+
+				submitDataCT.append('MaDV', selectedDichVu);
+				submitDataCT.append('MaNV', formData.nhanvien);
+				submitDataCT.append('SoLuong', formData.soluong || '1'); //mặc định 1 dịch vụ	
+
+				const dichVuSelected = dichVuList.find(dv => dv.madv === selectedDichVu);
+
+				submitDataCT.append('GiaDuKien', dichVuSelected ? dichVuSelected.giadv.toString() : '0');
+				submitDataCT.append('GhiChu', formDataDetails.ghichu || 'Không có ghi chú');
+
+				//gọi API tạo lịch hẹn và chi tiết lịch hẹn
+				await bookingApi.create(submitData);
+				await bookingApi.createCT(submitDataCT);
+
+				toast.success("Đặt lịch thành công!");
+
+				setModalType('none');
+				setmatkhauCheck('');
+				//chuyển hướng về trang lịch sử sau khi đặt lịch thành công
+				setTimeout(() => {
+					window.location.href = "/lichsu";
+				}, 2000);
+			}
+		}
+		catch (error) {
+			console.error("Lỗi khi kiểm tra tài khoản:", error);
+			toast.error("Đã xảy ra lỗi khi xác thực tài khoản!");
+		}
 	}
 
 	return (
@@ -221,6 +288,10 @@ const DatLichPage = () => {
 							))}
 						</select>
 						<br /><br />
+						<div className="form-group">
+							<label htmlFor="ghichu">Ghi chú:</label>
+							<textarea id="ghichu" rows={3} value={formDataDetails.ghichu} onChange={handleChange} />
+						</div>
 
 
 						<input id="btn-datlichpage" onClick={themlichhen} type="submit" value="ĐẶT LỊCH NGAY" />
@@ -231,7 +302,7 @@ const DatLichPage = () => {
 					<Modal isOpen={modalType !== 'none'} onClose={() => setModalType('none')} title="Nhập mật khẩu để tiếp tục">
 						<label>Mật khẩu:</label>
 						<div className="password-container">
-							<input id="password" className="input-field" type="password" placeholder="Mật khẩu" required/>
+							<input id="password" className="input-field" type="password" onChange={handleChange} value={matkhauCheck} placeholder="Mật khẩu" required />
 						</div>
 						<div className="form-actions">
 							<button type="submit" className="btn primary" onClick={submitDatLich}>

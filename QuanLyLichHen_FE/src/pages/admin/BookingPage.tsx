@@ -59,7 +59,10 @@ const BookingPage = () => {
     const filteredBookingList = bookingList.filter(lichhen =>
         lichhen.malich?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         lichhen.makh?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        lichhen.machinhanh?.toLowerCase().includes(searchTerm.toLowerCase())
+        lichhen.machinhanh?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (lichhen.ngayhen
+            ? new Date(lichhen.ngayhen).toLocaleDateString('vi-VN').includes(searchTerm)
+            : false)
     );
     //up data từ api lên bảng
     const fetchData = async () => {
@@ -446,8 +449,8 @@ const BookingPage = () => {
         { tieude: "Số lượng", cotnhandulieu: "soluong" },
         {
             tieude: "Giá dự kiến", cotnhandulieu: "giA_DUKIEN", render(row) {
-               const value = parseFloat(row.giA_DUKIEN as any);
-                return value ? value.toLocaleString('vi-VN') + '₫': "0₫";
+                const value = parseFloat(row.giA_DUKIEN as any);
+                return value ? value.toLocaleString('vi-VN') + '₫' : "0₫";
             },
         },
         { tieude: "Ghi chú", cotnhandulieu: "ghichu" },
@@ -463,7 +466,7 @@ const BookingPage = () => {
         //tìm lịch đã được khách chọn nhân viên thực hiện trong ngày đó
         const bookedIdsForStaff = bookingDetailsList
             .filter(detail => detail.manv === formData.nhanvien)
-            .map(detail => detail.malich?.trim()); 
+            .map(detail => detail.malich?.trim());
 
         //lọc ra những lịch ngày đó, chưa huỷ hoặc chưa hoàn thành và có nhân viên thực hiện trùng với nhân viên đang chọn
         const lichDabook = bookingList.filter(booking => {
@@ -479,7 +482,7 @@ const BookingPage = () => {
         //giờ hẹn từ API
         //Chỉ lấy 5 ký tự đầu (HH:mm) để bỏ qua giây (nếu có)
         const bookedHours = lichDabook.map(b => {
-            return b.giohen ? b.giohen.substring(0, 5) : ""; 
+            return b.giohen ? b.giohen.substring(0, 5) : "";
         });
         //tạo danh sách giờ trống từ 8h đến 22h với khoảng cách 30 phút
         const hours: string[] = [];

@@ -38,6 +38,15 @@ const LichSuPage = () => {
 		soluong: '',
 		nhanvien: '',
 	});
+	const [formDataDetails, setFormDataDetails] = useState({
+		bookingID: '',
+		branchID: '',
+		dichvu: '',
+		soluong: '',
+		giadukien: '',
+		nhanvien: '',
+		ghichu: '',
+	});
 
 	//up data từ api lên bảng
 	const fetchData = async () => {
@@ -70,6 +79,19 @@ const LichSuPage = () => {
 			fetchData();
 		}
 	}, []);
+
+	useEffect(() => {
+		// kiểm tra khi bookingList đã fetch
+		if (bookingList && bookingList.length > 0) {
+			const checkDangCho = bookingList.filter(lh => lh.trangthai === "Đang chờ");
+
+			if (checkDangCho.length > 0) {
+            toast.info("Bạn có lịch hẹn đã được duyệt, hãy đến dùng dịch vụ!", {
+                toastId: 'thong-bao-dang-cho' //chỉ hiện 1 lần dù có nhiều lịch hẹn đang chờ
+            });
+        }
+		}
+	}, [bookingList]); // Chạy khi bookingList thay đổi
 
 	if (!user && !role) {
 		return <Navigate to="/login" replace />;
@@ -128,6 +150,12 @@ const LichSuPage = () => {
 		"Đã huỷ": { backgroundColor: '#fff1f0', color: '#f5222d', border: '1px solid #ffa39e' },
 	};
 
+	//xử lý thay đổi form
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+		const { id, value } = e.target;
+		// Cập nhật dữ liệu người dùng nhập vào formData
+		setFormDataDetails((prev) => ({ ...prev, [id]: value }));
+	};
 	const handleDeleteClick = (row: Booking) => {
 		setFormData({
 			bookingID: row.malich || '',
@@ -140,6 +168,16 @@ const LichSuPage = () => {
 			soluong: '', //tạm để trống
 			nhanvien: '' //tạm để trống
 		});
+		setFormDataDetails({
+			bookingID: '',
+			branchID: '',
+			dichvu: '',
+			soluong: '',
+			giadukien: '',
+			nhanvien: '',
+			ghichu: '',
+		});
+
 		setModalType('edit');
 	};
 
@@ -147,15 +185,20 @@ const LichSuPage = () => {
 	const handleDeleteConfirm = async (e: React.FormEvent) => {
 		e.preventDefault();
 		//tạo FormData theo swagger
-        const submitData = new FormData();
+		const submitData = new FormData();
 
 		const trangthaiHienTai = bookingList.find(b => b.malich === formData.bookingID)?.trangthai;
 		try {
 			if (modalType === 'edit') {
+				if (formDataDetails.ghichu === '') {
+					toast.info("Vui lòng ghi lý do huỷ lịch của bạn!");
+					return;
+				}
 				if (trangthaiHienTai !== "Đã đặt" && trangthaiHienTai !== "Đang chờ") {
 					toast.error("Chỉ có thể huỷ lịch khi lịch hẹn ở trạng thái 'Đã đặt' hoặc 'Đang chờ'!");
 					return;
 				}
+				await bookingApi.updateCT(formData.bookingID, formDataDetails.ghichu);
 				await bookingApi.update(formData.bookingID, "Đã huỷ");
 				toast.success("Huỷ lịch hẹn thành công!");
 			}
@@ -277,9 +320,12 @@ const LichSuPage = () => {
 						</div>
 					)}
 				</div>
-				<Modal isOpen={modalType === 'edit'} onClose={() => setModalType('none')} title="Huỷ lịch hẹn?">
+				<Modal isOpen={modalType === 'edit'} onClose={() => setModalType('none')} title="Bạn có chắc chắn huỷ lịch hẹn này?">
 					<form className="service-form" onSubmit={handleDeleteConfirm}>
-						<p>Bạn có chắc chắn muốn huỷ lịch hẹn này không?</p><br />
+						<div className="form-group">
+							<label htmlFor="ghichu">Nhập lý do huỷ lịch của bạn:</label>
+							<input id="ghichu" value={formDataDetails.ghichu} onChange={handleChange} />
+						</div>
 						<button className="btn small delete" onClick={handleDeleteConfirm}><i className="fas fa-trash"></i> Xác nhận</button>
 					</form>
 				</Modal>

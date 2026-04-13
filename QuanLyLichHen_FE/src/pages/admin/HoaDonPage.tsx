@@ -38,7 +38,10 @@ const HoaDonPage = () => {
         hd.makh?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         hd.trangthai?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         hd.manv?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        hd.mahd?.toLowerCase().includes(searchTerm.toLowerCase())
+        hd.mahd?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (hd.ngaythanhtoan
+            ? new Date(hd.ngaythanhtoan).toLocaleDateString('vi-VN').includes(searchTerm)
+            : false)
     );
 
     //up data từ api lên bảng
@@ -182,8 +185,12 @@ const HoaDonPage = () => {
                 return;
             }
         } else if (modalType === 'edit') {
-            if (!formData.status) {
-                setFormErrors({ status: "Trạng thái không được để trống" });
+            if (!formData.nhanvienID) {
+                setFormErrors({ nhanvienID: "Thu ngân không được để trống" });
+                return;
+            }
+            if (!formData.methodPayment) {
+                setFormErrors({ methodPayment: "Hình thức thanh toán không được để trống" });
                 return;
             }
         }
@@ -526,7 +533,6 @@ const HoaDonPage = () => {
                     <option value="Thẻ tín dụng">Thẻ tín dụng</option>
                     <option value="Chuyển khoản">Chuyển khoản</option>
                     <option value="Ví điện tử">Ví điện tử</option>
-                    <option value="Không xác định">Không xác định</option>
                 </select>
                 {formErrors.methodPayment && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.methodPayment}</span>}
             </div>

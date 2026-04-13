@@ -29,6 +29,10 @@ namespace BLL
         {
             return _DAL.Create(model);
         }
+        public DataTable Update(string ma, string ghichu)
+        {
+            return _DAL.Update(ma, ghichu);
+        }
         public DataTable Delete(string ma)
         {
             return _DAL.Delete(ma);

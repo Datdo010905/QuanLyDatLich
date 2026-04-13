@@ -223,5 +223,28 @@ namespace API_Stylist.Controllers
                 return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
             }
         }
+        [Route("update-CTlichhen")]
+        [HttpPut]
+        public IActionResult UpdateCT(string ma, string ghichu)
+        {
+            try
+            {
+                DataTable dt = CTLH_BLL.GetById(ma);
+
+                if (dt.Rows.Count >= 1)
+                {
+                    DataTable data = CTLH_BLL.Update(ma, ghichu);
+                    return Ok(new { success = true, message = "Thay đổi ghi chú chi tiết lịch hẹn thành công:" });
+                }
+                else
+                {
+                    return Ok(new { message = "Không tồn tại lịch hẹn có mã: '" + ma.Trim() + "' để thay đổi ghi chú" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
     }
 }

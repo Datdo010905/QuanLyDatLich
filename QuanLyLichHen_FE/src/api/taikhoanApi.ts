@@ -15,7 +15,7 @@ const TaiKhoanApi = {
     },
     getById(id: string) {
         const url = `/api-admin/TaiKhoan_/get-byId-taikhoan?ma=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: TaiKhoan }>(url);
+        return axiosClient.get<{ success: boolean; message: string; data: TaiKhoan[] }>(url);
     },
     create(data: FormData) {
         const url = '/api-admin/TaiKhoan_/insert-taikhoan';
