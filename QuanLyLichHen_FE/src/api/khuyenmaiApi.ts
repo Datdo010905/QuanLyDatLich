@@ -1,4 +1,3 @@
-import { SrvRecord } from 'dns';
 import axiosClient from './axiosClient';
 
 //định nghĩa theo api trả về

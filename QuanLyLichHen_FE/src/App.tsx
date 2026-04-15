@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
+import { Route, Routes, Outlet } from 'react-router-dom';
 //import css
 import './assets/css/style.css';
 import './assets/css/admin.css';

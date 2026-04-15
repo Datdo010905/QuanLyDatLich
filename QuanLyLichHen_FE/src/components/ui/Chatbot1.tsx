@@ -8,7 +8,7 @@ const Chatbot1 = () => {
   }
     return (
         <div id="chatbot">
-        <a onClick={handleClick} target="_blank"><svg stroke="currentColor" fill="none" stroke-width="2"
+        <a href="none" onClick={handleClick} target="_blank"><svg stroke="currentColor" fill="none" stroke-width="2"
           viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em"
           xmlns="http://www.w3.org/2000/svg">
           <path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z">

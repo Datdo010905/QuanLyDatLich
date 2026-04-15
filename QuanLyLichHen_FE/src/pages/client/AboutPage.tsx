@@ -16,7 +16,7 @@ const About = () => {
 			</div>
 			<div className="clear"></div>
 			<div className="banner">
-				<img className="cuocthi-img" title="cuocthi30shine" src="img/cuocthi/thumbnail-about.jpg" />
+				<img className="cuocthi-img" title="cuocthi30shine" alt = "none" src="img/cuocthi/thumbnail-about.jpg" />
 			</div>
 			<div className="clear"></div>
 			<h2 id="hot" className="product-title">Kiểu Tóc Đẹp Không Phải Đích Đến – Mà Là Điểm Khởi Đầu</h2>
@@ -87,26 +87,26 @@ const About = () => {
 			<div className="product-title-2">Để xe thuận tiện an toàn, bản đồ dẫn đường chi tiết (hàng trăm Salon)</div>
 			<div className="col-s-6 col-m-4 col-x-3">
 				<div className="diadiem-item">
-					<img className="tintuc-pic" title="diadiem1" src="img/diadiem/hanoi.png" /> <br /><br />
-					<a className="diadiem-name">HÀ NỘI</a>
+					<img className="tintuc-pic" title="diadiem1" alt = "none" src="img/diadiem/hanoi.png" /> <br /><br />
+					<a href="none" className="diadiem-name">HÀ NỘI</a>
 				</div>
 			</div>
 			<div className="col-s-6 col-m-4 col-x-3">
 				<div className="diadiem-item">
-					<img className="tintuc-pic" title="diadiem2" src="img/diadiem/hochiminh.jpg" /> <br /><br />
-					<a className="diadiem-name">HỒ CHÍ MINH</a>
+					<img className="tintuc-pic" title="diadiem2" alt = "none" src="img/diadiem/hochiminh.jpg" /> <br /><br />
+					<a href="none" className="diadiem-name">HỒ CHÍ MINH</a>
 				</div>
 			</div>
 			<div className="col-s-6 col-m-4 col-x-3">
 				<div className="diadiem-item">
-					<img className="tintuc-pic" title="diadiem2" src="img/diadiem/danang.jpg" /> <br /><br />
-					<a className="diadiem-name">ĐÀ NẴNG</a>
+					<img className="tintuc-pic" title="diadiem2" alt = "none" src="img/diadiem/danang.jpg" /> <br /><br />
+					<a href="none" className="diadiem-name">ĐÀ NẴNG</a>
 				</div>
 			</div>
 			<div className="col-s-6 col-m-4 col-x-3">
 				<div className="diadiem-item">
-					<img className="tintuc-pic" title="diadiem2" src="img/diadiem/hungyen.jpg" /> <br /><br />
-					<a className="diadiem-name">ĐỊA ĐIỂM KHÁC</a>
+					<img className="tintuc-pic" title="diadiem2" alt = "none" src="img/diadiem/hungyen.jpg" /> <br /><br />
+					<a href="none" className="diadiem-name">ĐỊA ĐIỂM KHÁC</a>
 				</div>
 			</div>
 		</div>
