@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { da } from 'zod/v4/locales';
 
 export const khuyenMaiSchema = z.object({
   promotionID: z.coerce.string().min(1, { message: "Mã khuyến mại không được để trống" }),
