@@ -1,13 +1,10 @@
 import "../../assets/css/lichsu.css";
-import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
+import {Navigate } from 'react-router-dom';
 import React, { useEffect, useState, useMemo } from "react";
 import Modal from "../../components/ui/Modal";
-import { useSearch } from '../../context/SearchContext';
 import { toast } from 'react-toastify';
 import DataTable, { Column } from '../../components/ui/DataTable';
 import bookingApi, { Booking, BookingDetails } from "../../api/bookingApi";
-import { BookingSchema } from "../../utils/bookingSchema";
-import customerApi, { Customer } from "../../api/customerApi";
 import dichVuApi, { DichVu } from "../../api/dichvuApi";
 import staffApi, { NhanVien } from "../../api/staffApi";
 

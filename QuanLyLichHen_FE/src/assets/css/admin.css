@@ -22,7 +22,8 @@
   color: #fff;
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
 }
 
 .sidebar .brand {
@@ -90,6 +91,11 @@
 
 .sidebar-footer button:hover {
   background: #dc2626;
+}
+
+/* Khi mở */
+.sidebar.open {
+  transform: translateX(0);
 }
 
 /* ========== MAIN CONTENT ========== */
@@ -305,6 +311,7 @@
   #toggleSidebar {
     display: inline-block;
   }
+  
 }
 
 .accounts {
@@ -336,13 +343,15 @@
 .btn.small.edit {
   color: #0164f9;
 }
+
 .btn.small.addDetail {
   color: #f95801;
 }
 
 .btn.small.delete {
-  color:red;
+  color: red;
 }
+
 /* Nền modal */
 .modal {
   display: none;
@@ -437,7 +446,7 @@
 
 .btn.primary {
   background-color: #007bff;
-  color: white; 
+  color: white;
 }
 
 .btn.primary:hover {
@@ -474,7 +483,11 @@
     margin: 50px auto;
   }
 }
-
+@media (min-width: 769px) {
+  .sidebar {
+    transform: translateX(0); /* desktop luôn hiện */
+  }
+}
 textarea {
   resize: none;
   /* Không cho kéo */

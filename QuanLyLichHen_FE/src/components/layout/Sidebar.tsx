@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from '../../context/AuthContext'; // Lấy hook ra để sử dụng trong component
 const Sidebar = () => {
@@ -12,6 +12,39 @@ const Sidebar = () => {
             navigate('/login', { replace: true });
         }
     }
+    useEffect(() => {
+        const sidebar = document.querySelector(".sidebar" as any);
+        const toggleBtn = document.getElementById("toggleSidebar");
+
+        const handleToggle = (e:MouseEvent) => {
+            sidebar.classList.toggle("open");
+            e.stopPropagation();
+        };
+
+        const handleClickOutside = (e: MouseEvent) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target as Node) && e.target !== toggleBtn) {
+                    sidebar.classList.remove("open");
+                }
+            }
+        };
+
+        const handleResize = () => {
+            if (window.innerWidth > 768) sidebar.classList.remove("open");
+        };
+
+        // Gắn event
+        toggleBtn?.addEventListener("click", handleToggle);
+        document.addEventListener("click", handleClickOutside);
+        window.addEventListener("resize", handleResize);
+        // Cleanup
+        return () => {
+            toggleBtn?.removeEventListener("click", handleToggle);
+            document.removeEventListener("click", handleClickOutside);
+            window.removeEventListener("resize", handleResize);
+        };
+
+    }, []);
 
     return (
         <>
