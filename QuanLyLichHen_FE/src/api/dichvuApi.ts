@@ -11,6 +11,17 @@ export interface DichVu {
     hinh: string;
     quytrinh: string;
 };
+export interface DichVu2 {
+    MADV: string;
+    LOAI: string;
+    TENDV: string;
+    MOTA: string;
+    THOIGIAN: number;
+    GIADV: number;
+    TRANGTHAI: string;
+    HINH: string;
+    QUYTRINH: string;
+}
 export interface TopDVData {
     madv: string;
     tendv: string;
@@ -36,8 +47,9 @@ const dichVuApi = {
     },
     // Hàm lấy danh sách tất cả dịch vụ
     getAllClient() {
-        const url = '/api-common/DichVu_/get-all-DichVuToc';
-        return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
+        //const url = '/api-common/DichVu_/get-all-DichVuToc';
+        const url = '/api/dichvu/get-all-DichVuCSD';
+        return axiosClient.get<{ success: boolean; message: string; data: DichVu2[] }>(url);
     },
     // Hàm lấy danh sách tất cả dịch vụ
     getAllDichVuClient() {
@@ -46,8 +58,9 @@ const dichVuApi = {
     },
     // Hàm lấy danh sách tất cả dịch vụ
     getAllCSDClient() {
-        const url = '/api-common/DichVu_/get-all-DichVuCSD';
-        return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
+        //const url = '/api-common/DichVu_/get-all-DichVuCSD';
+        const url = '/api/dichvu/get-all-DichVuToc';
+        return axiosClient.get<{ success: boolean; message: string; data: DichVu2[] }>(url);
     },
     // Hàm lấy dịch vụ theo ID
     getById(id: string) {

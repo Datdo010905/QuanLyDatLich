@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: 'https://localhost:7157', 
+  //baseURL: 'https://localhost:7157',  //netcore 5175
+  baseURL: 'http://localhost:5000', //nodejs 5000 ko có 's'
   headers: {
     'Content-Type': 'application/json',
   },

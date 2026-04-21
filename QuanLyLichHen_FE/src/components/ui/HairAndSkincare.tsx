@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import dichVuApi, { DichVu } from "../../api/dichvuApi";
+import dichVuApi, { DichVu, DichVu2 } from "../../api/dichvuApi";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 const HairAndSkincare = () => {
 
-    const [dichVuList, setDichVuList] = useState<DichVu[]>([]);
-    const [dichVuCSDList, setDichVuCSDList] = useState<DichVu[]>([]);
+    const [dichVuList, setDichVuList] = useState<DichVu2[]>([]);
+    const [dichVuCSDList, setDichVuCSDList] = useState<DichVu2[]>([]);
     //up data từ api lên bảng
     const fetchDichVu = async () => {
         try {
@@ -34,17 +34,17 @@ const HairAndSkincare = () => {
             <div className="row" id="ds-dichvu">
                 {/* 3. Duyệt mảng dịch vụ tóc*/}
                 {dichVuList.map((item) => (
-                    <div className="col-s-6 col-m-4 col-x-3" key={item.madv}>
+                    <div className="col-s-6 col-m-4 col-x-3" key={item.MADV}>
                         <div className="item">
                             <br />
 
-                            <img className="pic_item" title={item.tendv} src={`${item.hinh}`} alt={item.tendv} />
+                            <img className="pic_item" title={item.TENDV} src={`${item.HINH}`} alt={item.TENDV} />
                             <br /><br />
                             {/* Chuyển hướng đến trang chi tiết kèm mã dịch vụ */}
-                            <Link className="product-name" to={`/dichvuchitiet/${item.madv}`}>{item.tendv}</Link><br /><br />
-                            <span className="giamgia">{item.thoigian} phút</span>
+                            <Link className="product-name" to={`/dichvuchitiet/${item.MADV}`}>{item.TENDV}</Link><br /><br />
+                            <span className="giamgia">{item.THOIGIAN} phút</span>
                             <br />
-                            <div className="gia"><span className="product-price">{formatPrice(item.giadv)}</span></div>
+                            <div className="gia"><span className="product-price">{formatPrice(item.GIADV)}</span></div>
                         </div>
                     </div>
                 ))}
@@ -56,14 +56,14 @@ const HairAndSkincare = () => {
             <div className="row" id="ds-chamsoc">
                 {/* 4. Duyệt mảng dịch vụ chăm sóc da */}
                 {dichVuCSDList.map((item) => (
-                    <div className="col-s-6 col-m-4 col-x-3" key={item.madv}>
+                    <div className="col-s-6 col-m-4 col-x-3" key={item.MADV}>
                         <div className="item">
                             <br />
-                            <img className="pic_item" title={item.tendv} src={`${item.hinh}`} alt={item.tendv} /> <br /><br />
-                            <Link className="product-name" to={`/dichvuchitiet/${item.madv}`}>{item.tendv}</Link><br /><br />
-                            <span className="giamgia">{item.thoigian} phút</span>
+                            <img className="pic_item" title={item.TENDV} src={`${item.HINH}`} alt={item.TENDV} /> <br /><br />
+                            <Link className="product-name" to={`/dichvuchitiet/${item.MADV}`}>{item.TENDV}</Link><br /><br />
+                            <span className="giamgia">{item.THOIGIAN} phút</span>
                             <br />
-                            <div className="gia"><span className="product-price">{formatPrice(item.giadv)}</span></div>
+                            <div className="gia"><span className="product-price">{formatPrice(item.GIADV)}</span></div>
                         </div>
                     </div>
                 ))}

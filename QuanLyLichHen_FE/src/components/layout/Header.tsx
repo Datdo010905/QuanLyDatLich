@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import dichVuApi, { DichVu } from "../../api/dichvuApi";
+import dichVuApi, { DichVu, DichVu2 } from "../../api/dichvuApi";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -8,8 +8,8 @@ const Header = () => {
   // Các state để quản lý tìm kiếm
   const [keyword, setKeyword] = useState("");
 
-  const [allServices, setAllServices] = useState<DichVu[]>([]);
-  const [filteredServices, setFilteredServices] = useState<DichVu[]>([]);
+  const [allServices, setAllServices] = useState<DichVu2[]>([]);
+  const [filteredServices, setFilteredServices] = useState<DichVu2[]>([]);
 
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -18,7 +18,7 @@ const Header = () => {
 
   useEffect(() => {
     const loadServices = async () => {
-      let services: DichVu[] = [];
+      let services: DichVu2[] = [];
 
       const dichVuStr = await dichVuApi.getAllClient();
       if (dichVuStr) {
@@ -71,9 +71,9 @@ const Header = () => {
     const results = allServices.filter(dv => {
       const parseKeyword = parseFloat(searchStr);
       return (
-        dv.tendv.toLowerCase().includes(searchStr) ||
-        dv.thoigian.toString().includes(searchStr) ||
-        (!isNaN(parseKeyword) && dv.giadv <= parseKeyword)
+        dv.TENDV.toLowerCase().includes(searchStr) ||
+        dv.THOIGIAN.toString().includes(searchStr) ||
+        (!isNaN(parseKeyword) && dv.GIADV <= parseKeyword)
       );
     });
 
@@ -83,13 +83,13 @@ const Header = () => {
   };
 
   //click vào dịch vụ
-  const handleSelectService = (dv: DichVu) => {
-    setKeyword(dv.tendv);       // Điền tên vào ô input
+  const handleSelectService = (dv: DichVu2) => {
+    setKeyword(dv.TENDV);       // Điền tên vào ô input
     setShowDropdown(false);     // Ẩn dropdown
-    localStorage.setItem("madvCanXem", dv.madv);
+    localStorage.setItem("madvCanXem", dv.MADV);
 
     //chuyển
-    navigate(`/dichvuchitiet/${dv.madv}`);
+    navigate(`/dichvuchitiet/${dv.MADV}`);
   };
 
   const formatCurrency = (amount: number) => {
@@ -125,11 +125,11 @@ const Header = () => {
                 <ul id="searchResults" className="search-dropdown" style={{ display: 'block', marginLeft: '55px' }}>
                   {filteredServices.map((dv, index) => (
                     <li key={index} onClick={() => handleSelectService(dv)} style={{ cursor: "pointer" }}>
-                      <img src={dv.hinh ? `/${dv.hinh}` : '/img/logo.png'} alt="img" />
+                      <img src={dv.HINH ? `/${dv.HINH}` : '/img/logo.png'} alt="img" />
                       <div>
-                        <b>{dv.tendv}</b><br />
-                        <i style={{ lineHeight: "22px", marginRight: "20px" }}>{formatCurrency(dv.giadv)}</i>
-                        <span style={{ color: "#0a2a78" }}>{dv.thoigian} phút</span>
+                        <b>{dv.TENDV}</b><br />
+                        <i style={{ lineHeight: "22px", marginRight: "20px" }}>{formatCurrency(dv.GIADV)}</i>
+                        <span style={{ color: "#0a2a78" }}>{dv.THOIGIAN} phút</span>
                       </div>
                     </li>
                   ))}
