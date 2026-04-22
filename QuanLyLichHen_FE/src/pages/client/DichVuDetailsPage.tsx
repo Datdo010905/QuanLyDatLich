@@ -24,9 +24,7 @@ const DichVuDetailsPage = () => {
 				const foundItem = response.data?.data;
 				console.log("Dịch vụ tìm thấy:", foundItem);
 				if (foundItem) {
-					if (Array.isArray(foundItem) && foundItem.length > 0) {
-						setDichVu(foundItem[0]); // Lấy phần tử đầu tiên của mảng
-					}
+					setDichVu(foundItem);
 				}
 			} catch (error) {
 				toast.error("Lỗi khi lấy chi tiết dịch vụ:" + (error instanceof Error ? error.message : "Unknown error"));
@@ -69,7 +67,7 @@ const DichVuDetailsPage = () => {
 						toast.error("Có lỗi xảy ra khi đặt lịch!");
 					}
 				}
-				
+
 			}
 		}
 	};
@@ -92,20 +90,20 @@ const DichVuDetailsPage = () => {
 		<>
 			<div className="product" id="chitietdichvu">
 				<div className="product-title-3" style={{ marginTop: '20px' }}>
-					<Link to="/home">Dịch vụ</Link> - {dichVu.tendv}
+					<Link to="/home">Dịch vụ</Link> - {dichVu.TENDV}
 				</div>
 
 				<div className="col-s-6 col-m-5 col-x-4">
 					<div className="itemchitiet" style={{ border: 'none' }}>
 						{/* Hiển thị ảnh chính từ DB */}
-						<img id="slide_dv" className="pic_itemchitiet" title={dichVu.tendv}
-							src={`/${dichVu.hinh}`} alt={dichVu.tendv} />
+						<img id="slide_dv" className="pic_itemchitiet" title={dichVu.TENDV}
+							src={`/${dichVu.HINH}`} alt={dichVu.TENDV} />
 					</div>
 				</div>
 
 				<div className="col-s-6 col-x-4 col-m-7">
 					<div className="name_itemchitiet">
-						{dichVu.tendv}
+						{dichVu.TENDV}
 					</div>
 					<div className="react" style={{ color: "#ff9300" }}>
 						{[...Array(5)].map((_, i) => (
@@ -113,12 +111,12 @@ const DichVuDetailsPage = () => {
 								<path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path>
 							</svg>
 						))}
-						<a href="https://www.facebook.com/toladatdo" style={{ marginLeft: '10px', color: '#00a2ff' }}>({dichVu.thoigian} đánh giá của khách hàng)</a>
+						<a href="https://www.facebook.com/toladatdo" style={{ marginLeft: '10px', color: '#00a2ff' }}>({dichVu.THOIGIAN} đánh giá của khách hàng)</a>
 					</div>
 
 					<div className="phut-gia">
-						<div className="phut">{dichVu.thoigian} phút</div>
-						<div className="giachitiet"><span>{formatPrice(dichVu.giadv)}</span></div>
+						<div className="phut">{dichVu.THOIGIAN} phút</div>
+						<div className="giachitiet"><span>{formatPrice(dichVu.GIADV)}</span></div>
 					</div>
 
 					<div className="btn-datlichchitiet">
@@ -129,7 +127,7 @@ const DichVuDetailsPage = () => {
 						<div className="title_quytrinh">MÔ TẢ</div>
 						<div className="quytrinh_content" style={{ marginLeft: '40px' }}>
 							{/*đổ dữ liệu HTML */}
-							{renderListItems(dichVu.mota)}
+							{renderListItems(dichVu.MOTA)}
 						</div>
 					</div>
 				</div>
@@ -138,7 +136,7 @@ const DichVuDetailsPage = () => {
 					<div className="mota-dv">
 						<div className="title_quytrinh">QUY TRÌNH DỊCH VỤ</div>
 						<div className="quytrinh_content" style={{ marginLeft: '40px' }}>
-							{renderListItems(dichVu.quytrinh)}
+							{renderListItems(dichVu.QUYTRINH)}
 						</div>
 					</div>
 				</div>

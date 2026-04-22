@@ -28,9 +28,9 @@ const Login: React.FC = () => {
 
       if (response.data.success) {
         const token = response.data.token;
-        const phanquyen = response.data.data.phanquyen;
-        const username = response.data.data.matk;
-        const trangthai = response.data.data.trangthai;
+        const phanquyen = response.data.data.PHANQUYEN;
+        const username = response.data.data.MATK;
+        const trangthai = response.data.data.TRANGTHAI;
 
         // GỌI HÀM LƯU VÀO VÙNG NHỚ CHUNG TẠI ĐÂY
         login({ username, role: phanquyen.toString() }, token);

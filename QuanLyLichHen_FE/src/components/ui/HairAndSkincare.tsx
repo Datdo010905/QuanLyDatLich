@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import dichVuApi, { DichVu, DichVu2 } from "../../api/dichvuApi";
+import dichVuApi, { DichVu } from "../../api/dichvuApi";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 const HairAndSkincare = () => {
 
-    const [dichVuList, setDichVuList] = useState<DichVu2[]>([]);
-    const [dichVuCSDList, setDichVuCSDList] = useState<DichVu2[]>([]);
+    const [dichVuList, setDichVuList] = useState<DichVu[]>([]);
+    const [dichVuCSDList, setDichVuCSDList] = useState<DichVu[]>([]);
     //up data từ api lên bảng
     const fetchDichVu = async () => {
         try {

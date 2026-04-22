@@ -34,13 +34,13 @@ const DichVuPage: React.FC = () => {
 
 
     const filteredDichVuList = dichVuList.filter(dv =>
-        dv.tendv?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        dv.madv?.toLowerCase().includes(searchTerm.toLowerCase())
+        dv.TENDV?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        dv.MADV?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const filteredDichVuCSDList = dichVuCSDList.filter(dv =>
-        dv.tendv?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        dv.madv?.toLowerCase().includes(searchTerm.toLowerCase())
+        dv.TENDV?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        dv.MADV?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     //up data từ api lên bảng
@@ -115,27 +115,27 @@ const DichVuPage: React.FC = () => {
     //click nút sửa
     const handleEditClick = (row: DichVu) => {
         setFormData({
-            serviceID: row.madv || '',
-            serviceName: row.tendv || '',
-            serviceType: row.loaidv || 'CT',
-            serviceDesc: row.mota || '',
-            serviceTime: row.thoigian ? String(row.thoigian) : '',
-            servicePrice: row.giadv ? String(row.giadv) : '',
-            serviceStatus: row.trangthai || 'Đang cung cấp',
-            serviceProcedure: row.quytrinh || '',
+            serviceID: row.MADV || '',
+            serviceName: row.TENDV || '',
+            serviceType: row.LOAI || 'CT',
+            serviceDesc: row.MOTA || '',
+            serviceTime: row.THOIGIAN ? String(row.THOIGIAN) : '',
+            servicePrice: row.GIADV ? String(row.GIADV) : '',
+            serviceStatus: row.TRANGTHAI || 'Đang cung cấp',
+            serviceProcedure: row.QUYTRINH || '',
         });
-        setPreviewImg(row.hinh ? (row.hinh.startsWith('/') ? row.hinh : `/${row.hinh}`) : '');
+        setPreviewImg(row.HINH ? (row.HINH.startsWith('/') ? row.HINH : `/${row.HINH}`) : '');
         setFormErrors({}); // Xóa lỗi cũ
         setImageFile(null);
         setModalType('edit');
 
     };
     const handleDeleteClick = (row: DichVu) => {
-        if (row.trangthai !== 'Ngừng cung cấp') {
+        if (row.TRANGTHAI !== 'Ngừng cung cấp') {
             toast.error('Lỗi: Chỉ có thể xóa dịch vụ khi trạng thái là "Ngừng cung cấp"!');
             return;
         }
-        setIdToDelete(row.madv);
+        setIdToDelete(row.MADV);
         setIsDeleteModalOpen(true);
     };
 
@@ -179,13 +179,27 @@ const DichVuPage: React.FC = () => {
         }
         try {
             if (modalType === 'add') {
-                const ex = await dichVuApi.getById(formData.serviceID);
-                if (ex && ex.data.data) {
-                    toast.error("Mã dịch vụ đã tồn tại!");
+                let isExist = false;
+                try {
+                    const ex = await dichVuApi.getById(formData.serviceID);
+                    //(HTTP 200) Mã đã tồn tại
+                    if (ex && ex.data.success) {
+                        isExist = true;
+                    }
+                } catch (err: any) {
+                    // 404 do BE trả khi ko có mã -> thêm
+                    if (err.response && err.response.status === 404) {
+                        isExist = false;
+                    } else {
+                        throw err; 
+                    }
+                }
+
+                if (isExist) {
+                    toast.error("Mã dịch vụ đã tồn tại. Vui lòng nhập mã khác!");
                     return;
                 }
                 await dichVuApi.create(submitData);
-                //alert("Đã thêm thành công!");
                 toast.success("Thêm dịch vụ thành công!");
             } else {
                 await dichVuApi.update(submitData);
@@ -219,19 +233,19 @@ const DichVuPage: React.FC = () => {
 
     //Định nghĩa cột cho DataTable
     const dichVuColumns: Column<DichVu>[] = [
-        { tieude: "ID", cotnhandulieu: "madv" },
-        { tieude: "Tên dịch vụ", cotnhandulieu: "tendv" },
-        { tieude: "Thời gian", cotnhandulieu: "thoigian", render: (row) => `${row.thoigian} phút` },
+        { tieude: "ID", cotnhandulieu: "MADV" },
+        { tieude: "Tên dịch vụ", cotnhandulieu: "TENDV" },
+        { tieude: "Thời gian", cotnhandulieu: "THOIGIAN", render: (row) => `${row.THOIGIAN} phút` },
         {
-            tieude: "Giá", cotnhandulieu: "giadv", render: (row) => {
-                const value = parseFloat(row.giadv as any);
+            tieude: "Giá", cotnhandulieu: "GIADV", render: (row) => {
+                const value = parseFloat(row.GIADV as any);
                 return value ? value.toLocaleString('vi-VN') + '₫' : "0₫";
             }
 
         },
         {
-            tieude: "Trạng thái", cotnhandulieu: "trangthai", render: (row) => {
-                const codeStatus = row.trangthai;
+            tieude: "Trạng thái", cotnhandulieu: "TRANGTHAI", render: (row) => {
+                const codeStatus = row.TRANGTHAI;
                 const style = status[codeStatus] || status['Đang cung cấp'];
 
                 return (
@@ -249,13 +263,13 @@ const DichVuPage: React.FC = () => {
             }
         },
         {
-            tieude: "Ảnh", cotnhandulieu: "hinh", render: (row) => {
-                const imgPath = row.hinh?.startsWith('/') ? row.hinh : `/${row.hinh}`;
-                return row.hinh ? <img src={imgPath} alt={row.tendv} height="60" width="70" style={{ objectFit: 'cover', borderRadius: '4px' }} /> : <span style={{ color: '#999', fontSize: '12px' }}>Không có ảnh</span>;
+            tieude: "Ảnh", cotnhandulieu: "HINH", render: (row) => {
+                const imgPath = row.HINH?.startsWith('/') ? row.HINH : `/${row.HINH}`;
+                return row.HINH ? <img src={imgPath} alt={row.TENDV} height="60" width="70" style={{ objectFit: 'cover', borderRadius: '4px' }} /> : <span style={{ color: '#999', fontSize: '12px' }}>Không có ảnh</span>;
             }
         },
         {
-            tieude: "Hành động", cotnhandulieu: "madv", render: (row) => (
+            tieude: "Hành động", cotnhandulieu: "MADV", render: (row) => (
                 <>
                     <button className="btn small edit" onClick={() => handleEditClick(row)}><i className="fas fa-edit"></i></button>
                     <button

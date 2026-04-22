@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import dichVuApi, { DichVu, DichVu2 } from "../../api/dichvuApi";
+import dichVuApi, { DichVu } from "../../api/dichvuApi";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -8,8 +8,8 @@ const Header = () => {
   // Các state để quản lý tìm kiếm
   const [keyword, setKeyword] = useState("");
 
-  const [allServices, setAllServices] = useState<DichVu2[]>([]);
-  const [filteredServices, setFilteredServices] = useState<DichVu2[]>([]);
+  const [allServices, setAllServices] = useState<DichVu[]>([]);
+  const [filteredServices, setFilteredServices] = useState<DichVu[]>([]);
 
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -18,7 +18,7 @@ const Header = () => {
 
   useEffect(() => {
     const loadServices = async () => {
-      let services: DichVu2[] = [];
+      let services: DichVu[] = [];
 
       const dichVuStr = await dichVuApi.getAllClient();
       if (dichVuStr) {
@@ -83,7 +83,7 @@ const Header = () => {
   };
 
   //click vào dịch vụ
-  const handleSelectService = (dv: DichVu2) => {
+  const handleSelectService = (dv: DichVu) => {
     setKeyword(dv.TENDV);       // Điền tên vào ô input
     setShowDropdown(false);     // Ẩn dropdown
     localStorage.setItem("madvCanXem", dv.MADV);
