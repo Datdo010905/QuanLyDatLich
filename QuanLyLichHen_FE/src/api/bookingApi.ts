@@ -1,91 +1,61 @@
 import axiosClient from './axiosClient';
 
-//định nghĩa theo api trả về
 export interface Booking {
-    malich: string;
-    ngayhen: string;
-    giohen: string;
-    trangthai: string;
-    machinhanh: string;
-    makh: string;
-};
+    MALICH: string;
+    NGAYHEN: string;
+    GIOHEN: string;
+    TRANGTHAI: string;
+    MACHINHANH: string;
+    MAKH: string;
+}
 export interface BookingDetails {
-    malich: string;
-    madv: string;
-    manv: string;
-    soluong: number;
-    giA_DUKIEN: number;
-    ghichu: string;
-};
+    MALICH: string;
+    MADV: string;
+    MANV: string;
+    SOLUONG: number;
+    GIA_DUKIEN: number;
+    GHICHU: string;
+}
+
 const BookingApi = {
+    // ===== LỊCH HẸN =====
     getAll() {
-        const url = '/api-admin/LichHen_/get-all-lichhen';
-        return axiosClient.get<{ success: boolean; message: string; data: Booking[] }>(url);
+        return axiosClient.get('/api/lichhen/get-all-lichhen');
     },
-    getAllCTTvaDHT() {
-        const url = '/api-admin/LichHen_/get-all-lichhenCTTvaDHT';
-        return axiosClient.get<{ success: boolean; message: string; data: Booking[] }>(url);
-    },
-    getAllCT() {
-        const url = '/api-admin/LichHen_/get-all-CTlichhen';
-        return axiosClient.get<{ success: boolean; message: string; data: BookingDetails[] }>(url);
-    },
-    getAllByIdNV(id: string) {
-        const url = `/api-admin/LichHen_/get-allbyIdNV-lichhen?manv=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: Booking }>(url);
-    },
-    getAllByIdKH(id: string) {
-        const url = `/api-common/LichHen_/get-allbyIdKH-lichhen?ma=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: Booking[] }>(url);
-    },
+
     getById(id: string) {
-        const url = `/api-admin/LichHen_/get-byId-lichhen?ma=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: Booking }>(url);
+        return axiosClient.get(`/api/lichhen/get-byId-lichhen/${id}`);
     },
-    getByNgay(ngaybd: string, ngaykt: string) {
-        const url = `/api-admin/LichHen_/get-all-lichhenTheoNgay?ngaybd=${ngaybd}&ngaykt=${ngaykt}`;
-        return axiosClient.get<{ success: boolean; message: string; data: Booking[] }>(url);
+
+    create(data: Booking) {
+        return axiosClient.post('/api/lichhen/insert-lichhen', data);
     },
-    getByIdCT(id: string) {
-        const url = `/api-admin/LichHen_/get-byId-CTlichhen?ma=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: BookingDetails[] }>(url);
-    },
-    getByIdChiTiet(id: string) {
-        const url = `/api-common/LichHen_/get-byId-CTlichhen?ma=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: BookingDetails[] }>(url);
-    },
-    create(data: FormData) {
-        const url = '/api-admin/LichHen_/insert-lichhen';
-        return axiosClient.post(url, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-    },
-    createCT(data: FormData) {
-        const url = '/api-admin/LichHen_/insert-CTlichhen';
-        return axiosClient.post(url, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-    },
+
     update(id: string, trangthai: string) {
-        const url = `/api-admin/LichHen_/update-lichhen?ma=${id}&trangthai=${trangthai}`;
-        return axiosClient.put(url);
+        return axiosClient.put(`/api/lichhen/update-lichhen/${id}`, {
+            TRANGTHAI: trangthai
+        });
     },
-    updateCT(id: string, ghichu: string) {
-        const url = `/api-common/LichHen_/update-CTlichhen?ma=${id}&ghichu=${ghichu}`;
-        return axiosClient.put(url);
-    },
+
     delete(id: string) {
-        const url = `/api-admin/LichHen_/delete-lichhen?ma=${id}`;
-        return axiosClient.delete(url);
+        return axiosClient.delete(`/api/lichhen/delete-lichhen/${id}`);
     },
+
+    // ===== CHI TIẾT LỊCH HẸN =====
+    getAllCT() {
+        return axiosClient.get('/api/lichhen/get-all-CTlichhen');
+    },
+
+    getByIdCT(id: string) {
+        return axiosClient.get(`/api/lichhen/get-byId-CTlichhen/${id}`);
+    },
+
+    createCT(data: BookingDetails) {
+        return axiosClient.post('/api/lichhen/insert-CTlichhen', data);
+    },
+
     deleteCT(id: string) {
-        const url = `/api-admin/LichHen_/delete-CTlichhen?ma=${id}`;
-        return axiosClient.delete(url);
+        return axiosClient.delete(`/api/lichhen/delete-CTlichhen/${id}`);
     }
 };
-
 export default BookingApi;

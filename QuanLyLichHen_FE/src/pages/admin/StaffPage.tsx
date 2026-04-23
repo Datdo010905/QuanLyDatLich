@@ -36,9 +36,9 @@ const StaffPage: React.FC = () => {
         staffAcc: ''
     });
     const filteredStaffList = staffList.filter(nhanvien =>
-        nhanvien.manv?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        nhanvien.matk?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        nhanvien.sdt?.toLowerCase().includes(searchTerm.toLowerCase())
+        nhanvien.MANV?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        nhanvien.MATK?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        nhanvien.SDT?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     //up data từ api lên bảng
@@ -79,14 +79,14 @@ const StaffPage: React.FC = () => {
     //click nút sửa
     const handleEditClick = (row: NhanVien) => {
         setFormData({
-            staffID: row.manv || '',
-            staffName: row.hoten || '',
-            staffPosition: row.chucvu || '',
-            staffPhone: row.sdt || '',
-            staffAddress: row.diachi || '',
-            staffBranch: row.machinhanh || '',
-            staffBirthDate: row.ngaysinh ? row.ngaysinh.split('T')[0] : '',
-            staffAcc: row.matk || ''
+            staffID: row.MANV.trim() || '',
+            staffName: row.HOTEN.trim() || '',
+            staffPosition: row.CHUCVU.trim() || '',
+            staffPhone: row.SDT.trim() || '',
+            staffAddress: row.DIACHI.trim() || '',
+            staffBranch: row.MACHINHANH.trim() || '',
+            staffBirthDate: row.NGAYSINH ? row.NGAYSINH.split('T')[0] : '',
+            staffAcc: row.MATK.trim() || ''
         });
         setFormErrors({}); // Xóa lỗi cũ
         setModalType('edit');
@@ -107,8 +107,8 @@ const StaffPage: React.FC = () => {
         }
     };
     const handleDeleteClick = (row: NhanVien) => {
-        setIdToDelete(row.manv || null); // Lưu ID của nhân viên cần xóa
-        setTKToDelete(row.matk || null); // Lưu ID tài khoản cần xóa
+        setIdToDelete(row.MANV || null); // Lưu ID của nhân viên cần xóa
+        setTKToDelete(row.MATK || null); // Lưu ID tài khoản cần xóa
         setIsDeleteModalOpen(true);
     };
     //HÀM SUBMIT CHO CẢ THÊM VÀ SỬA
@@ -135,15 +135,28 @@ const StaffPage: React.FC = () => {
         setFormErrors({});
 
         //tạo FormData theo swagger
-        const submitData = new FormData();
-        submitData.append('MaNV', formData.staffID);
-        submitData.append('HoTen', formData.staffName);
-        submitData.append('ChucVu', formData.staffPosition);
-        submitData.append('SDT', formData.staffPhone);
-        submitData.append('DiaChi', formData.staffAddress);
-        submitData.append('MaChiNhanh', formData.staffBranch);
-        submitData.append('NgaySinh', formData.staffBirthDate);
-        submitData.append('MaTK', formData.staffAcc);
+        // const submitData = new FormData();
+        // submitData.append('MaNV', formData.staffID);
+        // submitData.append('HoTen', formData.staffName);
+        // submitData.append('ChucVu', formData.staffPosition);
+        // submitData.append('SDT', formData.staffPhone);
+        // submitData.append('DiaChi', formData.staffAddress);
+        // submitData.append('MaChiNhanh', formData.staffBranch);
+        // submitData.append('NgaySinh', formData.staffBirthDate);
+        // submitData.append('MaTK', formData.staffAcc);
+
+        const submitData: NhanVien = {
+            MANV: formData.staffID,
+            HOTEN: formData.staffName,
+            CHUCVU: formData.staffPosition,
+            SDT: formData.staffPhone,
+            DIACHI: formData.staffAddress,
+            MACHINHANH: formData.staffBranch,
+            NGAYSINH: formData.staffBirthDate,
+            MATK: formData.staffAcc
+        };
+
+
 
         //check chọn quyền thì role tài khoản sẽ theo
         //case 2: return "Quản lý";
@@ -158,34 +171,45 @@ const StaffPage: React.FC = () => {
         };
 
 
-        const submitDataTK = new FormData();
-        submitDataTK.append('MaTK', formData.staffAcc);
-        submitDataTK.append('Pass', formData.staffAcc);
-        submitDataTK.append('PhanQuyen', roleMap[formData.staffPosition] || "3");
-        submitDataTK.append('TrangThai', "Hoạt động");
+        // const submitDataTK = new FormData();
+        // submitDataTK.append('MaTK', formData.staffAcc);
+        // submitDataTK.append('Pass', formData.staffAcc);
+        // submitDataTK.append('PhanQuyen', roleMap[formData.staffPosition] || "3");
+        // submitDataTK.append('TrangThai', "Hoạt động");
 
+        const submitDataTK: TaiKhoan = {
+            MATK: formData.staffAcc,
+            PASS: formData.staffAcc,
+            PHANQUYEN: Number(roleMap[formData.staffPosition] || "3"),
+            TRANGTHAI: "Hoạt động"
+        };
         try {
             if (modalType === 'add') {
-                const checkExist = await taikhoanApi.getById(formData.staffAcc);
+                let isTkExist = false;
+                try {
+                    const checkExistTK = await taikhoanApi.getById(formData.staffAcc);
+                    if (checkExistTK && checkExistTK.data.success) 
+                        isTkExist = true;
+                } catch (err: any) {
+                    if (err.response && err.response.status === 404) 
+                        isTkExist = false;
+                    else 
+                        throw err;
+                }
                 const checkPhone = await staffApi.getAll();
-                const staffExist = await staffApi.getById(formData.staffID);
 
-                const phoneExists = checkPhone.data.data.some((nv) => nv.sdt === formData.staffPhone);
-                if (staffExist && staffExist.data.data) {
-                    toast.error("Mã nhân viên đã tồn tại!");
+                const phoneExists = checkPhone.data.data.some((nv: any) => nv.SDT === formData.staffPhone);
+                if (isTkExist) {
+                    toast.error("Tài khoản này đã tồn tại!");
                     return;
                 }
                 if (phoneExists) {
                     toast.error("Số điện thoại đã tồn tại!");
                     return;
-
-                } if (checkExist && checkExist.data.data) {
-                    toast.error("Tài khoản đã tồn tại!");
-                    return;
                 }
 
                 const taikhoanResult = await taikhoanApi.create(submitDataTK);
-                if(taikhoanResult.data.success) {
+                if (taikhoanResult.data.success) {
                     await staffApi.create(submitData);
                     toast.success("Thêm nhân viên thành công!");
                 }
@@ -196,7 +220,7 @@ const StaffPage: React.FC = () => {
                     setModalType('none');
                     return;
                 }
-                await staffApi.update(submitData);
+                await staffApi.update(formData.staffID, submitData);
                 toast.success("Cập nhật nhân viên thành công!");
             }
             setModalType('none'); // Đóng form
@@ -209,22 +233,19 @@ const StaffPage: React.FC = () => {
     };
     // xoá
     const handleDeleteConfirm = async () => {
-        if (!idToDelete) return;
-        if (!tkToDelete) return;
+        if (!idToDelete || !tkToDelete) return;
         if (idToDelete === 'NV001') {
             toast.error("Không thể xóa nhân viên này!");
             setIsDeleteModalOpen(false);
             return;
         }
         try {
-            //song song
-            await Promise.all([
-                taikhoanApi.delete(tkToDelete),
-                staffApi.delete(idToDelete)
-            ]);
+            await staffApi.delete(idToDelete);
+            await taikhoanApi.delete(tkToDelete);
+
             toast.success("Xóa nhân viên thành công!");
             setIsDeleteModalOpen(false);
-            fetchData(); // Load lại bảng
+            fetchData();
         } catch (error) {
             console.error("Lỗi xóa:", error);
             toast.error("Xóa thất bại!");
@@ -233,7 +254,8 @@ const StaffPage: React.FC = () => {
 
 
     const getChiNhanhName = (branchCode: string) => {
-        switch (branchCode) {
+        //check khoảng trắng khi api trả về
+        switch (branchCode?.trim()) {
             case "CN001": return "30Shine - Nguyễn Trãi";
             case "CN002": return "30Shine - Cầu Giấy";
             case "CN003": return "30Shine - Tân Bình";
@@ -258,11 +280,11 @@ const StaffPage: React.FC = () => {
 
     //Định nghĩa cột cho DataTable theo api trả về
     const staffColumns: Column<NhanVien>[] = [
-        { tieude: "ID", cotnhandulieu: "manv" },
-        { tieude: "Họ tên", cotnhandulieu: "hoten" },
+        { tieude: "ID", cotnhandulieu: "MANV" },
+        { tieude: "Họ tên", cotnhandulieu: "HOTEN" },
         {
-            tieude: "Chức vụ", cotnhandulieu: "chucvu", render: (row) => {
-                const style = roleStyles[row.chucvu || ''] || {};
+            tieude: "Chức vụ", cotnhandulieu: "CHUCVU", render: (row) => {
+                const style = roleStyles[row.CHUCVU || ''] || {};
                 return (
                     <span style={{
                         padding: '4px 10px',
@@ -272,32 +294,32 @@ const StaffPage: React.FC = () => {
                         whiteSpace: 'nowrap',
                         ...style
                     }}>
-                        {style ? row.chucvu : "Không xác định"}
+                        {style ? row.CHUCVU : "Không xác định"}
                     </span>
                 )
             }
         },
-        { tieude: "SĐT", cotnhandulieu: "sdt" },
+        { tieude: "SĐT", cotnhandulieu: "SDT" },
         {
-            tieude: "Chi nhánh", cotnhandulieu: "machinhanh", render: (row) => {
-                const style = branchStyles[row.machinhanh || ''] || {};
+            tieude: "Chi nhánh", cotnhandulieu: "MACHINHANH", render: (row) => {
+                const style = branchStyles[row.MACHINHANH?.trim() || ''] || {};
                 return (
                     <span style={style}>
-                        {getChiNhanhName(row.machinhanh || '')}
+                        {getChiNhanhName(row.MACHINHANH?.trim() || '')}
                     </span>
                 );
             }
 
         },
         {
-            tieude: "Ngày sinh", cotnhandulieu: "ngaysinh", render: (row) => {
-                const date = new Date(row.ngaysinh);
+            tieude: "Ngày sinh", cotnhandulieu: "NGAYSINH", render: (row) => {
+                const date = new Date(row.NGAYSINH);
                 return date.toLocaleDateString('vi-VN');
             }
         },
 
         {
-            tieude: "Hành động", cotnhandulieu: "manv", render: (row) => (
+            tieude: "Hành động", cotnhandulieu: "MANV", render: (row) => (
                 <>
                     <button className="btn small edit" onClick={() => handleEditClick(row)}><i className="fas fa-edit"></i></button>
                     <button

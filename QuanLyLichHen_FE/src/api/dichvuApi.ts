@@ -91,7 +91,7 @@ const dichVuApi = {
         });
     },
     // Hàm xoá dịch vụ
-    delete(id: string) { // Đổi FormData thành id (string)
+    delete(id: string) {
         //const url = `/api-admin/DichVu_/delete-DichVu?ma=${id}`;
         const url = `/api/dichvu/delete-DichVu/${id}`;
         return axiosClient.delete(url); 

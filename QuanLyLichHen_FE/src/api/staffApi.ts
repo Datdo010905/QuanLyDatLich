@@ -1,57 +1,46 @@
 import axiosClient from './axiosClient';
 
-//định nghĩa theo api trả về
+//theo api trả về
 export interface NhanVien {
-    manv: string;
-    hoten: string;
-    chucvu: string;
-    sdt: string;
-    diachi: string;
-    machinhanh: string;
-    ngaysinh: string;
-    matk: string;
+    MANV: string;
+    HOTEN: string;
+    CHUCVU: string;
+    SDT: string;
+    DIACHI: string;
+    MACHINHANH: string;
+    NGAYSINH: string;
+    MATK: string;
 };
 
-export interface TopStaffData {
-    manv: string;
-    hoten: string;
-    chucvu: string;
-    sdt: string;
-    diachi: string;
-    machinhanh: string;
-    ngaysinh: string;
-    matk: string;
-    solich: number;
-}
+// export interface TopStaffData {
+//     manv: string;
+//     hoten: string;
+//     chucvu: string;
+//     sdt: string;
+//     diachi: string;
+//     machinhanh: string;
+//     ngaysinh: string;
+//     matk: string;
+//     solich: number;
+// }
+
 const NhanVienApi = {
     getAll() {
-        const url = '/api-admin/NhanVien_/get-all-nhanvien';
-        return axiosClient.get<{ success: boolean; message: string; data: NhanVien[] }>(url);
+        return axiosClient.get('/api/nhanvien/get-all-nhanvien');
     },
     getById(id: string) {
-        const url = `/api-admin/NhanVien_/get-byId-nhanvien?ma=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: NhanVien }>(url);
+        return axiosClient.get(`/api/nhanvien/get-byId-nhanvien/${id}`);
     },
-    create(data: FormData) {
-        const url = '/api-admin/NhanVien_/insert-nhanvien';
-        return axiosClient.post(url, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+    create(data: NhanVien) {
+        return axiosClient.post('/api/nhanvien/insert-nhanvien', data);
     },
-    update(data: FormData) {
-        const url = '/api-admin/NhanVien_/update-nhanvien';
-        return axiosClient.put(url, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+    update(id: string, data: NhanVien) {
+        return axiosClient.put(`/api/nhanvien/update-nhanvien/${id}`, data);
     },
     delete(id: string) {
-        const url = `/api-admin/NhanVien_/delete-nhanvien?ma=${id}`;
-        return axiosClient.delete(url); 
+        return axiosClient.delete(`/api/nhanvien/delete-nhanvien/${id}`);
     }
 };
+
 
 export default NhanVienApi;

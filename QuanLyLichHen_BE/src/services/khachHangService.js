@@ -1,27 +1,64 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const checkKhachHangTonTai = async (maKH) => {
-    return await prisma.kHACHHANG.findUnique({ where: { MAKH: maKH } });
+const getAllKhachHang = async () => {
+    return await prisma.kHACHHANG.findMany();
 };
 
-const checkSDTTonTai = async (sdt) => {
-    return await prisma.kHACHHANG.findFirst({ where: { SDT: sdt } });
+
+const getKhachHangByID = async (ma) => {
+    return await prisma.kHACHHANG.findFirst({
+        where: {
+            OR: [
+                { MAKH: ma },
+                { SDT: ma }
+            ]
+        }
+    });
+};
+
+const checkSDTTonTai = async (ma, sdt) => {
+    return await prisma.kHACHHANG.findFirst({
+        where: {
+            SDT: sdt,
+            MAKH: { not: ma } // Lệnh "khác" trong Prisma
+        }
+    });
 };
 
 const createKhachHang = async (model) => {
     return await prisma.kHACHHANG.create({
         data: {
-            MAKH: model.MaKH,
-            HOTEN: model.HoTen,
-            SDT: model.SDT,
-            MATK: model.MaTK || null // Nếu không có MaTK thì cho null
+            //check cả chữ HOA lẫn chữ thường từ React do FE có thể gửi lên không đồng nhất
+            MAKH: model.MAKH || model.makh,
+            HOTEN: model.HOTEN || model.hoten,
+            SDT: model.SDT || model.sdt,
+            MATK: model.MATK || model.matk || null
+        }
+    });
+};
+
+const updateKhachHang = async (ma, model) => {
+    return await prisma.kHACHHANG.update({
+        where: { MAKH: ma },
+        data: {
+            HOTEN: model.HOTEN || model.hoten,
+            SDT: model.SDT || model.sdt
+        }
+    });
+};
+
+const deleteKhachHang = async (ma) => {
+    return await prisma.kHACHHANG.deleteMany({
+        where: {
+            OR: [
+                { MAKH: ma },
+                { SDT: ma }
+            ]
         }
     });
 };
 
 module.exports = {
-    checkKhachHangTonTai,
-    checkSDTTonTai,
-    createKhachHang
+    getAllKhachHang, getKhachHangByID, checkSDTTonTai, createKhachHang, updateKhachHang, deleteKhachHang
 };

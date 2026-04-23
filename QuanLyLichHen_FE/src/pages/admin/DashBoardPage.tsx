@@ -8,6 +8,7 @@ import StaffApi from "../../api/staffApi"
 import dichVuApi from "../../api/dichvuApi";
 import TaiKhoanApi from "../../api/taikhoanApi";
 import KhuyenMaiApi from "../../api/khuyenmaiApi";
+import { any } from "zod";
 const DashboardPage: React.FC = () => {
 
     //lưu state để dùng
@@ -53,7 +54,7 @@ const DashboardPage: React.FC = () => {
         if (resBooking.data.success) {
             const homnay = resBooking.data.data;
             const Todaybookings = homnay.filter(
-                lich => lich.ngayhen.split('T')[0] === today
+                (lich: any) => lich.ngayhen.split('T')[0] === today
             );
             setTotalBookingsToday(Todaybookings.length);
         }

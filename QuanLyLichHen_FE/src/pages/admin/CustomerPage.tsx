@@ -32,9 +32,9 @@ const CustomerPage: React.FC = () => {
         cusAcc: ''
     });
     const filteredCustomerList = customerList.filter(customer =>
-        customer.makh?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        customer.matk?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        customer.sdt?.toLowerCase().includes(searchTerm.toLowerCase())
+        customer.MAKH?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.MATK?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.SDT?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     //up data từ api lên bảng
@@ -71,10 +71,10 @@ const CustomerPage: React.FC = () => {
     //click nút sửa
     const handleEditClick = (row: Customer) => {
         setFormData({
-            cusID: row.makh || '',
-            cusName: row.hoten || '',
-            cusPhone: row.sdt || '',
-            cusAcc: row.matk || ''
+            cusID: row.MAKH || '',
+            cusName: row.HOTEN || '',
+            cusPhone: row.SDT || '',
+            cusAcc: row.MATK || ''
         });
         setFormErrors({}); // Xóa lỗi cũ
         setModalType('edit');
@@ -95,8 +95,8 @@ const CustomerPage: React.FC = () => {
         }
     };
     const handleDeleteClick = (row: Customer) => {
-        setIdToDelete(row.makh || null); // Lưu ID của khách hàng cần xóa
-        setSdtToDelete(row.sdt || null); // Lưu SĐT của khách hàng cần xóa
+        setIdToDelete(row.MAKH || null); // Lưu ID của khách hàng cần xóa
+        setSdtToDelete(row.SDT || null); // Lưu SĐT của khách hàng cần xóa
         setIsDeleteModalOpen(true);
     };
     //HÀM SUBMIT CHO CẢ THÊM VÀ SỬA
@@ -123,39 +123,73 @@ const CustomerPage: React.FC = () => {
         setFormErrors({});
 
         //tạo FormData theo swagger
-        const submitData = new FormData();
-        submitData.append('MaKH', formData.cusPhone);
-        submitData.append('HoTen', formData.cusName);
-        submitData.append('SDT', formData.cusPhone);
-        submitData.append('MaTK', formData.cusPhone);
+        // const submitData = new FormData();
+        // submitData.append('MaKH', formData.cusPhone);
+        // submitData.append('HoTen', formData.cusName);
+        // submitData.append('SDT', formData.cusPhone);
+        // submitData.append('MaTK', formData.cusPhone);
 
-        const submitDataTK = new FormData();
-        submitDataTK.append('MaTK', formData.cusPhone);
-        submitDataTK.append('Pass', formData.cusPhone);
-        submitDataTK.append('PhanQuyen', "0");
-        submitDataTK.append('TrangThai', "Hoạt động");
+        // const submitDataTK = new FormData();
+        // submitDataTK.append('MaTK', formData.cusPhone);
+        // submitDataTK.append('Pass', formData.cusPhone);
+        // submitDataTK.append('PhanQuyen', "0");
+        // submitDataTK.append('TrangThai', "Hoạt động");
+        const submitData = {
+            MAKH: formData.cusPhone,
+            HOTEN: formData.cusName,
+            SDT: formData.cusPhone,
+            MATK: formData.cusPhone
+        };
 
+        const submitDataTK = {
+            MATK: formData.cusPhone,
+            PASS: formData.cusPhone,
+            PHANQUYEN: 0,
+            TRANGTHAI: "Hoạt động"
+        };
         try {
             if (modalType === 'add') {
-                const ex = await customerApi.getById(formData.cusPhone);
-                if (ex && ex.data.data) {
-                    toast.error("Khách hàng đã tồn tại!");
+                let isTkExist = false;
+                try {
+                    const checkExistTK = await taikhoanApi.getById(formData.cusPhone);
+                    if (checkExistTK && checkExistTK.data.success) isTkExist = true;
+                } catch (err: any) {
+                    if (err.response && err.response.status === 404) isTkExist = false;
+                    else throw err;
+                }
+
+                if (isTkExist) {
+                    toast.error("Tài khoản (SĐT) này đã tồn tại!");
                     return;
                 }
-                const checkExistTK = await taikhoanApi.getById(formData.cusPhone);
-                if (checkExistTK && checkExistTK.data.data) {
+
+                let isExistTK = false;
+                try {
+                    const checkExistTK = await taikhoanApi.getById(formData.cusPhone);
+                    if (checkExistTK && checkExistTK.data.success) {
+                        isExistTK = true;
+                    }
+                } catch (err: any) {
+                    if (err.response && err.response.status === 404) {
+                        isExistTK = false;
+                    } else {
+                        throw err;
+                    }
+                }
+
+                if (isExistTK) {
                     toast.error("Tài khoản đã tồn tại!");
                     return;
                 }
                 const taikhoanResult = await taikhoanApi.create(submitDataTK);
-                if(taikhoanResult.data.success) {
+                if (taikhoanResult.data.success) {
                     await customerApi.create(submitData);
                     toast.success("Thêm khách hàng thành công!");
                 }
 
-                
+
             } else {
-                await customerApi.update(submitData);
+                await customerApi.update(formData.cusPhone, submitData);
                 toast.success("Cập nhật khách hàng thành công!");
             }
             setModalType('none'); // Đóng form
@@ -168,30 +202,30 @@ const CustomerPage: React.FC = () => {
     };
     // xoá
     const handleDeleteConfirm = async () => {
-        if (!idToDelete) return;
-        if (!sdtToDelete) return;
+        if (!idToDelete || !sdtToDelete) return;
         try {
-            //song song
-            await Promise.all([
-                taikhoanApi.delete(sdtToDelete),
-                customerApi.delete(idToDelete)
-            ]);
+            //Xóa Khách Hàng trước
+            await customerApi.delete(idToDelete);
+            
+            //Xóa Tài Khoản sau
+            await taikhoanApi.delete(sdtToDelete);
+
             toast.success("Xóa khách hàng thành công!");
             setIsDeleteModalOpen(false);
             fetchData(); // Load lại bảng
         } catch (error) {
             console.error("Lỗi xóa:", error);
-            toast.error("Xóa thất bại!");
+            toast.error("Xóa thất bại! Vui lòng kiểm tra lại dữ liệu.");
         }
     };
     //Định nghĩa cột cho DataTable theo api trả về
     const customerColumns: Column<Customer>[] = [
-        { tieude: "ID", cotnhandulieu: "makh" },
-        { tieude: "Họ tên", cotnhandulieu: "hoten", render: (row) => row.hoten },
-        { tieude: "SĐT", cotnhandulieu: "sdt" },
-        { tieude: "Tài khoản", cotnhandulieu: "matk" },
+        { tieude: "ID", cotnhandulieu: "MAKH" },
+        { tieude: "Họ tên", cotnhandulieu: "HOTEN", render: (row) => row.HOTEN },
+        { tieude: "SĐT", cotnhandulieu: "SDT" },
+        { tieude: "Tài khoản", cotnhandulieu: "MATK" },
         {
-            tieude: "Hành động", cotnhandulieu: "makh", render: (row) => (
+            tieude: "Hành động", cotnhandulieu: "MAKH", render: (row) => (
                 <>
                     <button className="btn small edit" onClick={() => handleEditClick(row)}><i className="fas fa-edit"></i></button>
                     <button
@@ -217,7 +251,7 @@ const CustomerPage: React.FC = () => {
                     value={formData.cusID}
                     onChange={handleChange}
                     disabled={modalType === 'edit'}
-                    
+
                 />
             </div>
 
@@ -253,7 +287,7 @@ const CustomerPage: React.FC = () => {
 
 
             <div hidden={modalType === 'add'} className="form-group">
-                <label  htmlFor="cusAcc">Tài khoản:</label>
+                <label htmlFor="cusAcc">Tài khoản:</label>
                 <input
                     type="text"
                     id="cusAcc"

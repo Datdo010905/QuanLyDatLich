@@ -30,8 +30,8 @@ const AccountPage: React.FC = () => {
     });
 
     const filteredtaikhoanList = taikhoanList.filter(tk =>
-        tk.matk?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        tk.trangthai?.toLowerCase().includes(searchTerm.toLowerCase())
+        tk.MATK?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tk.TRANGTHAI?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     //up data từ api lên bảng
@@ -66,10 +66,10 @@ const AccountPage: React.FC = () => {
     //click nút sửa
     const handleEditClick = (row: TaiKhoan) => {
         setFormData({
-            accUsername: row.matk || '',
-            accPassword: row.pass || '',
-            accRole: row.phanquyen ? String(row.phanquyen) : '',
-            accStatus: row.trangthai || 'Hoạt động',
+            accUsername: row.MATK ? row.MATK.trim() : '',
+            accPassword: row.PASS ? row.PASS.trim() : '', 
+            accRole: row.PHANQUYEN ? String(row.PHANQUYEN) : '',
+            accStatus: row.TRANGTHAI ? row.TRANGTHAI.trim() : 'Hoạt động',
         });
         setFormErrors({}); // Xóa lỗi cũ
         setModalType('edit');
@@ -92,11 +92,11 @@ const AccountPage: React.FC = () => {
         }
     };
     const handleDeleteClick = (row: TaiKhoan) => {
-        if (row.trangthai !== 'Khoá') {
+        if (row.TRANGTHAI !== 'Khoá') {
             toast.error('Lỗi: Chỉ có thể xóa tài khoản khi trạng thái là "Khoá"!');
             return;
         }
-        setIdToDelete(row.matk);
+        setIdToDelete(row.MATK);
         setIsDeleteModalOpen(true);
     };
     //HÀM SUBMIT CHO CẢ THÊM VÀ SỬA
@@ -123,16 +123,36 @@ const AccountPage: React.FC = () => {
         setFormErrors({});
 
         //tạo FormData theo swagger
-        const submitData = new FormData();
-        submitData.append('MaTK', formData.accUsername);
-        submitData.append('Pass', formData.accPassword);
-        submitData.append('PhanQuyen', formData.accRole);
-        submitData.append('TrangThai', formData.accStatus);
+        // const submitData = new FormData();
+        // submitData.append('MaTK', formData.accUsername);
+        // submitData.append('Pass', formData.accPassword);
+        // submitData.append('PhanQuyen', formData.accRole);
+        // submitData.append('TrangThai', formData.accStatus);
+        const submitData = {
+            MATK: formData.accUsername,
+            PASS: formData.accPassword,
+            PHANQUYEN: Number(formData.accRole),
+            TRANGTHAI: formData.accStatus
+        };
 
         try {
             if (modalType === 'add') {
-                const checkExist = await taikhoanApi.getById(formData.accUsername);
-                if (checkExist) {
+               //CHECK TRÙNG CHO 404
+                let isExist = false;
+                try {
+                    const checkExist = await taikhoanApi.getById(formData.accUsername);
+                    if (checkExist && checkExist.data.success) {
+                        isExist = true;
+                    }
+                } catch (err: any) {
+                    if (err.response && err.response.status === 404) {
+                        isExist = false; 
+                    } else {
+                        throw err;
+                    }
+                }
+
+                if (isExist) {
                     toast.error("Tài khoản đã tồn tại!");
                     return;
                 }
@@ -140,7 +160,7 @@ const AccountPage: React.FC = () => {
 
                 toast.success("Thêm tài khoản thành công!");
             } else {
-                await taikhoanApi.update(submitData);
+                await taikhoanApi.update(formData.accUsername, submitData);
                 toast.success("Cập nhật tài khoản thành công!");
             }
             setModalType('none'); // Đóng form
@@ -201,11 +221,11 @@ const AccountPage: React.FC = () => {
     }
     //Định nghĩa cột cho DataTable theo api trả về
     const taiKhoanColumns: Column<TaiKhoan>[] = [
-        { tieude: "Tài khoản", cotnhandulieu: "matk" },
-        { tieude: "Mật khẩu", cotnhandulieu: "pass", render: (row) => Mahoa(row.pass) },
+        { tieude: "Tài khoản", cotnhandulieu: "MATK" },
+        { tieude: "Mật khẩu", cotnhandulieu: "PASS", render: (row) => Mahoa(row.PASS) },
         {
-            tieude: "Quyền hạn", cotnhandulieu: "phanquyen", render: (row) => {
-                const roleCode = Number(row.phanquyen);
+            tieude: "Quyền hạn", cotnhandulieu: "PHANQUYEN", render: (row) => {
+                const roleCode = Number(row.PHANQUYEN);
                 const roleName = getRoleName(roleCode);
 
                 const style = roleStyles[roleCode] || roleStyles[0];
@@ -225,8 +245,8 @@ const AccountPage: React.FC = () => {
             }
         },
         {
-            tieude: "Trạng thái", cotnhandulieu: "trangthai", render: (row) => {
-                const codeStatus = row.trangthai;
+            tieude: "Trạng thái", cotnhandulieu: "TRANGTHAI", render: (row) => {
+                const codeStatus = row.TRANGTHAI;
                 const style = status[codeStatus] || status['Hoạt động'];
 
                 return (
@@ -244,7 +264,7 @@ const AccountPage: React.FC = () => {
             }
         },
         {
-            tieude: "Hành động", cotnhandulieu: "matk", render: (row) => (
+            tieude: "Hành động", cotnhandulieu: "MATK", render: (row) => (
                 <>
                     <button className="btn small edit" onClick={() => handleEditClick(row)}><i className="fas fa-edit"></i></button>
                     <button
@@ -270,7 +290,7 @@ const AccountPage: React.FC = () => {
             </div>
             <div className="form-group">
                 <label htmlFor="accPassword">Mật khẩu:</label>
-                <input type="password" id="accPassword" value={formData.accPassword} name="accPassword" onChange={handleChange} />
+                <input disabled={modalType === 'edit'} type="password" id="accPassword" value={formData.accPassword} name="accPassword" onChange={handleChange} />
                 {formErrors.accPassword && <span style={{ color: 'red', fontSize: '0.85rem' }}>{formErrors.accPassword}</span>}
 
             </div>

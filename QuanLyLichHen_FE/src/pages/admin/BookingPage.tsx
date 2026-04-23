@@ -57,11 +57,11 @@ const BookingPage = () => {
     });
 
     const filteredBookingList = bookingList.filter(lichhen =>
-        lichhen.malich?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        lichhen.makh?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        lichhen.machinhanh?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (lichhen.ngayhen
-            ? new Date(lichhen.ngayhen).toLocaleDateString('vi-VN').includes(searchTerm)
+        lichhen.MALICH?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lichhen.MAKH?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lichhen.MACHINHANH?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (lichhen.NGAYHEN
+            ? new Date(lichhen.NGAYHEN).toLocaleDateString('vi-VN').includes(searchTerm)
             : false)
     );
     //up data từ api lên bảng
@@ -116,26 +116,9 @@ const BookingPage = () => {
             soluong: '',
             nhanvien: '',
         });
-        setFormErrors({}); // Xóa lỗi cũ
-        setModalType('add');
-    };
-    //lấy mã lịch và mã chi nhánh của lịch được click để chuẩn bị form thêm chi tiết
-    const handleAddDetailsClick = (row: Booking) => {
-        setFormData({
-            bookingID: row.malich?.trim() || '',
-            customerID: row.makh || '',
-            branchID: row.machinhanh || '',
-            bookingDate: row.ngayhen ? row.ngayhen.split('T')[0] : '',
-            bookingTime: row.giohen || '',
-            status: row.trangthai || '',
-            dichvu: '',
-            soluong: '1',
-            nhanvien: '',
-        });
-
         setFormDataDetails({
-            bookingID: row.malich.trim() || '',
-            branchID: row.machinhanh || '',
+            bookingID: '',
+            branchID: '',
             dichvu: '',
             soluong: '1',
             giadukien: '',
@@ -143,17 +126,43 @@ const BookingPage = () => {
             ghichu: '',
         });
         setFormErrors({}); // Xóa lỗi cũ
+        setModalType('add');
+    };
+    //lấy mã lịch và mã chi nhánh của lịch được click để chuẩn bị form thêm chi tiết
+    const handleAddDetailsClick = (row: Booking) => {
+        setFormData({
+            bookingID: row.MALICH?.trim() || '',
+            customerID: row.MAKH?.trim() || '',
+            branchID: row.MACHINHANH?.trim() || '',
+            bookingDate: row.NGAYHEN ? row.NGAYHEN.split('T')[0] : '',
+            bookingTime: row.GIOHEN?.trim() || '',
+            status: row.TRANGTHAI?.trim() || '',
+            dichvu: '',
+            soluong: '1',
+            nhanvien: '',
+        });
+
+        setFormDataDetails({
+            bookingID: row.MALICH?.trim() || '',
+            branchID: row.MACHINHANH?.trim() || '',
+            dichvu: '',
+            soluong: '1',
+            giadukien: '',
+            nhanvien: '',
+            ghichu: '',
+        });
+        setFormErrors({});
         setModalType('addDetails');
     };
     //click nút sửa
     const handleEditClick = (row: Booking) => {
         setFormData({
-            bookingID: row.malich || '',
-            customerID: row.makh || '',
-            branchID: row.machinhanh || '',
-            bookingTime: row.giohen || '',
-            bookingDate: row.ngayhen ? row.ngayhen.split('T')[0] : '',
-            status: row.trangthai || '',
+            bookingID: row.MALICH.trim() || '',
+            customerID: row.MAKH.trim() || '',
+            branchID: row.MACHINHANH.trim() || '',
+            bookingTime: row.GIOHEN.trim() || '',
+            bookingDate: row.NGAYHEN ? row.NGAYHEN.split('T')[0] : '',
+            status: row.TRANGTHAI.trim() || '',
             dichvu: '', //tạm để trống
             soluong: '', //tạm để trống
             nhanvien: '' //tạm để trống
@@ -180,7 +189,7 @@ const BookingPage = () => {
     };
 
     const handleDeleteClick = (row: Booking) => {
-        setIdToDelete(row.malich || null);
+        setIdToDelete(row.MALICH || null);
         setIsDeleteModalOpen(true);
     };
 
@@ -213,33 +222,68 @@ const BookingPage = () => {
         setFormErrors({});
 
         //tạo FormData theo swagger
-        const submitData = new FormData();
-        submitData.append('MaLich', formData.bookingID);
-        submitData.append('NgayHen', formData.bookingDate);
-        submitData.append('GioHen', formData.bookingTime);
-        submitData.append('TrangThai', formData.status);
-        submitData.append('MaChiNhanh', formData.branchID);
-        submitData.append('MaKH', formData.customerID);
+        // const submitData = new FormData();
+        // submitData.append('MaLich', formData.bookingID);
+        // submitData.append('NgayHen', formData.bookingDate);
+        // submitData.append('GioHen', formData.bookingTime);
+        // submitData.append('TrangThai', formData.status);
+        // submitData.append('MaChiNhanh', formData.branchID);
+        // submitData.append('MaKH', formData.customerID);
 
-        const submitDataCT = new FormData();
-        submitDataCT.append('MaLich', formData.bookingID);
-        submitDataCT.append('MaDV', formData.dichvu);
-        submitDataCT.append('MaNV', formData.nhanvien);
-        submitDataCT.append('SoLuong', formData.soluong);
-        const dichVuSelected = dichVuList.find(dv => dv.madv === formData.dichvu);
-        submitDataCT.append('GiaDuKien', dichVuSelected ? dichVuSelected.giadv.toString() : '0');
-        submitDataCT.append('GhiChu', formDataDetails.ghichu || 'Không có ghi chú');
+        // const submitDataCT = new FormData();
+        // submitDataCT.append('MaLich', formData.bookingID);
+        // submitDataCT.append('MaDV', formData.dichvu);
+        // submitDataCT.append('MaNV', formData.nhanvien);
+        // submitDataCT.append('SoLuong', formData.soluong);
+        // const dichVuSelected = dichVuList.find(dv => dv.madv === formData.dichvu);
+        // submitDataCT.append('GiaDuKien', dichVuSelected ? dichVuSelected.giadv.toString() : '0');
+        // submitDataCT.append('GhiChu', formDataDetails.ghichu || 'Không có ghi chú');
+
+        // TẠO JSON CHO BẢNG (LỊCH HẸN)
+        const submitData: Booking = {
+            MALICH: formData.bookingID,
+            NGAYHEN: formData.bookingDate,
+            GIOHEN: formData.bookingTime,
+            TRANGTHAI: formData.status,
+            MACHINHANH: formData.branchID,
+            MAKH: formData.customerID
+        };
+        // Tìm dịch vụ để lấy giá dự kiến
+        const dichVuSelected = dichVuList.find(dv => (dv.MADV?.trim()) === formData.dichvu?.trim());
+
+        // TẠO JSON CHO BẢNG (CHI TIẾT LỊCH HẸN)
+        const submitDataCT: BookingDetails = {
+            MALICH: formData.bookingID,
+            MADV: formData.dichvu?.trim(),
+            MANV: formData.nhanvien?.trim(),
+            SOLUONG: Number(formData.soluong),
+            GIA_DUKIEN: dichVuSelected ? Number(dichVuSelected.GIADV) : 0,
+            GHICHU: formDataDetails.ghichu || 'Không có ghi chú'
+        };
+
+
 
         //khởi tạo bên ngoài để dùng chung cho các trường hợp
-        const trangthaiHienTai = bookingList.find(b => b.malich === formData.bookingID)?.trangthai;
-        const trangthaiMoi = formData.status;
+        const trangthaiHienTai = bookingList.find(b => b.MALICH?.trim() === formData.bookingID)?.TRANGTHAI;
+        const trangthaiMoi = formData.status?.trim();
         try {
 
             if (modalType === 'add') {
 
-                const checkExist = await bookingApi.getById(formData.bookingID);
-                if (checkExist && checkExist.data.data) {
-                    toast.error("Lịch hẹn đã tồn tại!");
+                // Check 404 cho hàm kiểm tra tồn tại
+                let isExist = false;
+                try {
+                    const checkExist = await bookingApi.getById(formData.bookingID);
+                    if (checkExist && checkExist.data.success)
+                        isExist = true;
+                } catch (err: any) {
+                    if (err.response && err.response.status === 404)
+                        isExist = false;
+                    else throw err;
+                }
+
+                if (isExist) {
+                    toast.error("Mã lịch hẹn đã tồn tại!");
                     return;
                 }
                 await bookingApi.create(submitData);
@@ -298,8 +342,8 @@ const BookingPage = () => {
         if (!idToDelete) return;
         try {
             //chỉ xoá những lịch đã huỷ
-            const lichHen = bookingList.find(b => b.malich === idToDelete);
-            if (lichHen?.trangthai !== "Đã huỷ") {
+            const lichHen = bookingList.find(b => b.MALICH?.trim() === idToDelete?.trim());
+            if (lichHen?.TRANGTHAI?.trim() !== "Đã huỷ") {
                 toast.error("Chỉ có thể xóa những lịch hẹn đã huỷ!");
                 return;
             }
@@ -326,16 +370,16 @@ const BookingPage = () => {
     };
     const handleViewClick = async (row: Booking) => {
         try {
-            setIDtoView(row.malich || null);
+            setIDtoView(row.MALICH || null);
 
-            const view = await bookingApi.getByIdCT(row.malich || '');
+            const view = await bookingApi.getByIdCT(row.MALICH || '');
             if (view.data.success) {
                 const responseData = view.data.data;
                 // Nếu là mảng thì giữ nguyên, không thì bọc []
                 const formattedData = Array.isArray(responseData) ? responseData : [responseData];
 
                 setViewDetailsList(formattedData);
-                //toast.info(`Xem chi tiết lịch hẹn: ${row.malich}`);
+                //toast.info(`Xem chi tiết lịch hẹn: ${row.MALICH}`);
 
             } else {
                 toast.error("Không tìm thấy chi tiết lịch hẹn!");
@@ -348,7 +392,7 @@ const BookingPage = () => {
         }
     };
     const getChiNhanhName = (branchCode: string) => {
-        switch (branchCode) {
+        switch (branchCode?.trim()) {
             case "CN001": return "30Shine - Nguyễn Trãi";
             case "CN002": return "30Shine - Cầu Giấy";
             case "CN003": return "30Shine - Tân Bình";
@@ -379,14 +423,27 @@ const BookingPage = () => {
 
     //Định nghĩa cột cho DataTable theo api trả về
     const bookingColumns: Column<Booking>[] = [
-        { tieude: "ID", cotnhandulieu: "malich" },
-        { tieude: "Ngày hẹn", cotnhandulieu: "ngayhen", render: (row) => row.ngayhen ? new Date(row.ngayhen).toLocaleDateString('vi-VN') : '' },
+        { tieude: "ID", cotnhandulieu: "MALICH" },
+        { tieude: "Ngày hẹn", cotnhandulieu: "NGAYHEN", render: (row) => row.NGAYHEN ? new Date(row.NGAYHEN).toLocaleDateString('vi-VN') : '' },
         {
-            tieude: "Giờ hẹn", cotnhandulieu: "giohen"
+            tieude: "Giờ hẹn",
+            cotnhandulieu: "GIOHEN",
+            render: (row) => {
+                if (!row.GIOHEN) return "";
+
+                // chuỗi có chứa chữ 'T' (dạng ISO 1970-01-01T09:00:00...)
+                if (row.GIOHEN.includes('T')) {
+                    //Tách chuỗi lấy đoạn giữa (09:00)
+                    return row.GIOHEN.split('T')[1].substring(0, 5);
+                }
+
+                // Nếu dạng 09:00:00 lấy 5 ký tự đầu
+                return row.GIOHEN.substring(0, 5);
+            }
         },
         {
-            tieude: "Trạng thái", cotnhandulieu: "trangthai", render: (row) => {
-                const style = statusStyles[row.trangthai || ''] || {};
+            tieude: "Trạng thái", cotnhandulieu: "TRANGTHAI", render: (row) => {
+                const style = statusStyles[row.TRANGTHAI?.trim() || ''] || {};
                 return (
                     <span style={{
                         padding: '4px 10px',
@@ -396,26 +453,26 @@ const BookingPage = () => {
                         whiteSpace: 'nowrap',
                         ...style
                     }}>
-                        {style ? row.trangthai : "Không xác định"}
+                        {style ? row.TRANGTHAI : "Không xác định"}
                     </span>
                 )
             }
         },
         {
-            tieude: "Chi nhánh", cotnhandulieu: "machinhanh", render: (row) => {
-                const style = branchStyles[row.machinhanh || ''] || {};
+            tieude: "Chi nhánh", cotnhandulieu: "MACHINHANH", render: (row) => {
+                const style = branchStyles[row.MACHINHANH?.trim() || ''] || {};
                 return (
                     <span style={style}>
-                        {getChiNhanhName(row.machinhanh || '')}
+                        {getChiNhanhName(row.MACHINHANH?.trim() || '')}
                     </span>
                 );
             }
 
         },
-        { tieude: "Khách hàng", cotnhandulieu: "makh" },
+        { tieude: "Khách hàng", cotnhandulieu: "MAKH" },
 
         {
-            tieude: "Hành động", cotnhandulieu: "malich", render: (row) => (
+            tieude: "Hành động", cotnhandulieu: "MALICH", render: (row) => (
                 <>
                     <button className="btn small view" onClick={() => handleViewClick(row)}><i className="fas fa-eye"></i></button>
                     <button className="btn small addDetail" onClick={() => handleAddDetailsClick(row)}><i className="fa-regular fa-calendar-plus"></i></button>
@@ -432,28 +489,28 @@ const BookingPage = () => {
     ];
     //Định nghĩa cột cho DataTable theo api trả về
     const bookingDetailsColumns: Column<BookingDetails>[] = [
-        { tieude: "ID", cotnhandulieu: "malich" },
+        { tieude: "ID", cotnhandulieu: "MALICH" },
         {
-            tieude: "Dịch vụ", cotnhandulieu: "madv", render(row) {
-                const dichVu = dichVuList.find(dv => dv.madv === row.madv);
-                return dichVu ? dichVu.tendv : "Không xác định";
+            tieude: "Dịch vụ", cotnhandulieu: "MADV", render(row) {
+                const dichVu = dichVuList.find(dv => dv.MADV === row.MADV);
+                return dichVu ? dichVu.TENDV : "Không xác định";
 
             }
         },
         {
-            tieude: "Nhân viên", cotnhandulieu: "manv", render(row) {
-                const nv = nhanVienList.find(nv => nv.manv === row.manv);
-                return nv ? `${nv.hoten} (${nv.manv})` : "Không xác định";
+            tieude: "Nhân viên", cotnhandulieu: "MANV", render(row) {
+                const nv = nhanVienList.find(nv => nv.MANV === row.MANV);
+                return nv ? `${nv.HOTEN} (${nv.MANV})` : "Không xác định";
             }
         },
-        { tieude: "Số lượng", cotnhandulieu: "soluong" },
+        { tieude: "Số lượng", cotnhandulieu: "SOLUONG" },
         {
-            tieude: "Giá dự kiến", cotnhandulieu: "giA_DUKIEN", render(row) {
-                const value = parseFloat(row.giA_DUKIEN as any);
+            tieude: "Giá dự kiến", cotnhandulieu: "GIA_DUKIEN", render(row) {
+                const value = parseFloat(row.GIA_DUKIEN as any);
                 return value ? value.toLocaleString('vi-VN') + '₫' : "0₫";
             },
         },
-        { tieude: "Ghi chú", cotnhandulieu: "ghichu" },
+        { tieude: "Ghi chú", cotnhandulieu: "GHICHU" },
     ];
 
 
@@ -465,16 +522,16 @@ const BookingPage = () => {
         }
         //tìm lịch đã được khách chọn nhân viên thực hiện trong ngày đó
         const bookedIdsForStaff = bookingDetailsList
-            .filter(detail => detail.manv === formData.nhanvien)
-            .map(detail => detail.malich?.trim());
+            .filter(detail => detail.MANV === formData.nhanvien)
+            .map(detail => detail.MALICH?.trim());
 
         //lọc ra những lịch ngày đó, chưa huỷ hoặc chưa hoàn thành và có nhân viên thực hiện trùng với nhân viên đang chọn
         const lichDabook = bookingList.filter(booking => {
-            const trungNgay = booking.ngayhen && booking.ngayhen.split('T')[0] === formData.bookingDate;
-            const chuahuy = booking.trangthai !== "Đã huỷ";
-            const chuahoanthanh = booking.trangthai !== "Đã hoàn thành";
+            const trungNgay = booking.NGAYHEN && booking.NGAYHEN.split('T')[0] === formData.bookingDate;
+            const chuahuy = booking.TRANGTHAI !== "Đã huỷ";
+            const chuahoanthanh = booking.TRANGTHAI !== "Đã hoàn thành";
             //iclude kiểm tra mã lịch của booking có nằm trong danh sách mã lịch đã được chọn nhân viên thực hiện hay không
-            const NVDuocChon = bookedIdsForStaff.includes(booking.malich?.trim());
+            const NVDuocChon = bookedIdsForStaff.includes(booking.MALICH?.trim());
 
             return trungNgay && chuahuy && chuahoanthanh && NVDuocChon;
         });
@@ -482,7 +539,7 @@ const BookingPage = () => {
         //giờ hẹn từ API
         //Chỉ lấy 5 ký tự đầu (HH:mm) để bỏ qua giây (nếu có)
         const bookedHours = lichDabook.map(b => {
-            return b.giohen ? b.giohen.substring(0, 5) : "";
+            return b.GIOHEN ? b.GIOHEN.substring(0, 5) : "";
         });
         //tạo danh sách giờ trống từ 8h đến 22h với khoảng cách 30 phút
         const hours: string[] = [];
@@ -528,9 +585,9 @@ const BookingPage = () => {
                 <select id="nhanvien" value={formData.nhanvien} disabled={!formData.branchID} onChange={handleChange}>
                     <option value="">-- Chọn nhân viên --</option>
                     {/* lọc nhân viên theo chi nhánh đã chọn và chức vụ */}
-                    {nhanVienList.filter((nv) => nv.machinhanh === formData.branchID && nv.chucvu === "Stylist").map((nv) => (
-                        <option key={nv.manv} value={nv.manv}>
-                            {nv.manv} - {nv.hoten} {`(${nv.sdt})`}
+                    {nhanVienList.filter((nv) => nv.MACHINHANH?.trim() === formData.branchID?.trim() && nv.CHUCVU?.trim() === "Stylist").map((nv) => (
+                        <option key={nv.MANV?.trim()} value={nv.MANV?.trim()}>
+                            {nv.MANV} - {nv.HOTEN} {`(${nv.SDT})`}
                         </option>
                     ))}
                 </select>
@@ -567,8 +624,8 @@ const BookingPage = () => {
                     <option value="">-- Chọn khách hàng --</option>
                     {/* đổ dữ liệu khách hàng */}
                     {customerList.map((customer) => (
-                        <option key={customer.makh} value={customer.makh}>
-                            ({customer.sdt}) {customer.hoten}
+                        <option key={customer.MAKH} value={customer.MAKH}>
+                            ({customer.SDT}) {customer.HOTEN}
                         </option>
                     ))}
                 </select>
@@ -580,8 +637,8 @@ const BookingPage = () => {
                     <option value="">-- Chọn dịch vụ --</option>
                     {/* đổ dữ liệu dịch vụ */}
                     {dichVuList.map((dv) => (
-                        <option key={dv.madv} value={dv.madv}>
-                            {dv.tendv} - {dv.thoigian} phút - {dv.giadv.toLocaleString()} VNĐ
+                        <option key={dv.MADV} value={dv.MADV?.trim()}>
+                            {dv.TENDV} - {dv.THOIGIAN} phút - {dv.GIADV.toLocaleString()} VNĐ
                         </option>
                     ))}
                 </select>

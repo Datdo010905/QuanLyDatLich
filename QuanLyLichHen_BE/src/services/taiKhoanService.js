@@ -22,16 +22,40 @@ const checkTaiKhoanTonTai = async (maTK) => {
 const createTaiKhoan = async (model) => {
     return await prisma.tAIKHOAN.create({
         data: {
-            MATK: model.MaTK,
-            PASS: model.Pass,
-            PHANQUYEN: Number(model.PhanQuyen),
-            TRANGTHAI: model.TrangThai
+            MATK: model.MATK,
+            PASS: model.PASS,
+            PHANQUYEN: Number(model.PHANQUYEN),
+            TRANGTHAI: model.TRANGTHAI
         }
+    });
+};
+const getAllTaiKhoan = async () => {
+    //tìm all 
+    return await prisma.tAIKHOAN.findMany();
+};
+
+const updateTaiKhoan = async (ma, model) => {
+    return await prisma.tAIKHOAN.update({
+        where: { MATK: ma },
+        data: {
+            PASS: model.PASS,
+            PHANQUYEN: Number(model.PHANQUYEN),
+            TRANGTHAI: model.TRANGTHAI
+        }
+    });
+};
+
+const deleteTaiKhoan = async (ma) => {
+    return await prisma.tAIKHOAN.delete({
+        where: { MATK: ma }
     });
 };
 
 module.exports = {
     checkLogin,
-    checkTaiKhoanTonTai, 
-    createTaiKhoan     
+    checkTaiKhoanTonTai,
+    createTaiKhoan,
+    getAllTaiKhoan,
+    updateTaiKhoan,
+    deleteTaiKhoan  
 };

@@ -38,10 +38,10 @@ const KhuyenMaiPage = () => {
 
 
     const filteredkhuyenmaiList = khuyenmaiList.filter(km =>
-        km.makm?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        km.trangthai?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        km.ngaybd?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        km.ngaykt?.toLowerCase().includes(searchTerm.toLowerCase())
+        km.MAKM?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        km.TRANGTHAI?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        km.NGAYBD?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        km.NGAYKT?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     //up data từ api lên bảng
     const fetchData = async () => {
@@ -77,19 +77,18 @@ const KhuyenMaiPage = () => {
         setFormErrors({}); // Xóa lỗi cũ
         setModalType('add');
     };
-    //click nút sửa
+    //click vào sửa thì đẩy data lên form
     const handleEditClick = (row: KhuyenMai) => {
         setFormData({
-            promotionID: row.makm,
-            promotionName: row.tenkm,
-            promotionDesc: row.mota,
-            // Cắt chuỗi để lấy đúng định dạng YYYY-MM-DD
-            promotionBD: row.ngaybd ? row.ngaybd.split('T')[0] : '',
-            promotionKT: row.ngaykt ? row.ngaykt.split('T')[0] : '',
-            promotionValue: row.giatri.toString(),
-            promotionStatus: row.trangthai,
+            promotionID: row.MAKM ? row.MAKM.trim() : '',
+            promotionName: row.TENKM ? row.TENKM.trim() : '',
+            promotionDesc: row.MOTA ? row.MOTA.trim() : '',
+            promotionBD: row.NGAYBD ? row.NGAYBD.split('T')[0] : '',
+            promotionKT: row.NGAYKT ? row.NGAYKT.split('T')[0] : '',
+            promotionValue: row.GIATRI ? row.GIATRI.toString() : '0',
+            promotionStatus: row.TRANGTHAI ? row.TRANGTHAI.trim() : '',
         });
-        setFormErrors({}); // Xóa lỗi cũ
+        setFormErrors({}); 
         setModalType('edit');
     };
     //xử lý thay đổi form
@@ -108,11 +107,11 @@ const KhuyenMaiPage = () => {
         }
     };
     const handleDeleteClick = (row: KhuyenMai) => {
-        if (row.trangthai !== 'Hết hạn') {
+        if (row.TRANGTHAI !== 'Hết hạn') {
             toast.error('Lỗi: Chỉ có thể xóa khuyến mại khi trạng thái là "Hết hạn"!');
             return;
         }
-        setIdToDelete(row.makm);
+        setIdToDelete(row.MAKM.trim());
         setIsDeleteModalOpen(true);
     };
 
@@ -148,20 +147,41 @@ const KhuyenMaiPage = () => {
         setFormData((prev) => ({ ...prev, promotionStatus: autoStatus }));
 
 
-        //tạo FormData theo swagger
-        const submitData = new FormData();
-        submitData.append('MaKM', formData.promotionID);
-        submitData.append('TenKM', formData.promotionName);
-        submitData.append('MoTa', formData.promotionDesc);
-        submitData.append('NgayBD', formData.promotionBD);
-        submitData.append('NgayKT', formData.promotionKT);
-        submitData.append('GiaTri', formData.promotionValue);
-        submitData.append('TrangThai', autoStatus);
+        // //tạo FormData theo swagger
+        // const submitData = new FormData();
+        // submitData.append('MaKM', formData.promotionID);
+        // submitData.append('TenKM', formData.promotionName);
+        // submitData.append('MoTa', formData.promotionDesc);
+        // submitData.append('NgayBD', formData.promotionBD);
+        // submitData.append('NgayKT', formData.promotionKT);
+        // submitData.append('GiaTri', formData.promotionValue);
+        // submitData.append('TrangThai', autoStatus);
 
+
+
+        // TẠO JSON ĐỂ GỬI LÊN
+        const submitData: KhuyenMai = {
+            MAKM: formData.promotionID,
+            TENKM: formData.promotionName,
+            MOTA: formData.promotionDesc,
+            NGAYBD: formData.promotionBD,
+            NGAYKT: formData.promotionKT,
+            GIATRI: Number(formData.promotionValue),
+            TRANGTHAI: autoStatus
+        };
         try {
             if (modalType === 'add') {
-                const ex = await khuyenmaiApi.getById(formData.promotionID);
-                if (ex && ex.data.data) {
+                // Check 404 cho hàm kiểm tra tồn tại
+                let isExist = false;
+                try {
+                    const ex = await khuyenmaiApi.getById(formData.promotionID);
+                    if (ex && ex.data.success) isExist = true;
+                } catch (err: any) {
+                    if (err.response && err.response.status === 404) isExist = false;
+                    else throw err;
+                }
+
+                if (isExist) {
                     toast.error("Mã khuyến mại đã tồn tại!");
                     return;
                 }
@@ -169,7 +189,7 @@ const KhuyenMaiPage = () => {
 
                 toast.success("Thêm khuyến mại thành công!");
             } else {
-                await khuyenmaiApi.update(submitData);
+                await khuyenmaiApi.update(formData.promotionID, submitData);
                 toast.success("Cập nhật khuyến mại thành công!");
             }
             setModalType('none'); // Đóng form
@@ -201,29 +221,29 @@ const KhuyenMaiPage = () => {
     };
     //Định nghĩa cột cho DataTable theo api trả về
     const taiKhoanColumns: Column<KhuyenMai>[] = [
-        { tieude: "ID", cotnhandulieu: "makm" },
-        { tieude: "Tên chương trình", cotnhandulieu: "tenkm" },
-        { tieude: "Mô tả", cotnhandulieu: "mota" },
+        { tieude: "ID", cotnhandulieu: "MAKM" },
+        { tieude: "Tên chương trình", cotnhandulieu: "TENKM" },
+        { tieude: "Mô tả", cotnhandulieu: "MOTA" },
         {
-            tieude: "Ngày bắt đầu", cotnhandulieu: "ngaybd", render: (row) => {
-                const date = new Date(row.ngaybd);
+            tieude: "Ngày bắt đầu", cotnhandulieu: "NGAYBD", render: (row) => {
+                const date = new Date(row.NGAYBD);
                 return date.toLocaleDateString('vi-VN');
             }
         },
         {
-            tieude: "Ngày kết thúc", cotnhandulieu: "ngaykt", render: (row) => {
-                const date = new Date(row.ngaykt);
+            tieude: "Ngày kết thúc", cotnhandulieu: "NGAYKT", render: (row) => {
+                const date = new Date(row.NGAYKT);
                 return date.toLocaleDateString('vi-VN');
             }
         },
         {
-            tieude: "Giá trị", cotnhandulieu: "giatri", render(row) {
-                return `${row.giatri}%`;
+            tieude: "Giá trị", cotnhandulieu: "GIATRI", render(row) {
+                return `${row.GIATRI}%`;
             },
         },
         {
-            tieude: "Trạng thái", cotnhandulieu: "trangthai", render: (row) => {
-                const codeStatus = row.trangthai;
+            tieude: "Trạng thái", cotnhandulieu: "TRANGTHAI", render: (row) => {
+                const codeStatus = row.TRANGTHAI;
                 const style = status[codeStatus];
 
                 return (
@@ -241,7 +261,7 @@ const KhuyenMaiPage = () => {
             }
         },
         {
-            tieude: "Hành động", cotnhandulieu: "makm", render: (row) => (
+            tieude: "Hành động", cotnhandulieu: "MAKM", render: (row) => (
                 <>
                     <button className="btn small edit" onClick={() => handleEditClick(row)}><i className="fas fa-edit"></i></button>
                     <button
