@@ -30,8 +30,8 @@ const Datlich = () => {
       localStorage.setItem("username", savedSDT);
       //lấy tên KH
       try {
-        const resKH = await CustomerApi.getBySDT(savedSDT);
-        localStorage.setItem("tenkhach", resKH.data.data.hoten);
+        const resKH = await CustomerApi.getById(savedSDT);
+        localStorage.setItem("tenkhach", resKH.data.data.HOTEN);
         navigate('/datlich');
       } 
       catch {

@@ -1,81 +1,65 @@
 import axiosClient from './axiosClient';
 
-//định nghĩa theo api trả về
 export interface HoaDon {
-    mahd: string;
-    makh: string;
-    makm: string;
-    malich: string;
-    manv: string;
-    tongtien: number;
-    hinhthucthanhtoan: string;
-    trangthai: string;
-    ngaythanhtoan: string;
-};
+    MAHD: string;
+    MAKH: string;
+    MAKM: string;
+    MALICH: string;
+    MANV: string;
+    TONGTIEN: number;
+    HINHTHUCTHANHTOAN: string;
+    TRANGTHAI: string;
+    NGAYTHANHTOAN: string;
+}
 export interface HoaDonDetails {
-    mahd: string;
-    madv: string;
-    soluong: number;
-    dongia: number;
-    thanhtien: string;
-};
+    MAHD: string;
+    MADV: string;
+    SOLUONG: number;
+    DONGIA: number;
+    THANHTIEN: string;
+}
+
 const HoaDonApi = {
+    // ===== HÓA ĐƠN =====
     getAll() {
-        const url = '/api-admin/HoaDon_/get-all-HoaDon';
-        return axiosClient.get<{ success: boolean; message: string; data: HoaDon[] }>(url);
+        return axiosClient.get('/api/hoadon/get-all-HoaDon');
     },
-     getAllCT() {
-        const url = '/api-admin/HoaDon_/get-all-CTHoaDon';
-        return axiosClient.get<{ success: boolean; message: string; data: HoaDonDetails[] }>(url);
-    },
-    getAllByIdNV(id: string) {
-        const url = `/api-admin/HoaDon_/get-allbyIdNV-HoaDon?manv=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: HoaDon }>(url);
-    },
+
     getById(id: string) {
-        const url = `/api-admin/HoaDon_/get-byId-HoaDon?ma=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: HoaDon }>(url);
+        return axiosClient.get(`/api/hoadon/get-byId-HoaDon/${id}`);
+    },
+
+    create(data: HoaDon) {
+        return axiosClient.post('/api/hoadon/insert-HoaDon', data);
+    },
+
+    update(id: string, data: HoaDon) {
+        return axiosClient.put(`/api/hoadon/update-HoaDon/${id}`, data);
+    },
+
+    delete(id: string) {
+        return axiosClient.delete(`/api/hoadon/delete-HoaDon/${id}`);
     },
     getByNgay(ngaybd: string, ngaykt: string) {
-        const url = `/api-admin/HoaDon_/get-all-hoadonTheoNgay?ngaybd=${ngaybd}&ngaykt=${ngaykt}`;
-        return axiosClient.get<{ success: boolean; message: string; data: HoaDon[] }>(url);
+        // Đổi api-admin thành chuẩn api anh em mình chốt
+        const url = `/api/hoadon/get-all-hoadonTheoNgay?ngaybd=${ngaybd}&ngaykt=${ngaykt}`;
+        return axiosClient.get(url);
     },
+    // ===== CHI TIẾT HÓA ĐƠN =====
+    getAllCT() {
+        return axiosClient.get('/api/hoadon/get-all-CTHoaDon');
+    },
+
     getByIdCT(id: string) {
-        const url = `/api-admin/HoaDon_/get-byId-CTHoaDon?ma=${id}`;
-        return axiosClient.get<{ success: boolean; message: string; data: HoaDonDetails }>(url);
+        return axiosClient.get(`/api/hoadon/get-byId-CTHoaDon/${id}`);
     },
-    create(data: FormData) {
-        const url = '/api-admin/HoaDon_/insert-HoaDon';
-        return axiosClient.post(url, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+
+    createCT(data: HoaDonDetails) {
+        return axiosClient.post('/api/hoadon/insert-CTHoaDon', data);
     },
-    createCT(data: FormData) {
-        const url = '/api-admin/HoaDon_/insert-CTHoaDon';
-        return axiosClient.post(url, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-    },
-    update(data: FormData) {
-        const url = `/api-admin/HoaDon_/update-HoaDon`;
-        return axiosClient.put(url, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-    },
-    delete(id: string) {
-        const url = `/api-admin/HoaDon_/delete-HoaDon?ma=${id}`;
-        return axiosClient.delete(url); 
-    },
+
     deleteCT(id: string) {
-        const url = `/api-admin/HoaDon_/delete-CTHoaDon?ma=${id}`;
-        return axiosClient.delete(url); 
+        return axiosClient.delete(`/api/hoadon/delete-CTHoaDon/${id}`);
     }
 };
-
 export default HoaDonApi;

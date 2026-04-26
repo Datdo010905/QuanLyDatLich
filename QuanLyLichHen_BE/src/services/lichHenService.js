@@ -6,6 +6,7 @@ const getAllLichHen = async () => await prisma.lICHHEN.findMany();
 
 const getLichHenByID = async (ma) => await prisma.lICHHEN.findUnique({ where: { MALICH: ma } });
 
+const getLichHenByIDKH = async (ma) => await prisma.lICHHEN.findMany({ where: { MAKH: ma } });
 
 const createLichHen = async (model) => {
     const gioGoc = model.GIOHEN || model.giohen;
@@ -35,7 +36,25 @@ const updateTrangThai = async (ma, trangthai) => {
 
 const deleteLichHen = async (ma) => await prisma.lICHHEN.delete({ where: { MALICH: ma } });
 
+const getLichHenTheoNgay = async (ngaybd, ngaykt) => {
+    const start = new Date(ngaybd);
+    const end = new Date(ngaykt);
+    end.setHours(23, 59, 59, 999); // Lấy đến tận 23:59:59 của ngày kết thúc
 
+    return await prisma.lICHHEN.findMany({
+        where: {
+            NGAYHEN: {
+                gte: start, // Lớn hơn hoặc bằng ngày bắt đầu
+                lte: end    // Nhỏ hơn hoặc bằng ngày kết thúc
+            }
+        },
+        orderBy: {
+            NGAYHEN: 'desc' // Sắp xếp giảm dần y hệt C#
+        }
+    });
+};
+
+// Nhớ ném getLichHenTheoNgay vào module.exports nhé bro!
 
 
 //CHI TIẾT LỊCH HẸN
@@ -59,13 +78,20 @@ const createCT = async (model) => {
         }
     });
 };
+const updateCT = async (ma, ghichu) => {
+    return await prisma.cHITIETLICHHEN.updateMany({
+        where: { MALICH: ma },
+        data: { GHICHU: ghichu }
+    });
+};
 
+// Nhớ ném updateCT vào module.exports ở cuối file nhé!
 const deleteCT = async (ma) => {
     //deleteMany xoá những lịch liên quan "ma"
     return await prisma.cHITIETLICHHEN.deleteMany({ where: { MALICH: ma } });
 };
 
 module.exports = {
-    getAllLichHen, getLichHenByID, createLichHen, updateTrangThai, deleteLichHen,
-    getAllCT, getCTByID, createCT, deleteCT
+    getAllLichHen, getLichHenByID, getLichHenByIDKH, createLichHen, updateTrangThai, deleteLichHen, getLichHenTheoNgay,
+    getAllCT, getCTByID, createCT, updateCT, deleteCT
 };

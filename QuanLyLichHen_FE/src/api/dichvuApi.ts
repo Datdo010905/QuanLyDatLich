@@ -35,30 +35,25 @@ export interface TopDVData {
 };
 
 const dichVuApi = {
-    // Hàm lấy danh sách tất cả dịch vụ
+    // Hàm lấy danh sách tất cả dịch vụ cả đang và ngừng cung cấp
     getAll() {
         //const url = '/api-admin/DichVu_/get-all-DichVuToc';
         const url = '/api/dichvu/get-all-DichVu';
         return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
     },
-    // Hàm lấy danh sách tất cả dịch vụ
+    // Hàm lấy danh sách tất cả dịch vụ CSD cả đang và ngừng cung cấp
     getAllCSD() {
         //const url = '/api-admin/DichVu_/get-all-DichVuCSD';
         const url = '/api/dichvu/get-all-DichVuChamSocDA';
         return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
     },
-    // Hàm lấy danh sách tất cả dịch vụ
+    // Hàm lấy danh sách tất cả dịch vụ cả đang cung cấp
     getAllClient() {
         //const url = '/api-common/DichVu_/get-all-DichVuToc';
         const url = '/api/dichvu/get-all-DichVuToc';
         return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
     },
-    // Hàm lấy danh sách tất cả dịch vụ
-    getAllDichVuClient() {
-        const url = '/api-common/DichVu_/get-all-DichVu';
-        return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
-    },
-    // Hàm lấy danh sách tất cả dịch vụ
+    // Hàm lấy danh sách tất cả dịch vụ CSD cả đang cung cấp
     getAllCSDClient() {
         //const url = '/api-common/DichVu_/get-all-DichVuCSD';
         const url = '/api/dichvu/get-all-DichVuCSD';
@@ -95,7 +90,11 @@ const dichVuApi = {
         //const url = `/api-admin/DichVu_/delete-DichVu?ma=${id}`;
         const url = `/api/dichvu/delete-DichVu/${id}`;
         return axiosClient.delete(url); 
-    }
+    },
+    getAllDichVuClient() {
+        const url = '/api/dichvu/get-all-DichVuCungCap';
+        return axiosClient.get<{ success: boolean; message: string; data: DichVu[] }>(url);
+    },
 };
 
 export default dichVuApi;

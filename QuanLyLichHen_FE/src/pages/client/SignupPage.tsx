@@ -27,32 +27,47 @@ const Signup = () => {
         setIsLoading(true);
         try {
             //TAIKHOAN
-            const submitData = new FormData();
-            submitData.append('MaTK', username);
-            submitData.append('Pass', password);
-            submitData.append('TrangThai', 'Hoạt động');
-            submitData.append('phanQuyen', '0');
+            // const submitData = new FormData();
+            // submitData.append('MaTK', username);
+            // submitData.append('Pass', password);
+            // submitData.append('TrangThai', 'Hoạt động');
+            // submitData.append('phanQuyen', '0');
+            const submitData = {
+                MATK: username,
+                PASS: password,
+                PHANQUYEN: 0,
+                TRANGTHAI: 'Hoạt động'
+            };
             //KHACHHANG
 
-            const submitDataKH = new FormData();
-            submitDataKH.append('MaKH', username);
-            submitDataKH.append('HoTen', fullName);
-            submitDataKH.append('SDT', username);
-            submitDataKH.append('MaTK', username);
+            // const submitDataKH = new FormData();
+            // submitDataKH.append('MaKH', username);
+            // submitDataKH.append('HoTen', fullName);
+            // submitDataKH.append('SDT', username);
+            // submitDataKH.append('MaTK', username);
 
-            //dùng api đăng ký tài khoản và thêm khách hàng song song để tránh lỗi nếu một trong hai bước thất bại
-            const [response, responseKH] = await Promise.all([
-                authApi.signup(submitData),
-                authApi.themKH(submitDataKH)
-            ]);
+            const submitDataKH = {
+                MAKH: username,
+                HOTEN: fullName,
+                SDT: username,
+                MATK: username
+            };
 
+            const response = await authApi.signup(submitData);
 
-            if (response.data.success && responseKH.data.success) {
-                toast.success("Đăng ký tài khoản thành công! Vui lòng đăng nhập.");
-                navigate('/login');
-            } else {
-                toast.error(response.data.message || "Đăng ký thất bại!");
+            if (!response.data.success) {
+                toast.error(response.data.message || "Đăng ký tài khoản thất bại!");
+                return;
             }
+
+            const responseKH = await authApi.themKH(submitDataKH);
+
+            if (!responseKH.data.success) {
+                toast.error(responseKH.data.message || "Tạo khách hàng thất bại!");
+                return;
+            }
+            toast.success("Đăng ký tài khoản thành công! Vui lòng đăng nhập.");
+            navigate('/login');
 
         } catch (err: any) {
             toast.error('Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.');

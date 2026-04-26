@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import dichVuApi, { DichVu } from "../../api/dichvuApi";
 import { toast } from "react-toastify";
-import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
 import CustomerApi, { Customer } from "../../api/customerApi";
 const DichVuDetailsPage = () => {
 
@@ -58,8 +57,8 @@ const DichVuDetailsPage = () => {
 					localStorage.setItem("username", savedSDT);
 					//lấy tên KH
 					try {
-						const resKH = await CustomerApi.getBySDT(savedSDT);
-						localStorage.setItem("tenkhach", resKH.data.data.hoten);
+						const resKH = await CustomerApi.getById(savedSDT);
+						localStorage.setItem("tenkhach", resKH.data.data.HOTEN);
 						localStorage.setItem('madvCanXem', madv);
 						navigate('/datlich');
 					}

@@ -1,5 +1,7 @@
 
 import axiosClient from './axiosClient';
+import { Customer } from './customerApi';
+import { TaiKhoan } from './taikhoanApi';
 
 export interface LoginPayload {
   username: string;
@@ -32,22 +34,13 @@ const authApi = {
       pass: data.password 
     });
   },
-  signup(data: FormData) {
-    const url = '/api-common/Login_/signup-taikhoan';
-    return axiosClient.post(url, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-  },
-  themKH(data: FormData) {
-    const url = '/api-common/Login_/insert-khachhang';
-    return axiosClient.post(url, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-  },
+  signup(data: TaiKhoan) {
+        const url = '/api/taikhoan/insert-taikhoan';
+        return axiosClient.post(url, data);
+    },
+  themKH(data: Customer) {
+        return axiosClient.post('/api/khachhang/insert-khachhang', data);
+    },
 };
 
 export default authApi;

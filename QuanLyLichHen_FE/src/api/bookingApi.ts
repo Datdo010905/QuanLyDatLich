@@ -27,6 +27,9 @@ const BookingApi = {
         return axiosClient.get(`/api/lichhen/get-byId-lichhen/${id}`);
     },
 
+    getAllByIdKH(id: string) {
+        return axiosClient.get(`/api/lichhen/get-byIdKH-lichhen/${id}`);
+    },
     create(data: Booking) {
         return axiosClient.post('/api/lichhen/insert-lichhen', data);
     },
@@ -40,7 +43,10 @@ const BookingApi = {
     delete(id: string) {
         return axiosClient.delete(`/api/lichhen/delete-lichhen/${id}`);
     },
-
+    getByNgay(ngaybd: string, ngaykt: string) {
+        const url = `/api/lichhen/get-all-lichhenTheoNgay?ngaybd=${ngaybd}&ngaykt=${ngaykt}`;
+        return axiosClient.get(url);
+    },
     // ===== CHI TIẾT LỊCH HẸN =====
     getAllCT() {
         return axiosClient.get('/api/lichhen/get-all-CTlichhen');
@@ -53,7 +59,9 @@ const BookingApi = {
     createCT(data: BookingDetails) {
         return axiosClient.post('/api/lichhen/insert-CTlichhen', data);
     },
-
+    updateCT(id: string, ghichu: string) {
+        return axiosClient.put(`/api/lichhen/update-CTlichhen/${id}`, { GHICHU: ghichu });
+    },
     deleteCT(id: string) {
         return axiosClient.delete(`/api/lichhen/delete-CTlichhen/${id}`);
     }

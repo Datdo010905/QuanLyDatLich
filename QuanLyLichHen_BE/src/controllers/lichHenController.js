@@ -35,7 +35,24 @@ const getByID = async (req, res) => {
         });
     }
 };
-
+const getByIDKH = async (req, res) => {
+    try {
+        const data = await lichHenService.getLichHenByIDKH(req.params.id);
+        if (data) return res.status(200).json({
+            success: true,
+            data: data
+        });
+        return res.status(404).json({
+            success: false,
+            message: "Không tìm thấy!"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
 const create = async (req, res) => {
     try {
         const data = req.body;
@@ -94,6 +111,22 @@ const remove = async (req, res) => {
     }
 };
 
+const getAllTheoNgay = async (req, res) => {
+    try {
+        const { ngaybd, ngaykt } = req.query; // Hứng từ URL (VD: ?ngaybd=...&ngaykt=...)
+        if (!ngaybd || !ngaykt) {
+            return res.status(400).json({ success: false, message: "Thiếu ngày bắt đầu hoặc kết thúc!" });
+        }
+
+        const data = await lichHenService.getLichHenTheoNgay(ngaybd, ngaykt);
+        return res.status(200).json({ success: true, data: data });
+    } catch (error) { 
+        return res.status(500).json({ success: false, message: error.message }); 
+    }
+};
+
+
+
 //API (CHI TIẾT LỊCH HẸN)
 const getAllCT = async (req, res) => {
     try {
@@ -140,7 +173,20 @@ const createCT = async (req, res) => {
         });
     }
 };
+const updateCT = async (req, res) => {
+    try {
+        const id = req.params.id;
+        // Hứng cục JSON { "GHICHU": "..." } từ React gửi lên
+        const ghichu = req.body.GHICHU || req.body.ghichu || 'Không có ghi chú';
 
+        await lichHenService.updateCT(id, ghichu);
+        return res.status(200).json({ success: true, message: "Cập nhật ghi chú thành công!" });
+    } catch (error) { 
+        return res.status(500).json({ success: false, message: error.message }); 
+    }
+};
+
+// Nhớ xuất cái updateCT này ra ở module.exports nhé
 const removeCT = async (req, res) => {
     try {
         await lichHenService.deleteCT(req.params.id);
@@ -156,4 +202,4 @@ const removeCT = async (req, res) => {
     }
 };
 
-module.exports = { getAll, getByID, create, updateStatus, remove, getAllCT, getCTByID, createCT, removeCT };
+module.exports = { getAll, getByID, getByIDKH, create, updateStatus, remove, getAllTheoNgay, getAllCT, getCTByID, createCT, updateCT, removeCT };

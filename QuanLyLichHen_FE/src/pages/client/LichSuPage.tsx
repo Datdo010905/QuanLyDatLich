@@ -1,6 +1,6 @@
 import "../../assets/css/lichsu.css";
 import {Navigate } from 'react-router-dom';
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../../components/ui/Modal";
 import { toast } from 'react-toastify';
 import DataTable, { Column } from '../../components/ui/DataTable';
@@ -80,7 +80,7 @@ const LichSuPage = () => {
 	useEffect(() => {
 		// kiểm tra khi bookingList đã fetch
 		if (bookingList && bookingList.length > 0) {
-			const checkDangCho = bookingList.filter(lh => lh.trangthai === "Đang chờ");
+			const checkDangCho = bookingList.filter(lh => lh.TRANGTHAI.trim() === "Đang chờ");
 
 			if (checkDangCho.length > 0) {
             toast.info("Bạn có lịch hẹn đã được duyệt, hãy đến dùng dịch vụ!", {
@@ -96,16 +96,16 @@ const LichSuPage = () => {
 
 	const handleViewClick = async (row: Booking) => {
 		try {
-			setIDtoView(row.malich || null);
+			setIDtoView(row.MALICH?.trim() || null);
 
-			const view = await bookingApi.getByIdCT(row.malich || '');
+			const view = await bookingApi.getByIdCT(row.MALICH?.trim() || '');
 			if (view.data.success) {
 				const responseData = view.data.data;
 				// Nếu là mảng thì giữ nguyên, không thì bọc []
 				const formattedData = Array.isArray(responseData) ? responseData : [responseData];
 
 				setViewDetailsList(formattedData);
-				//toast.info(`Xem chi tiết lịch hẹn: ${row.malich}`);
+				//toast.info(`Xem chi tiết lịch hẹn: ${row.MALICH}`);
 
 			} else {
 				toast.error("Không tìm thấy chi tiết lịch hẹn!");
@@ -155,12 +155,12 @@ const LichSuPage = () => {
 	};
 	const handleDeleteClick = (row: Booking) => {
 		setFormData({
-			bookingID: row.malich || '',
-			customerID: row.makh || '',
-			branchID: row.machinhanh || '',
-			bookingTime: row.giohen || '',
-			bookingDate: row.ngayhen ? row.ngayhen.split('T')[0] : '',
-			status: row.trangthai || '',
+			bookingID: row.MALICH?.trim() || '',
+			customerID: row.MAKH?.trim() || '',
+			branchID: row.MACHINHANH?.trim() || '',
+			bookingTime: row.GIOHEN?.trim() || '',
+			bookingDate: row.NGAYHEN ? row.NGAYHEN.split('T')[0] : '',
+			status: row.TRANGTHAI?.trim() || '',
 			dichvu: '', //tạm để trống
 			soluong: '', //tạm để trống
 			nhanvien: '' //tạm để trống
@@ -184,7 +184,7 @@ const LichSuPage = () => {
 		//tạo FormData theo swagger
 		const submitData = new FormData();
 
-		const trangthaiHienTai = bookingList.find(b => b.malich === formData.bookingID)?.trangthai;
+		const trangthaiHienTai = bookingList.find(b => b.MALICH?.trim() === formData.bookingID)?.TRANGTHAI?.trim();
 		try {
 			if (modalType === 'edit') {
 				if (formDataDetails.ghichu === '') {
@@ -210,14 +210,27 @@ const LichSuPage = () => {
 
 	//Định nghĩa cột cho DataTable theo api trả về
 	const bookingColumns: Column<Booking>[] = [
-		{ tieude: "ID", cotnhandulieu: "malich" },
-		{ tieude: "Ngày hẹn", cotnhandulieu: "ngayhen", render: (row) => row.ngayhen ? new Date(row.ngayhen).toLocaleDateString('vi-VN') : '' },
+		{ tieude: "ID", cotnhandulieu: "MALICH" },
+		{ tieude: "Ngày hẹn", cotnhandulieu: "NGAYHEN", render: (row) => row.NGAYHEN ? new Date(row.NGAYHEN).toLocaleDateString('vi-VN') : '' },
+		 {
+            tieude: "Giờ hẹn",
+            cotnhandulieu: "GIOHEN",
+            render: (row) => {
+                if (!row.GIOHEN) return "";
+
+                // chuỗi có chứa chữ 'T' (dạng ISO 1970-01-01T09:00:00...)
+                if (row.GIOHEN.includes('T')) {
+                    //Tách chuỗi lấy đoạn giữa (09:00)
+                    return row.GIOHEN.split('T')[1].substring(0, 5);
+                }
+
+                // Nếu dạng 09:00:00 lấy 5 ký tự đầu
+                return row.GIOHEN.substring(0, 5);
+            }
+        },
 		{
-			tieude: "Giờ hẹn", cotnhandulieu: "giohen"
-		},
-		{
-			tieude: "Trạng thái", cotnhandulieu: "trangthai", render: (row) => {
-				const style = statusStyles[row.trangthai || ''] || {};
+			tieude: "Trạng thái", cotnhandulieu: "TRANGTHAI", render: (row) => {
+				const style = statusStyles[row.TRANGTHAI?.trim() || ''] || {};
 				return (
 					<span style={{
 						padding: '4px 10px',
@@ -227,30 +240,32 @@ const LichSuPage = () => {
 						whiteSpace: 'nowrap',
 						...style
 					}}>
-						{style ? row.trangthai : "Không xác định"}
+						{style ? row.TRANGTHAI?.trim() : "Không xác định"}
 					</span>
 				)
 			}
 		},
 		{
-			tieude: "Chi nhánh", cotnhandulieu: "machinhanh", render: (row) => {
-				const style = branchStyles[row.machinhanh || ''] || {};
+			tieude: "Chi nhánh", cotnhandulieu: "MACHINHANH", render: (row) => {
+				const style = branchStyles[row.MACHINHANH?.trim() || ''] || {};
 				return (
 					<span style={style}>
-						{getChiNhanhName(row.machinhanh || '')}
+						{getChiNhanhName(row.MACHINHANH?.trim() || '')}
 					</span>
 				);
 			}
 
 		},
-		{ tieude: "Khách hàng", cotnhandulieu: "makh" },
+		{ tieude: "Khách hàng", cotnhandulieu: "MAKH" },
 		{
-			tieude: "Hành động", cotnhandulieu: "malich", render: (row) => (
+			tieude: "Hành động", cotnhandulieu: "MALICH", render: (row) => (
 				<>
 					<button className="btn small view" onClick={() => handleViewClick(row)}><i className="fas fa-eye"></i></button>
 					<button
 						className="btn small delete"
 						onClick={() => handleDeleteClick(row)}
+						disabled={row.TRANGTHAI?.trim() === "Đã huỷ" || row.TRANGTHAI?.trim() === "Hoàn thành"}
+						title={row.TRANGTHAI?.trim() === "Đã huỷ" || row.TRANGTHAI?.trim() === "Hoàn thành" ? "Không thể huỷ lịch đã hoàn thành hoặc đã huỷ" : "Huỷ lịch hẹn"}
 					>
 						<i className="fas fa-trash"></i>
 					</button>
@@ -260,28 +275,28 @@ const LichSuPage = () => {
 	];
 	//Định nghĩa cột cho DataTable theo api trả về
 	const bookingDetailsColumns: Column<BookingDetails>[] = [
-		{ tieude: "ID", cotnhandulieu: "malich" },
+		{ tieude: "ID", cotnhandulieu: "MALICH" },
 		{
-			tieude: "Dịch vụ", cotnhandulieu: "madv", render(row) {
-				const dichVu = dichVuList.find(dv => dv.madv === row.madv);
-				return dichVu ? dichVu.tendv : "Không xác định";
+			tieude: "Dịch vụ", cotnhandulieu: "MADV", render(row) {
+				const dichVu = dichVuList.find(dv => dv.MADV === row.MADV);
+				return dichVu ? dichVu.TENDV : "Không xác định";
 
 			}
 		},
 		{
-			tieude: "Nhân viên", cotnhandulieu: "manv", render(row) {
-				const nv = nhanVienList.find(nv => nv.manv === row.manv);
-				return nv ? `${nv.hoten} (${nv.sdt})` : "Không xác định";
+			tieude: "Nhân viên", cotnhandulieu: "MANV", render(row) {
+				const nv = nhanVienList.find(nv => nv.MANV === row.MANV);
+				return nv ? `${nv.HOTEN} (${nv.SDT})` : "Không xác định";
 			}
 		},
-		{ tieude: "Số lượng", cotnhandulieu: "soluong" },
+		{ tieude: "Số lượng", cotnhandulieu: "SOLUONG" },
 		{
-			tieude: "Giá dự kiến", cotnhandulieu: "giA_DUKIEN", render(row) {
-				const value = parseFloat(row.giA_DUKIEN as any);
+			tieude: "Giá dự kiến", cotnhandulieu: "GIA_DUKIEN", render(row) {
+				const value = parseFloat(row.GIA_DUKIEN as any);
 				return value ? value.toLocaleString('vi-VN') + '₫' : "0₫";
 			},
 		},
-		{ tieude: "Ghi chú", cotnhandulieu: "ghichu" },
+		{ tieude: "Ghi chú", cotnhandulieu: "GHICHU" },
 	];
 	return (
 		<>

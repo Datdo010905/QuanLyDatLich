@@ -19,6 +19,7 @@ const upload = multer({ storage: storage });
 
 //endpoint như [HttpGet] 
 router.get('/get-all-DichVuToc', dichVuController.getDichVuToc);
+router.get('/get-all-DichVuCungCap', dichVuController.getTatCaDichVuCungCap);
 router.get('/get-all-DichVuCSD', dichVuController.getDichVuCSD);
 router.get('/get-all-DichVuChamSocDA', dichVuController.getDichVuChamSocDaAll);
 router.get('/get-all-DichVu', dichVuController.getDichVuTocAll);

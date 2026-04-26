@@ -7,6 +7,7 @@ const khachHangRoutes = require('./routes/khachHangRoutes');
 const nhanVienRoutes = require('./routes/nhanVienRoutes');
 const khuyenMaiRoutes = require('./routes/khuyenMaiRoutes');
 const lichHenRoutes = require('./routes/lichHenRoutes');
+const hoaDonRoutes = require('./routes/hoaDonRoutes');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/khachhang', khachHangRoutes);
 app.use('/api/nhanvien', nhanVienRoutes);
 app.use('/api/khuyenmai', khuyenMaiRoutes);
 app.use('/api/lichhen', lichHenRoutes);
+app.use('/api/hoadon', hoaDonRoutes);
 
 // Xử lý lỗi 404 cho các route không tồn tại
 app.use((req, res, next) => {

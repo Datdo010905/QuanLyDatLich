@@ -1,13 +1,9 @@
 
 import StatCard from "../../components/ui/StatCard";
 import React, { useEffect, useState } from "react";
-import Modal from "../../components/ui/Modal";
-import CustomerApi from "../../api/customerApi";
 import BookingApi, { Booking, BookingDetails } from "../../api/bookingApi";
 import StaffApi, { NhanVien, TopStaffData } from "../../api/staffApi"
 import dichVuApi, { DichVu, TopDVData } from "../../api/dichvuApi";
-import TaiKhoanApi from "../../api/taikhoanApi";
-import KhuyenMaiApi from "../../api/khuyenmaiApi";
 import hoadonApi, { HoaDon, HoaDonDetails } from "../../api/hoadonApi";
 import { toast } from "react-toastify";
 import DataTable, { Column } from '../../components/ui/DataTable';
@@ -68,14 +64,14 @@ const ReportPage = () => {
     }
     const checkOK = () => {
         //lọc
-        const ltc = bookingList.filter(lh => lh.trangthai === "Hoàn thành");
-        const hdtt = HoaDonList.filter(hd => hd.trangthai === "Đã thanh toán");
+        const ltc = bookingList.filter(lh => lh.TRANGTHAI === "Hoàn thành");
+        const hdtt = HoaDonList.filter(hd => hd.TRANGTHAI === "Đã thanh toán");
 
         setLTC(ltc.length);
         setHoaDonDTT(hdtt.length);
         //reduce duyệt
         //number tránh cộng chuỗi
-        const total = hdtt.reduce((sum, hd) => sum + Number(hd.tongtien), 0);
+        const total = hdtt.reduce((sum, hd) => sum + Number(hd.TONGTIEN), 0);
         settongDT(total);
         //console.log(total)
     }
@@ -85,8 +81,8 @@ const ReportPage = () => {
         const countNV: Record<string, number> = {};
         bookingDetailsList.forEach(lh => {
             //check true tránh underfined
-            if (lh.manv) {
-                countNV[lh.manv] = (countNV[lh.manv] || 0) + 1;//tìm nv nếu chưa có thì = 0, có thì + 1
+            if (lh.MANV?.trim()) {
+                countNV[lh.MANV.trim()] = (countNV[lh.MANV.trim()] || 0) + 1;//tìm nv nếu chưa có thì = 0, có thì + 1
             };
         });
         //console.log(countNV);
@@ -101,17 +97,17 @@ const ReportPage = () => {
         //return sortNhanVien;
 
         const topStaffWithDetails = sortNhanVien.map(topItem => {
-            const staffDetail = NhanVienList.find(nv => nv.manv === topItem.manv);
+            const staffDetail = NhanVienList.find(nv => nv.MANV?.trim() === topItem.manv?.trim());
 
             return {
                 manv: topItem.manv,
-                hoten: staffDetail?.hoten || "Không xác định",
-                chucvu: staffDetail?.chucvu || "",
-                sdt: staffDetail?.sdt || "",
-                diachi: staffDetail?.diachi || "",
-                machinhanh: staffDetail?.machinhanh || "",
-                ngaysinh: staffDetail?.ngaysinh || "",
-                matk: staffDetail?.matk || "",
+                hoten: staffDetail?.HOTEN || "Không xác định",
+                chucvu: staffDetail?.CHUCVU || "",
+                sdt: staffDetail?.SDT || "",
+                diachi: staffDetail?.DIACHI || "",
+                machinhanh: staffDetail?.MACHINHANH || "",
+                ngaysinh: staffDetail?.NGAYSINH || "",
+                matk: staffDetail?.MATK || "",
                 solich: topItem.count
             };
         });
@@ -128,8 +124,8 @@ const ReportPage = () => {
         const count: Record<string, number> = {};
         hoadonDetailsList.forEach(hd => {
             //check true tránh underfined
-            if (hd.madv) {
-                count[hd.madv] = (count[hd.madv] || 0) + 1;//tìm nv nếu chưa có thì = 0, có thì + 1
+            if (hd.MADV?.trim()) {
+                count[hd.MADV.trim()] = (count[hd.MADV.trim()] || 0) + 1;//tìm nv nếu chưa có thì = 0, có thì + 1
             };
         });
         const sortDV = Object.entries(count)
@@ -138,17 +134,17 @@ const ReportPage = () => {
             .slice(0, 5);
 
         const topDVWithDetails = sortDV.map(topItem => {
-            const DVDetail = DichVuList.find(dv => dv.madv === topItem.madv);
+            const DVDetail = DichVuList.find(dv => dv.MADV?.trim() === topItem.madv?.trim());
 
             return {
                 madv: topItem.madv,
-                tendv: DVDetail?.tendv || "Dịch vụ không xác định",
-                mota: DVDetail?.mota || "",
-                thoigian: DVDetail?.thoigian || 0,
-                giadv: DVDetail?.giadv || 0,
-                trangthai: DVDetail?.trangthai || "",
-                hinh: DVDetail?.hinh || "",
-                quytrinh: DVDetail?.quytrinh || "",
+                tendv: DVDetail?.TENDV || "Dịch vụ không xác định",
+                mota: DVDetail?.MOTA || "",
+                thoigian: DVDetail?.THOIGIAN || 0,
+                giadv: DVDetail?.GIADV || 0,
+                trangthai: DVDetail?.TRANGTHAI || "",
+                hinh: DVDetail?.HINH || "",
+                quytrinh: DVDetail?.QUYTRINH || "",
                 solan: topItem.count//gán
             };
         });

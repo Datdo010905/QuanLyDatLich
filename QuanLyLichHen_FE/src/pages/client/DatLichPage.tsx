@@ -3,14 +3,9 @@ import "../../assets/css/lichhen.css";
 import { toast } from "react-toastify";
 import dichVuApi, { DichVu } from "../../api/dichvuApi";
 import Modal from "../../components/ui/Modal";
-import { useSearch } from '../../context/SearchContext';
-import DataTable, { Column } from '../../components/ui/DataTable';
 import bookingApi, { Booking, BookingDetails } from "../../api/bookingApi";
-import { BookingSchema } from "../../utils/bookingSchema";
-import customerApi, { Customer } from "../../api/customerApi";
 import staffApi, { NhanVien } from "../../api/staffApi";
 import TaiKhoanApi from "../../api/taikhoanApi";
-import { set } from "zod";
 const DatLichPage = () => {
 
 	const [modalType, setModalType] = useState<'checkpass' | 'none'>('none');
@@ -19,7 +14,7 @@ const DatLichPage = () => {
 	const getName = localStorage.getItem("tenkhach");
 
 	//dùng dv cần xem bằng state
-	const [selectedDichVu, setSelectedDichVu] = useState<string>(localStorage.getItem("madvCanXem") || "");
+	const [selectedDichVu, setSelectedDichVu] = useState<string>(localStorage.getItem("madvCanXem")?.trim() || "");
 
 	//state lựa chọn
 	const [dichVuList, setDichVuList] = useState<DichVu[]>([]);
@@ -54,7 +49,9 @@ const DatLichPage = () => {
 	const fetchDichVu = async () => {
 		try {
 			const resToc = await dichVuApi.getAllDichVuClient();
-			setDichVuList(resToc.data.data);
+			if (resToc?.data?.success) {
+				setDichVuList(resToc.data.data || []);
+			}
 		} catch (err) {
 			toast.error("Không thể tải dữ liệu từ máy chủ.");
 		}
@@ -65,15 +62,17 @@ const DatLichPage = () => {
 			const resNhanVien = await staffApi.getAll();
 			const resBookingDetails = await bookingApi.getAllCT();
 
-			if (resNhanVien.data.success) {
-				setNhanVienList(resNhanVien.data.data);
+			if (resNhanVien?.data?.success) {
+				setNhanVienList(resNhanVien.data.data || []);
 			}
-			if (resBookingDetails.data.success) {
-				setBookingDetailsList(resBookingDetails.data.data);
+			if (resBookingDetails?.data?.success) {
+				setBookingDetailsList(resBookingDetails.data.data || []);
 			}
 
 			const resBooking = await bookingApi.getAll();
-			setBookingList(resBooking.data.data);
+			if (resBooking?.data?.success) {
+				setBookingList(resBooking.data.data || []);
+			}
 
 		} catch (err) {
 			toast.error("Không thể tải dữ liệu từ máy chủ.");
@@ -101,16 +100,16 @@ const DatLichPage = () => {
 		}
 		//tìm lịch đã được khách chọn nhân viên thực hiện trong ngày đó
 		const bookedIdsForStaff = bookingDetailsList
-			.filter(detail => detail.manv === formData.nhanvien)
-			.map(detail => detail.malich?.trim());
+			.filter(detail => detail.MANV?.trim() === formData.nhanvien)
+			.map(detail => detail.MALICH?.trim());
 
 		//lọc ra những lịch ngày đó, chưa huỷ hoặc chưa hoàn thành và có nhân viên thực hiện trùng với nhân viên đang chọn
 		const lichDabook = bookingList.filter(booking => {
-			const trungNgay = booking.ngayhen && booking.ngayhen.split('T')[0] === formData.bookingDate;
-			const chuahuy = booking.trangthai !== "Đã huỷ";
-			const chuahoanthanh = booking.trangthai !== "Đã hoàn thành";
+			const trungNgay = booking.NGAYHEN && booking.NGAYHEN.split('T')[0] === formData.bookingDate;
+			const chuahuy = booking.TRANGTHAI !== "Đã huỷ";
+			const chuahoanthanh = booking.TRANGTHAI !== "Đã hoàn thành";
 			//iclude kiểm tra mã lịch của booking có nằm trong danh sách mã lịch đã được chọn nhân viên thực hiện hay không
-			const NVDuocChon = bookedIdsForStaff.includes(booking.malich?.trim());
+			const NVDuocChon = bookedIdsForStaff.includes(booking.MALICH?.trim());
 
 			return trungNgay && chuahuy && chuahoanthanh && NVDuocChon;
 		});
@@ -118,7 +117,7 @@ const DatLichPage = () => {
 		//giờ hẹn từ API
 		//Chỉ lấy 5 ký tự đầu (HH:mm) để bỏ qua giây (nếu có)
 		const bookedHours = lichDabook.map(b => {
-			return b.giohen ? b.giohen.substring(0, 5) : "";
+			return b.GIOHEN ? b.GIOHEN.substring(0, 5) : "";
 		});
 		//tạo danh sách giờ trống từ 8h đến 22h với khoảng cách 30 phút
 		const hours: string[] = [];
@@ -159,43 +158,69 @@ const DatLichPage = () => {
 				//tìm tk
 				const resTaiKhoan = await TaiKhoanApi.getById(loggedUser);
 				console.log("Thông tin tài khoản:", resTaiKhoan);
-				const thongTinTaiKhoan = resTaiKhoan.data.data[0];
+				const thongTinTaiKhoan = resTaiKhoan.data.data;
 				console.log("Thông tin tài khoản sau khi lấy:", thongTinTaiKhoan);
 				//check mk
-				if (thongTinTaiKhoan.pass.trim() !== matkhauCheck.trim()) {
+				if (thongTinTaiKhoan.PASS.trim() !== matkhauCheck.trim()) {
 					toast.error("Mật khẩu không chính xác! Vui lòng thử lại.");
 					console.log("Mật khẩu nhập vào:", matkhauCheck);
-					console.log("Mật khẩu thực tế:", thongTinTaiKhoan.pass);
+					console.log("Mật khẩu thực tế:", thongTinTaiKhoan.PASS);
 
 					return;
 				}
 				toast.success("Xác thực thành công! Đang xử lý đặt lịch...");
-				//tạo FormData theo swagger
-				const submitData = new FormData();
+				// //tạo FormData theo swagger
+				// const submitData = new FormData();
 
-				//tạo mã lịch mới theo format LH + timestamp + random 3 số để đảm bảo tính duy nhất
+				// //tạo mã lịch mới theo format LH + timestamp + random 3 số để đảm bảo tính duy nhất
+				// const maLichMoi = "LH" + Date.now() + Math.floor(Math.random() * 1000);
+
+				// submitData.append('MaLich', maLichMoi);
+				// submitData.append('NgayHen', formData.bookingDate);
+				// submitData.append('GioHen', formData.bookingTime);
+				// submitData.append('TrangThai', "Đã đặt");//mặc định
+				// submitData.append('MaChiNhanh', formData.branchID);
+				// //khách hàng là nick đang đăng nhập
+				// submitData.append('MaKH', loggedUser);
+
+				// const submitDataCT = new FormData();
+				// submitDataCT.append('MaLich', maLichMoi);
+
+				// submitDataCT.append('MaDV', selectedDichVu);
+				// submitDataCT.append('MaNV', formData.nhanvien);
+				// submitDataCT.append('SoLuong', formData.soluong || '1'); //mặc định 1 dịch vụ	
+
+				// const dichVuSelected = dichVuList.find(dv => dv.MADV?.trim() === selectedDichVu);
+
+				// submitDataCT.append('GiaDuKien', dichVuSelected ? dichVuSelected.GIADV.toString() : '0');
+				// submitDataCT.append('GhiChu', formDataDetails.ghichu || 'Không có ghi chú');
+
+
+				// Tạo mã lịch mới theo format LH + timestamp + random 3 số để đảm bảo tính duy nhất
 				const maLichMoi = "LH" + Date.now() + Math.floor(Math.random() * 1000);
 
-				submitData.append('MaLich', maLichMoi);
-				submitData.append('NgayHen', formData.bookingDate);
-				submitData.append('GioHen', formData.bookingTime);
-				submitData.append('TrangThai', "Đã đặt");//mặc định
-				submitData.append('MaChiNhanh', formData.branchID);
-				//khách hàng là nick đang đăng nhập
-				submitData.append('MaKH', loggedUser);
+				// TẠO JSON CHO BẢNG (LỊCH HẸN)
+				const submitData = {
+					MALICH: maLichMoi,
+					NGAYHEN: formData.bookingDate,
+					GIOHEN: formData.bookingTime,
+					TRANGTHAI: "Đã đặt", // Mặc định
+					MACHINHANH: formData.branchID,
+					MAKH: loggedUser // Khách hàng là nick đang đăng nhập
+				};
 
-				const submitDataCT = new FormData();
-				submitDataCT.append('MaLich', maLichMoi);
+				// Tìm dịch vụ để lấy giá dự kiến
+				const dichVuSelected = dichVuList.find(dv => dv.MADV?.trim() === selectedDichVu?.trim());
 
-				submitDataCT.append('MaDV', selectedDichVu);
-				submitDataCT.append('MaNV', formData.nhanvien);
-				submitDataCT.append('SoLuong', formData.soluong || '1'); //mặc định 1 dịch vụ	
-
-				const dichVuSelected = dichVuList.find(dv => dv.madv === selectedDichVu);
-
-				submitDataCT.append('GiaDuKien', dichVuSelected ? dichVuSelected.giadv.toString() : '0');
-				submitDataCT.append('GhiChu', formDataDetails.ghichu || 'Không có ghi chú');
-
+				// TẠO JSON CHO BẢNG (CHI TIẾT LỊCH HẸN)
+				const submitDataCT = {
+					MALICH: maLichMoi,
+					MADV: selectedDichVu?.trim(),
+					MANV: formData.nhanvien?.trim(),
+					SOLUONG: Number(formData.soluong || 1), //mặc định 1
+					GIA_DUKIEN: dichVuSelected ? Number(dichVuSelected.GIADV) : 0,
+					GHICHU: formDataDetails.ghichu || 'Không có ghi chú'
+				};
 				//gọi API tạo lịch hẹn và chi tiết lịch hẹn
 				await bookingApi.create(submitData);
 				await bookingApi.createCT(submitDataCT);
@@ -234,12 +259,12 @@ const DatLichPage = () => {
 						<br />
 						<span>Dịch vụ:<span style={{ color: "red" }}>*</span></span><br />
 						<select id="dichvu" className="input-field" value={selectedDichVu}
-							onChange={(e) => setSelectedDichVu(e.target.value)}
+							onChange={(e) => setSelectedDichVu(e.target.value.trim())}
 						>
 							<option value="" disabled>-- Chọn dịch vụ --</option>
-							{dichVuList.map((dv) => (
-								<option key={dv.madv} value={dv.madv}>
-									{dv.tendv} - {dv.thoigian} phút - {dv.giadv.toLocaleString()} VNĐ
+							{dichVuList?.map((dv) => (
+								<option key={dv.MADV?.trim()} value={dv.MADV?.trim()}>
+									{dv.TENDV} - {dv.THOIGIAN} phút - {dv.GIADV.toLocaleString()} VNĐ
 								</option>
 							))}
 						</select>
@@ -259,9 +284,9 @@ const DatLichPage = () => {
 						<select id="nhanvien" className="input-field" value={formData.nhanvien} disabled={!formData.branchID} onChange={handleChange}>
 							<option value="">-- Chọn nhân viên --</option>
 							{/* lọc nhân viên theo chi nhánh đã chọn và chức vụ */}
-							{nhanVienList.filter((nv) => nv.machinhanh === formData.branchID && nv.chucvu === "Stylist").map((nv) => (
-								<option key={nv.manv} value={nv.manv}>
-									{nv.manv} - {nv.hoten} {`(${nv.sdt})`}
+							{nhanVienList?.filter((nv) => nv.MACHINHANH?.trim() === formData.branchID && nv.CHUCVU === "Stylist").map((nv) => (
+								<option key={nv.MANV?.trim()} value={nv.MANV?.trim()}>
+									{nv.MANV} - {nv.HOTEN} {`(${nv.SDT})`}
 								</option>
 							))}
 						</select><br />

@@ -31,7 +31,8 @@ axiosClient.interceptors.response.use(
       console.error("Token hết hạn hoặc không hợp lệ!");
       localStorage.removeItem('token');
       localStorage.removeItem('phanquyen');
-      window.location.href = '/login'; // Chuyển hướng cứng về login
+      localStorage.removeItem('username');
+      localStorage.removeItem('tenkhach');
     }
     return Promise.reject(error);
   }

@@ -14,6 +14,20 @@ const getDichVuToc = async (req, res) => {
         res.status(500).json({ success: false, message: 'Lỗi kết nối với server!' });
     }
 };
+const getTatCaDichVuCungCap = async (req, res) => {
+    try {
+        const data = await dichVuService.getTatCaDichVuCungCap();
+        //trả về dữ liệu cho client
+        res.status(200).json({
+            success: true,
+            data: data,
+            message: 'Lấy danh sách dịch vụ đang cung cấp thành công!'
+        });
+    } catch (error) {
+        console.error("Lỗi Controller Dịch Vụ:", error);
+        res.status(500).json({ success: false, message: 'Lỗi kết nối với server!' });
+    }
+};
 const getDichVuTocAll = async (req, res) => {
     try {
         const data = await dichVuService.getAllDichVu();
@@ -201,5 +215,6 @@ module.exports = {
     getDichVuTocAll,
     getDichVuChamSocDaAll,
     updateDichVu,
-    deleteDichVu
+    deleteDichVu,
+    getTatCaDichVuCungCap
 };

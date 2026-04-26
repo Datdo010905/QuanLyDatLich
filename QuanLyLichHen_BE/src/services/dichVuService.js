@@ -1,9 +1,20 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+
+const getTatCaDichVuCungCap = async () => {
+    const danhSach = await prisma.DICHVU.findMany();
+    return danhSach;
+};
+
 const getAllDichVuToc = async () => {
     //const danhSach = await prisma.DICHVU.findMany();
     const danhSachDV = await prisma.$queryRaw`SELECT * FROM DICHVU WHERE LOAI = 'CT' AND TRANGTHAI = N'Đang cung cấp'`;
+    return danhSachDV;
+};
+
+const getAllDichVuCSD = async () => {
+    const danhSachDV = await prisma.$queryRaw`SELECT * FROM DICHVU WHERE LOAI = 'CSD' AND TRANGTHAI = N'Đang cung cấp'`;
     return danhSachDV;
 };
 const getAllDichVu = async () => {
@@ -12,10 +23,6 @@ const getAllDichVu = async () => {
 };
 const getAllDichVuChamSocDA = async () => {
     const danhSachDV = await prisma.$queryRaw`SELECT * FROM DICHVU WHERE LOAI = 'CSD'`;
-    return danhSachDV;
-};
-const getAllDichVuCSD = async () => {
-    const danhSachDV = await prisma.$queryRaw`SELECT * FROM DICHVU WHERE LOAI = 'CSD' AND TRANGTHAI = N'Đang cung cấp'`;
     return danhSachDV;
 };
 const getDVByID = async (ma) => {
@@ -94,5 +101,6 @@ module.exports = {
     getDVByID,
     insertDichVu,
     updateDichVu,
-    deleteDichVu
+    deleteDichVu,
+    getTatCaDichVuCungCap
 };

@@ -4,6 +4,7 @@ import "../../assets/css/login.css";
 import authApi, { LoginPayload } from '../../api/authApi';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
+import { log } from "console";
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -50,18 +51,24 @@ const Login: React.FC = () => {
         }
         else{
           toast.error('Tài khoản đã bị khoá! Không thể truy cập.');
+          logout(); // Đảm bảo xóa dữ liệu nếu tài khoản bị khoá
         }
       }
       else {
+        //sai username hoặc password
         toast.error(response.data.message);
       }
 
     }
     catch (err: any) {
-      toast.error('Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.');
+      if (err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } 
+      else {
+        toast.error('Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.');
+      }
       console.error('Lỗi đăng nhập:', err);
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
